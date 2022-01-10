@@ -8,7 +8,7 @@ class DatabaseRepository {
   DatabaseRepository();
 
   // coverage:ignore-start
-  Query<Json> collectionGroup(path) =>
+  Query<Json> collectionGroup(String path) =>
       GetIt.I<FirebaseFirestore>().collectionGroup(path);
 
   JsonCollectionRef collection(String path) =>
