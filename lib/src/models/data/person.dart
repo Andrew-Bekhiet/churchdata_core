@@ -143,6 +143,7 @@ class PersonBase extends DataObject implements PhotoObjectBase {
       'Gender': gender,
       'ShammasLevel': shammasLevel,
       'StudyYear': studyYear,
+      'Color': color?.value,
     };
   }
 
