@@ -15,6 +15,7 @@ export 'src/utils.dart';
 export 'src/widgets.dart';
 
 // coverage:ignore-file
+
 ///Registers `GetIt` singleton instances for the repositories
 ///
 ///Don't forget to register `DefaultDataObjectTapHandler` as
