@@ -13,15 +13,17 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
     initListeners();
   }
 
-  final BehaviorSubject<U?> _userStream = BehaviorSubject<U?>();
-  ValueStream<U?> get userStream => _userStream.shareValue();
+  @protected
+  final BehaviorSubject<U?> userSubject = BehaviorSubject<U?>();
+  ValueStream<U?> get userStream => userSubject.shareValue();
 
-  U? get currentUser => _userStream.valueOrNull;
+  U? get currentUser => userSubject.valueOrNull;
 
-  final BehaviorSubject<P?> _userDataStream = BehaviorSubject<P?>();
-  ValueStream<P?> get userDataStream => _userDataStream.shareValue();
+  @protected
+  final BehaviorSubject<P?> userDataSubject = BehaviorSubject<P?>();
+  ValueStream<P?> get userDataStream => userDataSubject.shareValue();
 
-  P? get currentUserData => _userDataStream.valueOrNull;
+  P? get currentUserData => userDataSubject.valueOrNull;
 
   StreamSubscription<DatabaseEvent>? userTokenListener;
   StreamSubscription<DatabaseEvent>? connectionListener;
@@ -34,7 +36,7 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
   @mustCallSuper
   void initListeners() async {
     unawaited(
-      _userStream.next.then((value) {
+      userSubject.next.then((value) {
         if (!_disposed && !GetIt.I.isReadySync<AuthRepository>())
           GetIt.I.signalReady(this);
       }),
@@ -67,7 +69,7 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
         } else if (currentUser != null) {
           await userTokenListener?.cancel();
         } else if (!_disposed && !GetIt.I.isReadySync<AuthRepository>())
-          _userStream.add(null);
+          userSubject.add(null);
       },
     );
   }
@@ -102,9 +104,8 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
       PermissionsSet.empty;
 
   @protected
-  @mustCallSuper
   void refreshFromDoc(P userData) {
-    _userDataStream.add(userData);
+    userDataSubject.add(userData);
   }
 
   @protected
@@ -142,7 +143,7 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
         .onValue
         .listen(connectionChanged);
 
-    _userStream.add(user);
+    userSubject.add(user);
     return user;
   }
 
@@ -200,8 +201,8 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
     await GetIt.I<CacheRepository>().box('User').clear();
     await GetIt.I<CacheRepository>().openBox('User');
 
-    _userStream.add(null);
-    _userDataStream.add(null);
+    userSubject.add(null);
+    userDataSubject.add(null);
     await GetIt.I<GoogleSignIn>().signOut();
     await GetIt.I<auth.FirebaseAuth>().signOut();
     await connectionListener?.cancel();
@@ -215,7 +216,7 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
     await personListener?.cancel();
     await connectionListener?.cancel();
     await authListener?.cancel();
-    await _userDataStream.close();
-    await _userStream.close();
+    await userDataSubject.close();
+    await userSubject.close();
   }
 }
