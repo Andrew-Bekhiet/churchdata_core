@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "flutter",
+      "command": "flutter",
+      "args": ["pub", "run", "build_runner", "build"],
+      "problemMatcher": ["$dart-build_runner"],
+      "group": "build",
+      "label": "flutter: build build_runner"
+    },
+    {
+      "type": "flutter",
+      "command": "flutter",
+      "args": ["pub", "run", "build_runner", "watch"],
+      "problemMatcher": ["$dart-build_runner"],
+      "group": "build",
+      "label": "flutter: watch build_runner"
+    },
+    {
+      "type": "flutter",
+      "command": "flutter",
+      "args": ["pub", "run", "build_runner", "serve"],
+      "problemMatcher": ["$dart-build_runner"],
+      "group": "build",
+      "label": "flutter: serve build_runner"
+    }
+  ]
+}

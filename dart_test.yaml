@@ -1,0 +1,4 @@
+concurrency: 3
+
+tags:
+  uses_widgets_tester:
