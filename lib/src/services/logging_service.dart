@@ -58,6 +58,18 @@ class LoggingService {
       );
     };
 
+    final currentUser = GetIt.I.isRegistered<AuthRepository>()
+        ? GetIt.I<AuthRepository>().currentUser
+        : null;
+
+    Sentry.configureScope(
+      (scope) => scope.user = SentryUser(
+        id: currentUser?.uid,
+        email: currentUser?.email,
+        extras: currentUser?.toJson(),
+      ),
+    );
+
     GetIt.I.signalReady(this);
   }
 
