@@ -8,25 +8,24 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AuthRepository {
+class AuthRepository<U extends UserBase, P extends PersonBase> {
   AuthRepository() {
     initListeners();
   }
 
-  final BehaviorSubject<UserBase?> _userStream = BehaviorSubject<UserBase?>();
-  ValueStream<UserBase?> get userStream => _userStream.shareValue();
+  final BehaviorSubject<U?> _userStream = BehaviorSubject<U?>();
+  ValueStream<U?> get userStream => _userStream.shareValue();
 
-  UserBase? get currentUser => _userStream.valueOrNull;
+  U? get currentUser => _userStream.valueOrNull;
 
-  final BehaviorSubject<PersonBase?> _userDataStream =
-      BehaviorSubject<PersonBase?>();
-  ValueStream<PersonBase?> get userDataStream => _userDataStream.shareValue();
+  final BehaviorSubject<P?> _userDataStream = BehaviorSubject<P?>();
+  ValueStream<P?> get userDataStream => _userDataStream.shareValue();
 
-  PersonBase? get currentUserData => _userDataStream.valueOrNull;
+  P? get currentUserData => _userDataStream.valueOrNull;
 
   StreamSubscription<DatabaseEvent>? userTokenListener;
   StreamSubscription<DatabaseEvent>? connectionListener;
-  StreamSubscription<PersonBase>? personListener;
+  StreamSubscription<P>? personListener;
   StreamSubscription<auth.User?>? authListener;
 
   bool _disposed = false;
@@ -104,13 +103,14 @@ class AuthRepository {
 
   @protected
   @mustCallSuper
-  void refreshFromDoc(PersonBase userData) {
+  void refreshFromDoc(P userData) {
     _userDataStream.add(userData);
   }
 
   @protected
-  @mustCallSuper
-  UserBase refreshFromIdToken(
+
+  ///Must be ovrerriden if using any type other than [UserBase] or [PersonBase]
+  U refreshFromIdToken(
     Json idTokenClaims, {
     auth.User? firebaseUser,
     String? uid,
@@ -118,13 +118,13 @@ class AuthRepository {
     String? email,
     String? phone,
   }) {
-    final UserBase user = UserBase(
+    final U user = UserBase(
       uid: firebaseUser?.uid ?? uid!,
       name: firebaseUser?.displayName ?? name ?? '',
       email: firebaseUser?.email ?? email,
       phone: firebaseUser?.phoneNumber ?? phone,
       permissions: permissionsFromIdToken(idTokenClaims),
-    );
+    ) as U;
 
     if (idTokenClaims['personId'] != currentUserData?.ref.id) {
       personListener?.cancel();
@@ -132,7 +132,7 @@ class AuthRepository {
           .collection('Persons')
           .doc(idTokenClaims['personId'])
           .snapshots()
-          .map(PersonBase.fromDoc)
+          .map(PersonBase.fromDoc as P Function(JsonDoc))
           .listen(refreshFromDoc);
     }
 
