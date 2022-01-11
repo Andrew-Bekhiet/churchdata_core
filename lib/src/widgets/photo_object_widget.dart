@@ -24,7 +24,7 @@ class PhotoObjectWidget extends StatefulWidget {
   const PhotoObjectWidget(
     this.object, {
     Key? key,
-    this.circleCrop = false,
+    this.circleCrop = true,
     this.heroTag,
     this.constraints,
   }) : super(key: key);
