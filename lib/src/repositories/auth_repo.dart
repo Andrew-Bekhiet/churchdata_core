@@ -19,6 +19,8 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
 
   U? get currentUser => userSubject.valueOrNull;
 
+  bool get isSignedIn => currentUser != null;
+
   @protected
   final BehaviorSubject<P?> userDataSubject = BehaviorSubject<P?>();
   ValueStream<P?> get userDataStream => userDataSubject.shareValue();
