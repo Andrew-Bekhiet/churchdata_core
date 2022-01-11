@@ -21,6 +21,13 @@ class MetaObject extends DataObject {
 
 @CopyWith(copyWithNull: true)
 class Church extends MetaObject {
+  static Stream<List<Church>> getAll() {
+    return GetIt.I<DatabaseRepository>()
+        .collection('Churches')
+        .snapshots()
+        .map((s) => s.docs.map(Church.fromDoc).toList());
+  }
+
   final String? address;
 
   const Church(
@@ -39,14 +46,6 @@ class Church extends MetaObject {
   @override
   Json toJson() {
     return {...super.toJson(), 'Address': address};
-  }
-
-  Stream<List<Church>> getAll() {
-    return GetIt.I<DatabaseRepository>()
-        .collection('Fathers')
-        .where('ChurchId', isEqualTo: ref)
-        .snapshots()
-        .map((s) => s.docs.map(Church.fromDoc).toList());
   }
 
   Church.fromDoc(JsonDoc data)
@@ -68,6 +67,13 @@ class Church extends MetaObject {
 
 @CopyWith(copyWithNull: true)
 class PersonState extends MetaObject {
+  static Stream<List<PersonState>> getAll() {
+    return GetIt.I<DatabaseRepository>()
+        .collection('States')
+        .snapshots()
+        .map((s) => s.docs.map(PersonState.fromDoc).toList());
+  }
+
   @override
   final Color? color;
 
@@ -96,6 +102,13 @@ class PersonState extends MetaObject {
 
 @CopyWith(copyWithNull: true)
 class College extends MetaObject {
+  static Stream<List<College>> getAll() {
+    return GetIt.I<DatabaseRepository>()
+        .collection('Colleges')
+        .snapshots()
+        .map((s) => s.docs.map(College.fromDoc).toList());
+  }
+
   const College({required DocumentReference<Json> ref, required String name})
       : super(ref, name);
 
@@ -114,6 +127,13 @@ class College extends MetaObject {
 
 @CopyWith(copyWithNull: true)
 class Father extends MetaObject {
+  static Stream<List<Father>> getAll() {
+    return GetIt.I<DatabaseRepository>()
+        .collection('Fathers')
+        .snapshots()
+        .map((s) => s.docs.map(Father.fromDoc).toList());
+  }
+
   final DocumentReference<Json>? churchId;
 
   const Father({
@@ -150,6 +170,13 @@ class Father extends MetaObject {
 
 @CopyWith(copyWithNull: true)
 class Job extends MetaObject {
+  static Stream<List<Job>> getAll() {
+    return GetIt.I<DatabaseRepository>()
+        .collection('Jobs')
+        .snapshots()
+        .map((s) => s.docs.map(Job.fromDoc).toList());
+  }
+
   const Job({required DocumentReference<Json> ref, required String name})
       : super(ref, name);
 
@@ -168,6 +195,13 @@ class Job extends MetaObject {
 
 @CopyWith(copyWithNull: true)
 class PersonType extends MetaObject {
+  static Stream<List<PersonType>> getAll() {
+    return GetIt.I<DatabaseRepository>()
+        .collection('Types')
+        .snapshots()
+        .map((s) => s.docs.map(PersonType.fromDoc).toList());
+  }
+
   const PersonType({required DocumentReference<Json> ref, required String name})
       : super(ref, name);
 
@@ -186,6 +220,13 @@ class PersonType extends MetaObject {
 
 @CopyWith(copyWithNull: true)
 class ServingType extends MetaObject {
+  static Stream<List<ServingType>> getAll() {
+    return GetIt.I<DatabaseRepository>()
+        .collection('ServingTypes')
+        .snapshots()
+        .map((s) => s.docs.map(ServingType.fromDoc).toList());
+  }
+
   const ServingType(
       {required DocumentReference<Json> ref, required String name})
       : super(ref, name);
@@ -205,6 +246,13 @@ class ServingType extends MetaObject {
 
 @CopyWith(copyWithNull: true)
 class StudyYear extends MetaObject {
+  static Stream<List<StudyYear>> getAll() {
+    return GetIt.I<DatabaseRepository>()
+        .collection('StudyYears')
+        .snapshots()
+        .map((s) => s.docs.map(StudyYear.fromDoc).toList());
+  }
+
   final bool isCollegeYear;
   final int grade;
 
@@ -242,6 +290,13 @@ class StudyYear extends MetaObject {
 
 @CopyWith(copyWithNull: true)
 class School extends MetaObject {
+  static Stream<List<School>> getAll() {
+    return GetIt.I<DatabaseRepository>()
+        .collection('Schools')
+        .snapshots()
+        .map((s) => s.docs.map(School.fromDoc).toList());
+  }
+
   final String? address;
 
   const School(
