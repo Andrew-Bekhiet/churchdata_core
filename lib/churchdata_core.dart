@@ -20,11 +20,41 @@ export 'src/widgets.dart';
 ///
 ///Don't forget to register `DefaultDataObjectTapHandler` as
 ///soon as the app builds the navigator
-Future<void> init({required String sentryDSN}) async {
-  GetIt.I.registerSingleton(LoggingService(sentryDSN));
+///
+///Use [overrides] to override repository and/or services to
+///your implementations as follows:
+///
+///```dart
+/// await init(
+///    sentryDSN: sentryDSN,
+///    overrides: {
+///      LoggingService: () => LoggingService(additionalArgs),
+///      AuthRepository: AuthRepositoryImpl.new,
+///    },
+///  );
+///
+/// await init(
+///    sentryDSN: sentryDSN,
+///    overrides: {
+///      AuthRepository: () {
+///        final instance = AuthRepositoryImpl();
+///
+///        GetIt.I.registerSingleton<AuthRepositoryImpl>(instance);
+///
+///        return instance;
+///      },
+///    },
+///  );
+/// ```
+Future<void> init({
+  required String sentryDSN,
+  Map<Type, dynamic Function()> overrides = const {},
+}) async {
+  GetIt.I.registerSingleton<LoggingService>(
+      overrides[LoggingService]?.call() ?? LoggingService(sentryDSN));
 
   GetIt.I.registerSingleton<CacheRepository>(
-    CacheRepository(),
+    overrides[CacheRepository]?.call() ?? CacheRepository(),
     signalsReady: true,
     dispose: (r) => r.dispose(),
   );
@@ -60,19 +90,23 @@ Future<void> init({required String sentryDSN}) async {
     ],
   );
 
-  GetIt.I.registerSingleton(DatabaseRepository());
-  GetIt.I.registerSingleton(StorageRepository());
+  GetIt.I.registerSingleton<DatabaseRepository>(
+      overrides[DatabaseRepository]?.call() ?? DatabaseRepository());
+  GetIt.I.registerSingleton<StorageRepository>(
+      overrides[StorageRepository]?.call() ?? StorageRepository());
 
   GetIt.I.registerSingleton<AuthRepository>(
-    AuthRepository(),
+    overrides[AuthRepository]?.call() ?? AuthRepository(),
     dispose: (r) => r.dispose(),
     signalsReady: true,
   );
 
-  GetIt.I.registerSingleton(FunctionsService());
-  GetIt.I.registerSingleton(LauncherService());
-  GetIt.I.registerSingleton(
-    NotificationsService(),
+  GetIt.I.registerSingleton<FunctionsService>(
+      overrides[FunctionsService]?.call() ?? FunctionsService());
+  GetIt.I.registerSingleton<LauncherService>(
+      overrides[LauncherService]?.call() ?? LauncherService());
+  GetIt.I.registerSingleton<NotificationsService>(
+    overrides[NotificationsService]?.call() ?? NotificationsService(),
     signalsReady: true,
   );
 
