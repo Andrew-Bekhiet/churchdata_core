@@ -1,4 +1,3 @@
-import 'package:async/async.dart';
 import 'package:churchdata_core/churchdata_core.dart' hide GeoPoint, Timestamp;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -9,7 +8,7 @@ part 'person.g.dart';
 
 @immutable
 @CopyWith(copyWithNull: true)
-class PersonBase extends DataObject implements PhotoObjectBase {
+class PersonBase extends DataObjectWithPhoto {
   final String? address;
   final GeoPoint? location;
 
@@ -110,10 +109,6 @@ class PersonBase extends DataObject implements PhotoObjectBase {
 
   @override
   IconData get defaultIcon => Icons.person;
-
-  @override
-  final AsyncCache<String> photoUrlCache =
-      AsyncCache<String>(const Duration(days: 1));
 
   @override
   @mustCallSuper
