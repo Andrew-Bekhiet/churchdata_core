@@ -1,20 +1,22 @@
+import 'package:async/async.dart';
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 part 'user.g.dart';
 
 @immutable
 @CopyWith(copyWithNull: true)
-class UserBase extends Equatable {
+class UserBase extends Equatable implements PhotoObjectBase {
   final String uid;
   final String name;
   final String? email;
   final String? phone;
   final PermissionsSet permissions;
 
-  const UserBase({
+  UserBase({
     required this.uid,
     required this.name,
     this.email,
@@ -31,4 +33,18 @@ class UserBase extends Equatable {
         'Phone': phone,
         'Permissions': permissions.permissions
       };
+
+  @override
+  IconData get defaultIcon => Icons.account_circle;
+
+  @override
+  bool get hasPhoto => true;
+
+  @override
+  Reference? get photoRef =>
+      GetIt.I<StorageRepository>().ref('UsersPhotos/' + uid);
+
+  @override
+  final AsyncCache<String> photoUrlCache =
+      AsyncCache<String>(const Duration(days: 1));
 }

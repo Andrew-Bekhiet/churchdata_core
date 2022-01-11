@@ -290,7 +290,7 @@ void main() {
       test(
         'User test',
         () async {
-          const unit = UserBase(
+          final unit = UserBase(
             uid: 'uid',
             name: 'name',
             email: 'email',
