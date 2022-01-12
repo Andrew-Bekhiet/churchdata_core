@@ -319,7 +319,7 @@ class School extends MetaObject {
     };
   }
 
-  Stream<List<School>> getAll() {
+  Stream<List<School>> getAllPersons() {
     return GetIt.I<DatabaseRepository>()
         .collection('Persons')
         .where('School', isEqualTo: ref)
