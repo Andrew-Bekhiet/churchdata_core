@@ -62,16 +62,31 @@ class ListController<G, T extends DataObject> {
     _searchSubscription = searchStream?.listen(searchSubject.add,
         onError: searchSubject.addError);
 
-    _objectsSubscription = Rx.combineLatest2(
-      objectsPaginatableStream.stream,
-      searchStream ?? searchSubject,
-      this.filter,
-    ).listen(objectsSubject.add, onError: objectsSubject.addError);
+    _objectsSubscription = getObjectsSubscription(searchStream);
 
     _groupedObjectsSubscription = groupBy != null
-        ? objectsSubject.map(groupBy!).listen(groupedObjectsSubject.add,
+        ? Rx.combineLatest2<List<T>, Set<G>, Map<G, List<T>>>(
+            objectsSubject,
+            openedGroupsSubject!,
+            (o, g) => groupBy!(o).map(
+              (k, v) => MapEntry(
+                k,
+                g.contains(k) ? v : [],
+              ),
+            ),
+          ).listen(groupedObjectsSubject.add,
             onError: groupedObjectsSubject.addError)
         : null;
+  }
+
+  @protected
+  StreamSubscription<List<T>> getObjectsSubscription(
+      [Stream<String>? searchStream]) {
+    return Rx.combineLatest2(
+      objectsPaginatableStream.stream,
+      searchStream ?? searchSubject,
+      filter,
+    ).listen(objectsSubject.add, onError: objectsSubject.addError);
   }
 
   FutureOr<void> loadNextPage() async {
