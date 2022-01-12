@@ -282,6 +282,28 @@ void main() {
 
           expect(
             unit.groupedObjectsStream,
+            emits(
+              {
+                for (final c in colors.toSet()) c: [],
+              },
+            ),
+          );
+
+          await unit.groupedObjectsStream.next;
+
+          unit
+            ..openGroup(Colors.red.shade500)
+            ..openGroup(Colors.green.shade500)
+            ..openGroup(Colors.blue.shade500)
+            ..openGroup(Colors.black);
+
+          await unit.groupedObjectsStream.next;
+          await unit.groupedObjectsStream.next;
+          await unit.groupedObjectsStream.next;
+          await unit.groupedObjectsStream.next;
+
+          expect(
+            unit.groupedObjectsStream,
             emitsInOrder(
               [
                 persons.groupListsBy((p) => p.color),
