@@ -157,10 +157,9 @@ void main() {
               );
 
               await unit.searchSubject.next;
+
               unit.searchSubject.add('someguy');
-              await unit.searchSubject.next;
               unit.searchSubject.add('some');
-              await unit.searchSubject.next;
               unit.searchSubject.add('');
             },
             timeout: const Timeout(Duration(seconds: 15)),
@@ -207,31 +206,24 @@ void main() {
           await unit.objectsStream.next;
 
           unit.selectAll();
-          await unit.selectionStream.next;
           expect(unit.currentSelection, persons.toSet());
 
           unit.deselectAll();
-          await unit.selectionStream.next;
           expect(unit.currentSelection, <BasicDataObject>{});
 
           unit.select(persons.first);
-          await unit.selectionStream.next;
           expect(unit.currentSelection, {persons.first});
 
           unit.deselect(persons.first);
-          await unit.selectionStream.next;
           expect(unit.currentSelection, <BasicDataObject>{});
 
           unit.toggleSelected(persons.last);
-          await unit.selectionStream.next;
           expect(unit.currentSelection, {persons.last});
 
           unit.toggleSelected(persons.first);
-          await unit.selectionStream.next;
           expect(unit.currentSelection, {persons.last, persons.first});
 
           unit.exitSelectionMode();
-          await unit.selectionStream.next;
           expect(unit.currentSelection, null);
         },
         timeout: const Timeout(Duration(seconds: 15)),
@@ -280,13 +272,34 @@ void main() {
 
           addTearDown(unit.dispose);
 
+          final grouped = persons.groupListsBy((p) => p.color);
+
           expect(
             unit.groupedObjectsStream,
-            emits(
+            emitsInOrder([
               {
                 for (final c in colors.toSet()) c: [],
               },
-            ),
+              {
+                for (final c in colors.toSet()) c: [],
+                Colors.red.shade500: grouped[Colors.red.shade500],
+              },
+              {
+                for (final c in colors.toSet()) c: [],
+                Colors.red.shade500: grouped[Colors.red.shade500],
+                Colors.green.shade500: grouped[Colors.green.shade500],
+              },
+              {
+                for (final c in colors.toSet()) c: [],
+                Colors.red.shade500: grouped[Colors.red.shade500],
+                Colors.green.shade500: grouped[Colors.green.shade500],
+                Colors.blue.shade500: grouped[Colors.blue.shade500],
+              },
+              grouped,
+              persons
+                  .where((p) => p != persons.last)
+                  .groupListsBy((p) => p.color),
+            ]),
           );
 
           await unit.groupedObjectsStream.next;
@@ -297,27 +310,7 @@ void main() {
             ..openGroup(Colors.blue.shade500)
             ..openGroup(Colors.black);
 
-          await unit.groupedObjectsStream.next;
-          await unit.groupedObjectsStream.next;
-          await unit.groupedObjectsStream.next;
-          await unit.groupedObjectsStream.next;
-
-          expect(
-            unit.groupedObjectsStream,
-            emitsInOrder(
-              [
-                persons.groupListsBy((p) => p.color),
-                persons
-                    .where((p) => p != persons.last)
-                    .groupListsBy((p) => p.color),
-              ],
-            ),
-          );
-
-          await unit.groupedObjectsStream.next;
-
           await persons.last.ref.delete();
-          await unit.groupedObjectsStream.next;
         },
         timeout: const Timeout(Duration(seconds: 15)),
       );
@@ -365,6 +358,12 @@ void main() {
 
           addTearDown(unit.dispose);
 
+          await unit.openedGroupsStream.next;
+          await unit.objectsStream.next;
+
+          final grouped =
+              persons.groupListsBy<Color?>((element) => element.color);
+
           expect(
             unit.openedGroupsStream,
             emitsInOrder(
@@ -379,20 +378,43 @@ void main() {
             ),
           );
 
-          await unit.openedGroupsStream.next;
-          unit.openGroup(persons.first.color);
+          expect(
+            unit.groupedObjectsStream,
+            emitsInOrder(
+              [
+                {
+                  for (final c in colors.toSet()) c: [],
+                },
+                {
+                  for (final c in colors.toSet()) c: [],
+                  persons.first.color: grouped[persons.first.color],
+                },
+                {
+                  for (final c in colors.toSet()) c: [],
+                  persons.first.color: grouped[persons.first.color]!,
+                  persons.last.color: grouped[persons.last.color]!
+                },
+                {
+                  for (final c in colors.toSet()) c: [],
+                  persons.last.color: grouped[persons.last.color],
+                },
+                {
+                  for (final c in colors.toSet()) c: [],
+                },
+                {
+                  for (final c in colors.toSet()) c: [],
+                  persons.last.color: grouped[persons.last.color],
+                },
+              ],
+            ),
+          );
 
-          await unit.openedGroupsStream.next;
-          unit.openGroup(persons.last.color);
-
-          await unit.openedGroupsStream.next;
-          unit.closeGroup(persons.first.color);
-
-          await unit.openedGroupsStream.next;
-          unit.closeGroup(persons.last.color);
-
-          await unit.openedGroupsStream.next;
-          unit.toggleGroup(persons.last.color);
+          unit
+            ..openGroup(persons.first.color)
+            ..openGroup(persons.last.color)
+            ..closeGroup(persons.first.color)
+            ..closeGroup(persons.last.color)
+            ..toggleGroup(persons.last.color);
         },
         timeout: const Timeout(Duration(seconds: 15)),
       );
