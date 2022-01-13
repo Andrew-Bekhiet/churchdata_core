@@ -46,6 +46,29 @@ class ListController<G, T extends DataObject> {
   late final SearchFunction<T> filter;
   final GroupingFunction<G, T>? groupBy;
 
+  ValueStream<List<T>> get objectsStream => objectsSubject.shareValue();
+  List<T> get currentObjects => objectsSubject.value;
+  List<T>? get currentObjectsOrNull => objectsSubject.valueOrNull;
+
+  ValueStream<Map<G, List<T>>> get groupedObjectsStream =>
+      groupedObjectsSubject.shareValue();
+  Map<G, List<T>> get currentGroupedObjects => groupedObjectsSubject.value;
+  Map<G, List<T>>? get currentGroupedObjectsOrNull =>
+      groupedObjectsSubject.valueOrNull;
+
+  ValueStream<Set<T>?> get selectionStream => selectionSubject.shareValue();
+  Set<T>? get currentSelection => selectionSubject.valueOrNull;
+
+  ValueStream<Set<G>?> get openedGroupsStream {
+    assert(openedGroupsSubject != null);
+    return openedGroupsSubject!.shareValue();
+  }
+
+  Set<G>? get currentOpenedGroups {
+    assert(openedGroupsSubject != null);
+    return openedGroupsSubject!.valueOrNull;
+  }
+
   ListController({
     required this.objectsPaginatableStream,
     Stream<String>? searchStream,
@@ -182,32 +205,6 @@ class ListController<G, T extends DataObject> {
 
     await _groupedObjectsSubscription?.cancel();
     await groupedObjectsSubject.close();
-  }
-}
-
-extension ListControllerGetters<G, T extends DataObject>
-    on ListController<G, T> {
-  ValueStream<List<T>> get objectsStream => objectsSubject.shareValue();
-  List<T> get currentObjects => objectsSubject.value;
-  List<T>? get currentObjectsOrNull => objectsSubject.valueOrNull;
-
-  ValueStream<Map<G, List<T>>> get groupedObjectsStream =>
-      groupedObjectsSubject.shareValue();
-  Map<G, List<T>> get currentGroupedObjects => groupedObjectsSubject.value;
-  Map<G, List<T>>? get currentGroupedObjectsOrNull =>
-      groupedObjectsSubject.valueOrNull;
-
-  ValueStream<Set<T>?> get selectionStream => selectionSubject.shareValue();
-  Set<T>? get currentSelection => selectionSubject.valueOrNull;
-
-  ValueStream<Set<G>?> get openedGroupsStream {
-    assert(openedGroupsSubject != null);
-    return openedGroupsSubject!.shareValue();
-  }
-
-  Set<G>? get currentOpenedGroups {
-    assert(openedGroupsSubject != null);
-    return openedGroupsSubject!.valueOrNull;
   }
 }
 
