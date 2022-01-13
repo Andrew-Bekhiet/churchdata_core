@@ -16,6 +16,7 @@ void main() {
           registerFirebaseMocks();
 
           GetIt.I.registerSingleton(DatabaseRepository());
+          GetIt.I.registerSingleton(StorageRepository());
           GetIt.I.registerSingleton<FunctionsService>(FunctionsService());
         },
       );
@@ -295,6 +296,15 @@ void main() {
             name: 'name',
             email: 'email',
             phone: 'phone',
+          );
+
+          expect(unit.defaultIcon, Icons.account_circle);
+
+          expect(unit.hasPhoto, true);
+
+          expect(
+            unit.photoRef?.name,
+            GetIt.I<StorageRepository>().ref('UsersPhotos/' + unit.uid).name,
           );
 
           expect(unit.props, [
