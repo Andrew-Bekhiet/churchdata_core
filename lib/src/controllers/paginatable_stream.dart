@@ -109,6 +109,16 @@ class PaginatableStream<T extends DataObject> {
           query: BehaviorSubject.seeded(query),
         );
 
+  PaginatableStream.loadAll({
+    required Stream<List<T>> stream,
+  })  : limit = 0,
+        query = BehaviorSubject(),
+        mapper = ((o) => throw UnsupportedError(
+            '"mapper" is not supported when initialized from "loadAll"')) {
+    _streamSubscription =
+        stream.listen(_subject.add, onError: _subject.addError);
+  }
+
   Future<void> loadNextPage() async {
     if (canPaginateForward) {
       _controller.add(UpdateQueryEvent.forward);
