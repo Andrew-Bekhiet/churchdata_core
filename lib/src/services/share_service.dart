@@ -1,5 +1,6 @@
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ShareService {
   ShareService({
@@ -75,5 +76,19 @@ class ShareService {
       shortLinkType: ShortDynamicLinkType.unguessable,
     ))
         .shortUrl;
+  }
+
+  Future<Uri> shareDataObject(DataObject object) async {
+    if (object is PersonBase)
+      return sharePerson(object);
+    else if (object is QueryInfo) return shareQuery(object);
+    throw UnimplementedError(
+      'Expected an object of type PersonBase or QuerInfo, but instead got type' +
+          object.runtimeType.toString(),
+    );
+  }
+
+  Future<void> shareText(String text) async {
+    await Share.share(text);
   }
 }
