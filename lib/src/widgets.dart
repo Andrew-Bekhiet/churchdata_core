@@ -1,4 +1,5 @@
 export 'widgets/copiable_property_widget.dart';
+export 'widgets/data_object_list_view.dart';
 export 'widgets/data_object_widget.dart';
 export 'widgets/form_widgets/password_form_field.dart';
 export 'widgets/form_widgets/tappable_form_field.dart';
