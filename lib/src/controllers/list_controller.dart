@@ -35,13 +35,16 @@ class ListController<G, T extends DataObject> {
   final BehaviorSubject<Map<G, List<T>>> groupedObjectsSubject;
   late final StreamSubscription<Map<G, List<T>>>? _groupedObjectsSubscription;
 
-  final BehaviorSubject<String> searchSubject;
-  late final StreamSubscription<String>? _searchSubscription;
-
   @protected
   final BehaviorSubject<Set<T>?> selectionSubject;
   @protected
   final BehaviorSubject<Set<G>>? openedGroupsSubject;
+
+  final BehaviorSubject<String> searchSubject;
+  late final StreamSubscription<String>? _searchSubscription;
+
+  final BehaviorSubject<bool> groupingSubject;
+  late final StreamSubscription<bool>? _groupingSubscription;
 
   late final SearchFunction<T> filter;
   final GroupingFunction<G, T>? groupBy;
@@ -72,12 +75,14 @@ class ListController<G, T extends DataObject> {
   ListController({
     required this.objectsPaginatableStream,
     Stream<String>? searchStream,
+    Stream<bool>? groupingStream,
     SearchFunction<T>? filter,
     this.groupBy,
   })  : filter = filter ?? defaultSearch<T>,
         objectsSubject = BehaviorSubject<List<T>>(),
         groupedObjectsSubject = BehaviorSubject<Map<G, List<T>>>(),
         searchSubject = BehaviorSubject<String>.seeded(''),
+        groupingSubject = BehaviorSubject<bool>.seeded(false),
         selectionSubject = BehaviorSubject<Set<T>?>.seeded(null),
         openedGroupsSubject =
             groupBy != null ? BehaviorSubject<Set<G>>.seeded({}) : null {
@@ -85,18 +90,24 @@ class ListController<G, T extends DataObject> {
     _searchSubscription = searchStream?.listen(searchSubject.add,
         onError: searchSubject.addError);
 
+    _groupingSubscription = groupingStream?.listen(groupingSubject.add,
+        onError: groupingSubject.addError);
+
     _objectsSubscription = getObjectsSubscription(searchStream);
 
     _groupedObjectsSubscription = groupBy != null
-        ? Rx.combineLatest2<List<T>, Set<G>, Map<G, List<T>>>(
+        ? Rx.combineLatest3<bool, List<T>, Set<G>, Map<G, List<T>>>(
+            groupingSubject,
             objectsSubject,
             openedGroupsSubject!,
-            (o, g) => groupBy!(o).map(
-              (k, v) => MapEntry(
-                k,
-                g.contains(k) ? v : [],
-              ),
-            ),
+            (b, o, g) => b
+                ? groupBy!(o).map(
+                    (k, v) => MapEntry(
+                      k,
+                      g.contains(k) ? v : [],
+                    ),
+                  )
+                : {},
           ).listen(groupedObjectsSubject.add,
             onError: groupedObjectsSubject.addError)
         : null;
@@ -202,6 +213,9 @@ class ListController<G, T extends DataObject> {
 
     await selectionSubject.close();
     await openedGroupsSubject?.close();
+
+    await _groupingSubscription?.cancel();
+    await groupingSubject.close();
 
     await _groupedObjectsSubscription?.cancel();
     await groupedObjectsSubject.close();
