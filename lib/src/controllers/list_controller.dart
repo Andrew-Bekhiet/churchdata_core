@@ -48,6 +48,7 @@ class ListController<G, T extends DataObject> {
 
   late final SearchFunction<T> filter;
   final GroupingFunction<G, T>? groupBy;
+  final GroupingStreamFunction<G, T>? groupByStream;
 
   ValueStream<List<T>> get objectsStream => objectsSubject.shareValue();
   List<T> get currentObjects => objectsSubject.value;
@@ -78,14 +79,17 @@ class ListController<G, T extends DataObject> {
     Stream<bool>? groupingStream,
     SearchFunction<T>? filter,
     this.groupBy,
-  })  : filter = filter ?? defaultSearch<T>,
+    this.groupByStream,
+  })  : assert(groupByStream == null || groupBy == null),
+        filter = filter ?? defaultSearch<T>,
         objectsSubject = BehaviorSubject<List<T>>(),
         groupedObjectsSubject = BehaviorSubject<Map<G, List<T>>>(),
         searchSubject = BehaviorSubject<String>.seeded(''),
         groupingSubject = BehaviorSubject<bool>.seeded(false),
         selectionSubject = BehaviorSubject<Set<T>?>.seeded(null),
-        openedGroupsSubject =
-            groupBy != null ? BehaviorSubject<Set<G>>.seeded({}) : null {
+        openedGroupsSubject = groupBy != null || groupByStream != null
+            ? BehaviorSubject<Set<G>>.seeded({})
+            : null {
     //
     _searchSubscription = searchStream?.listen(searchSubject.add,
         onError: searchSubject.addError);
@@ -95,22 +99,46 @@ class ListController<G, T extends DataObject> {
 
     _objectsSubscription = getObjectsSubscription(searchStream);
 
-    _groupedObjectsSubscription = groupBy != null
-        ? Rx.combineLatest3<bool, List<T>, Set<G>, Map<G, List<T>>>(
-            groupingSubject,
-            objectsSubject,
-            openedGroupsSubject!,
-            (b, o, g) => b
-                ? groupBy!(o).map(
-                    (k, v) => MapEntry(
-                      k,
-                      g.contains(k) ? v : [],
+    _groupedObjectsSubscription = groupBy != null || groupByStream != null
+        ? getGroupedObjectsSubscription()
+        : null;
+  }
+
+  @protected
+  StreamSubscription<Map<G, List<T>>> getGroupedObjectsSubscription() {
+    if (groupByStream != null)
+      return groupingSubject
+          .switchMap(
+            (g) => g
+                ? Rx.combineLatest2<Map<G, List<T>>, Set<G>, Map<G, List<T>>>(
+                    objectsSubject.switchMap(groupByStream!),
+                    openedGroupsSubject!,
+                    (o, g) => o.map(
+                      (k, v) => MapEntry(
+                        k,
+                        g.contains(k) ? v : [],
+                      ),
                     ),
                   )
-                : {},
-          ).listen(groupedObjectsSubject.add,
-            onError: groupedObjectsSubject.addError)
-        : null;
+                : Stream.value(<G, List<T>>{}),
+          )
+          .listen(groupedObjectsSubject.add,
+              onError: groupedObjectsSubject.addError);
+
+    return Rx.combineLatest3<bool, List<T>, Set<G>, Map<G, List<T>>>(
+      groupingSubject,
+      objectsSubject,
+      openedGroupsSubject!,
+      (b, o, g) => b
+          ? groupBy!(o).map(
+              (k, v) => MapEntry(
+                k,
+                g.contains(k) ? v : [],
+              ),
+            )
+          : {},
+    ).listen(groupedObjectsSubject.add,
+        onError: groupedObjectsSubject.addError);
   }
 
   @protected
@@ -242,3 +270,5 @@ List<T> noopSearch<T extends DataObject>(List<T> objects, String searchTerms) {
 typedef SearchFunction<T> = List<T> Function(
     List<T> objects, String searchTerms);
 typedef GroupingFunction<G, T> = Map<G, List<T>> Function(List<T> objects);
+typedef GroupingStreamFunction<G, T> = Stream<Map<G, List<T>>> Function(
+    List<T> objects);
