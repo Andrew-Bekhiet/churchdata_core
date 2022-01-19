@@ -169,12 +169,16 @@ class ListController<G, T extends DataObject> {
     });
   }
 
-  void selectAll() {
-    selectionSubject.add(currentObjects.toSet());
+  void selectAll([List<T>? objects]) {
+    selectionSubject.add((objects ?? currentObjects).toSet());
   }
 
-  void deselectAll() {
-    selectionSubject.add({});
+  void deselectAll([List<T>? objects]) {
+    if (objects == null)
+      selectionSubject.add({});
+    else
+      selectionSubject
+          .add({...(currentSelection ?? {}).difference(objects.toSet())});
   }
 
   void exitSelectionMode() {
