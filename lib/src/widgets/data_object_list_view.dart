@@ -73,7 +73,7 @@ class _DataObjectListViewState<G, T extends DataObject>
     return StreamBuilder<bool>(
       initialData: false,
       stream: _controller.groupingSubject
-          .map((event) => event && !isSubtype<void, G>())
+          .map((event) => event && G != Null)
           .distinct(),
       builder: (context, grouped) {
         if (grouped.hasError)
