@@ -16,7 +16,7 @@ class NotificationsService {
     throw UnimplementedError('onNotificationClick is not implemented');
   }
 
-  static Future<void> _storeNotification(RemoteMessage message) async {
+  static Future<void> storeNotification(RemoteMessage message) async {
     final bool registered = GetIt.I.isRegistered<CacheRepository>();
 
     if (!registered) {
@@ -46,13 +46,13 @@ class NotificationsService {
   }
 
   static Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
-    await _storeNotification(message);
+    await storeNotification(message);
   }
 
   ///Must be overriden in another class when UI is available to
   ///make something with the notification
   static Future<void> onForegroundMessage(RemoteMessage message) async {
-    await _storeNotification(message);
+    await storeNotification(message);
 
     //Show some alert or notification content
   }
