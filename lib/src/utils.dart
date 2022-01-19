@@ -25,6 +25,8 @@ DateTime getRiseDay([int? year]) {
   return DateTime(year, (d + e + 114) ~/ 31, ((d + e + 114) % 31) + 14);
 }
 
+bool isSubtype<Generic, Subtype>() => <Subtype>[] is List<Generic>;
+
 class DefaultDataObjectTapHandler {
   final NavigatorState navigator;
 

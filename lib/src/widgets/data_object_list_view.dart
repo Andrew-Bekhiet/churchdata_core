@@ -31,7 +31,7 @@ class DataObjectListView<G, T extends DataObject> extends StatefulWidget {
   ///Optional string to show when there are no items
   final String? emptyMsg;
 
-  const DataObjectListView({
+  DataObjectListView({
     Key? key,
     required this.controller,
     this.itemBuilder,
@@ -40,7 +40,8 @@ class DataObjectListView<G, T extends DataObject> extends StatefulWidget {
     this.onLongPress,
     this.emptyMsg,
     required this.autoDisposeController,
-  }) : super(key: key);
+  })  : assert(groupBuilder == null || isSubtype<G, DataObject>()),
+        super(key: key);
 
   @override
   _DataObjectListViewState<G, T> createState() =>
@@ -54,7 +55,11 @@ class _DataObjectListViewState<G, T extends DataObject>
 
   ListController<G, T> get _controller => widget.controller;
 
-  ItemBuilder<T> get buildItem => widget.itemBuilder ?? defaultItemBuilder<T>;
+  ItemBuilder<T> get _buildItem => widget.itemBuilder ?? defaultItemBuilder<T>;
+  GroupBuilder<G> get _buildGroup =>
+      widget.groupBuilder ??
+      // ignore: unnecessary_parenthesis
+      (defaultGroupBuilder<DataObject>) as GroupBuilder<G>;
 
   @override
   bool get wantKeepAlive => _builtOnce && ModalRoute.of(context)!.isCurrent;
@@ -68,7 +73,7 @@ class _DataObjectListViewState<G, T extends DataObject>
     return StreamBuilder<bool>(
       initialData: false,
       stream: _controller.groupingSubject
-          .map((event) => event && G != Null && widget.groupBuilder != null)
+          .map((event) => event && !isSubtype<void, G>())
           .distinct(),
       builder: (context, grouped) {
         if (grouped.hasError)
@@ -115,7 +120,7 @@ class _DataObjectListViewState<G, T extends DataObject>
 
             return Container(
               margin: const EdgeInsets.symmetric(vertical: 4),
-              child: widget.groupBuilder!(
+              child: _buildGroup(
                 groupedData.data!.keys.elementAt(i),
                 onTap: (o) {
                   _controller.toggleGroup(
@@ -144,7 +149,7 @@ class _DataObjectListViewState<G, T extends DataObject>
 
             return Padding(
               padding: const EdgeInsets.fromLTRB(3, 0, 9, 0),
-              child: _buildItemWrapper(current),
+              child: buildItemWrapper(current),
             );
           },
         );
@@ -176,18 +181,18 @@ class _DataObjectListViewState<G, T extends DataObject>
               );
 
             final T current = _data[i];
-            return _buildItemWrapper(current);
+            return buildItemWrapper(current);
           },
         );
       },
     );
   }
 
-  Widget _buildItemWrapper(T current) {
+  Widget buildItemWrapper(T current) {
     return StreamBuilder<Set<T>?>(
       stream: _controller.selectionStream,
       builder: (context, snapshot) {
-        return buildItem(
+        return _buildItem(
           current,
           onLongPress: widget.onLongPress ?? _defaultLongPress,
           onTap: (T current) async {
@@ -276,3 +281,35 @@ Widget defaultItemBuilder<T extends DataObject>(
       onTap: onTap != null ? () => onTap(object) : null,
       trailing: trailing,
     );
+
+Widget defaultGroupBuilder<G extends DataObject>(
+  G? object, {
+  void Function(G)? onLongPress,
+  void Function(G)? onTap,
+  bool? showSubtitle,
+  Widget? trailing,
+  Widget? subtitle,
+}) {
+  if (object == null) return const Text('غير محددة');
+
+  return DataObjectWidget<G>(
+    object,
+    wrapInCard: false,
+    showSubtitle: showSubtitle ?? false,
+    subtitle: showSubtitle ?? false ? subtitle : null,
+    onTap: onTap != null ? () => onTap(object) : null,
+    onLongPress: onLongPress != null ? () => onLongPress(object) : null,
+    trailing: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (trailing != null) trailing,
+        IconButton(
+          onPressed: () {
+            GetIt.I<DefaultDataObjectTapHandler>().onTap(object);
+          },
+          icon: const Icon(Icons.info_outlined),
+        ),
+      ],
+    ),
+  );
+}
