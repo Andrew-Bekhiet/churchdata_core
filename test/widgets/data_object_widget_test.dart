@@ -55,7 +55,7 @@ void main() {
               );
 
               GetIt.I.registerSingleton(
-                DefaultDataObjectTapHandler(navigator.currentState!),
+                DefaultDataObjectTapHandler(navigator),
               );
 
               unawaited(
@@ -118,7 +118,7 @@ void main() {
               );
 
               GetIt.I.registerSingleton(
-                DefaultDataObjectTapHandler(navigator.currentState!),
+                DefaultDataObjectTapHandler(navigator),
               );
 
               unawaited(
@@ -219,7 +219,7 @@ void main() {
           );
 
           GetIt.I.registerSingleton(
-            DefaultDataObjectTapHandler(navigator.currentState!),
+            DefaultDataObjectTapHandler(navigator),
           );
 
           unawaited(

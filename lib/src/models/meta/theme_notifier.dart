@@ -26,91 +26,102 @@ class ThemeNotifier {
     700: Color(0xFF666666),
   });
 
-  static ThemeData getDefault([bool? darkTheme]) {
-    bool isDark = darkTheme ??
-        GetIt.I<CacheRepository>().box('Settings').get('DarkTheme',
-            defaultValue: WidgetsBinding.instance!.window.platformBrightness ==
-                Brightness.dark);
+  static ThemeData getDefault({
+    bool? darkTheme,
+    MaterialColor? primaryOverride,
+    Color? secondaryOverride,
+    bool? greatFeastThemeOverride,
+  }) {
+    {
+      bool isDark = darkTheme ??
+          GetIt.I<CacheRepository>().box('Settings').get(
+                'DarkTheme',
+                defaultValue:
+                    WidgetsBinding.instance!.window.platformBrightness ==
+                        Brightness.dark,
+              );
 
-    final bool greatFeastTheme = GetIt.I<CacheRepository>()
-        .box('Settings')
-        .get('GreatFeastTheme', defaultValue: true);
+      final bool greatFeastTheme = GetIt.I<CacheRepository>()
+          .box('Settings')
+          .get('GreatFeastTheme',
+              defaultValue: greatFeastThemeOverride ?? true);
 
-    MaterialColor primary = Colors.blueGrey;
-    Color secondary = Colors.grey;
+      MaterialColor primary = primaryOverride ?? Colors.blueGrey;
+      Color secondary = secondaryOverride ?? Colors.grey;
 
-    final riseDay = getRiseDay();
-    if (greatFeastTheme &&
-        DateTime.now()
-            .isAfter(riseDay.subtract(const Duration(days: 7, seconds: 20))) &&
-        DateTime.now().isBefore(riseDay.subtract(const Duration(days: 1)))) {
-      primary = black;
-      secondary = blackAccent;
-      isDark = true;
-    } else if (greatFeastTheme &&
-        DateTime.now()
-            .isBefore(riseDay.add(const Duration(days: 50, seconds: 20))) &&
-        DateTime.now().isAfter(riseDay.subtract(const Duration(days: 1)))) {
-      isDark = false;
-    }
+      final riseDay = getRiseDay();
+      if (greatFeastTheme &&
+          DateTime.now().isAfter(
+              riseDay.subtract(const Duration(days: 7, seconds: 20))) &&
+          DateTime.now().isBefore(riseDay.subtract(const Duration(days: 1)))) {
+        primary = black;
+        secondary = blackAccent;
+        isDark = true;
+      } else if (greatFeastTheme &&
+          DateTime.now()
+              .isBefore(riseDay.add(const Duration(days: 50, seconds: 20))) &&
+          DateTime.now().isAfter(riseDay.subtract(const Duration(days: 1)))) {
+        isDark = false;
+      }
 
-    return ThemeData.from(
-      colorScheme: ColorScheme.fromSwatch(
-        backgroundColor: isDark ? Colors.grey[850]! : Colors.grey[50]!,
+      return ThemeData.from(
+        colorScheme: ColorScheme.fromSwatch(
+          backgroundColor: isDark ? Colors.grey[850]! : Colors.grey[50]!,
+          brightness: isDark ? Brightness.dark : Brightness.light,
+          primarySwatch: primary,
+          accentColor: secondary,
+        ),
+      ).copyWith(
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: primary),
+          ),
+        ),
+        floatingActionButtonTheme:
+            FloatingActionButtonThemeData(backgroundColor: primary),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: isDark ? Brightness.dark : Brightness.light,
-        primarySwatch: primary,
-        accentColor: secondary,
-      ),
-    ).copyWith(
-      inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: primary),
-        ),
-      ),
-      floatingActionButtonTheme:
-          FloatingActionButtonThemeData(backgroundColor: primary),
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      brightness: isDark ? Brightness.dark : Brightness.light,
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          primary: secondary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            primary: secondary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
         ),
-      ),
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          primary: secondary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            primary: secondary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
         ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          primary: secondary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            primary: secondary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
         ),
-      ),
-      appBarTheme: AppBarTheme(
-        backgroundColor: primary,
-        foregroundColor: (isDark
-                ? Typography.material2018().white
-                : Typography.material2018().black)
-            .headline6
-            ?.color,
-        systemOverlayStyle:
-            isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
-      ),
-      bottomAppBarTheme: BottomAppBarTheme(
-        color: secondary,
-        shape: const CircularNotchedRectangle(),
-      ),
-    );
+        appBarTheme: AppBarTheme(
+          backgroundColor: primary,
+          foregroundColor: (isDark
+                  ? Typography.material2018().white
+                  : Typography.material2018().black)
+              .headline6
+              ?.color,
+          systemOverlayStyle:
+              isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+        ),
+        bottomAppBarTheme: BottomAppBarTheme(
+          color: secondary,
+          shape: const CircularNotchedRectangle(),
+        ),
+      );
+    }
   }
 
   factory ThemeNotifier() => ThemeNotifier.withInitialThemeata(getDefault());
@@ -128,7 +139,7 @@ class ThemeNotifier {
   }
 
   void switchTheme(bool darkTheme) {
-    theme = getDefault(darkTheme);
+    theme = getDefault(darkTheme: darkTheme);
   }
 
   Future<void> dispose() async {

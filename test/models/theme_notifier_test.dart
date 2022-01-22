@@ -33,7 +33,7 @@ void main() {
             .box('Settings')
             .put('GreatFeastTheme', false);
 
-        final unit = ThemeNotifier.getDefault(false);
+        final unit = ThemeNotifier.getDefault(darkTheme: false);
         final MaterialColor primary = Colors.blueGrey;
         const Color secondary = Colors.grey;
 
@@ -82,7 +82,7 @@ void main() {
             .box('Settings')
             .put('GreatFeastTheme', false);
 
-        final unit = ThemeNotifier.getDefault(true);
+        final unit = ThemeNotifier.getDefault(darkTheme: true);
         final MaterialColor primary = Colors.blueGrey;
         const Color secondary = Colors.grey;
 

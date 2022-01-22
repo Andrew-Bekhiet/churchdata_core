@@ -132,7 +132,7 @@ void main() {
             ),
           );
 
-          final unit = DefaultDataObjectTapHandler(key.currentState!)
+          final unit = DefaultDataObjectTapHandler(key)
             ..onTap(
               PersonBase(
                   ref: GetIt.I<DatabaseRepository>().doc('Persons/person'),

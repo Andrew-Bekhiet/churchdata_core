@@ -27,19 +27,6 @@ DateTime getRiseDay([int? year]) {
 
 bool isSubtype<Generic, Subtype>() => <Subtype>[] is List<Generic>;
 
-class DefaultDataObjectTapHandler {
-  final NavigatorState navigator;
-
-  DefaultDataObjectTapHandler(this.navigator);
-
-  void onTap(DataObject object) {
-    if (object is PersonBase)
-      navigator.pushNamed('PersonInfo', arguments: object);
-    else if (object is QueryInfo)
-      navigator.pushNamed('SearchQuery', arguments: object);
-  }
-}
-
 // coverage:ignore-start
 extension DateTimeX on DateTime {
   Timestamp toTimestamp() => Timestamp.fromDate(this);
