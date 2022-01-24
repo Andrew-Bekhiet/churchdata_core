@@ -50,16 +50,23 @@ Future<void> init({
   required String sentryDSN,
   Map<Type, dynamic Function()> overrides = const {},
 }) async {
-  GetIt.I.registerSingleton<LoggingService>(
-      overrides[LoggingService]?.call() ?? LoggingService(sentryDSN));
+  final loggingService =
+      overrides[LoggingService]?.call() ?? LoggingService(sentryDSN);
 
+  GetIt.I.registerSingleton<LoggingService>(
+    loggingService,
+    signalsReady: true,
+  );
+
+  final cacheRepository =
+      overrides[CacheRepository]?.call() ?? CacheRepository();
   GetIt.I.registerSingleton<CacheRepository>(
-    overrides[CacheRepository]?.call() ?? CacheRepository(),
+    cacheRepository,
     signalsReady: true,
     dispose: (r) => r.dispose(),
   );
 
-  await GetIt.I.isReady<CacheRepository>();
+  await GetIt.I.isReady<CacheRepository>(instance: cacheRepository);
 
   const secureStorage = FlutterSecureStorage();
   final containsEncryptionKey = await secureStorage.containsKey(key: 'key');
@@ -90,29 +97,45 @@ Future<void> init({
     ],
   );
 
+  final databaseRepository =
+      overrides[DatabaseRepository]?.call() ?? DatabaseRepository();
   GetIt.I.registerSingleton<DatabaseRepository>(
-      overrides[DatabaseRepository]?.call() ?? DatabaseRepository());
-  GetIt.I.registerSingleton<StorageRepository>(
-      overrides[StorageRepository]?.call() ?? StorageRepository());
+    databaseRepository,
+  );
 
+  final storageRepository =
+      overrides[StorageRepository]?.call() ?? StorageRepository();
+  GetIt.I.registerSingleton<StorageRepository>(storageRepository);
+
+  final authRepository = overrides[AuthRepository]?.call() ?? AuthRepository();
   GetIt.I.registerSingleton<AuthRepository>(
-    overrides[AuthRepository]?.call() ?? AuthRepository(),
+    authRepository,
     dispose: (r) => r.dispose(),
     signalsReady: true,
   );
 
+  final functionsService =
+      overrides[FunctionsService]?.call() ?? FunctionsService();
   GetIt.I.registerSingleton<FunctionsService>(
-      overrides[FunctionsService]?.call() ?? FunctionsService());
+    functionsService,
+  );
+
+  final launcherService =
+      overrides[LauncherService]?.call() ?? LauncherService();
   GetIt.I.registerSingleton<LauncherService>(
-      overrides[LauncherService]?.call() ?? LauncherService());
+    launcherService,
+  );
+
+  final notificationsService =
+      overrides[NotificationsService]?.call() ?? NotificationsService();
   GetIt.I.registerSingleton<NotificationsService>(
-    overrides[NotificationsService]?.call() ?? NotificationsService(),
+    notificationsService,
     signalsReady: true,
   );
 
   await Future.wait([
-    GetIt.I.isReady<LoggingService>(),
-    GetIt.I.isReady<AuthRepository>(),
-    GetIt.I.isReady<NotificationsService>(),
+    GetIt.I.isReady<LoggingService>(instance: loggingService),
+    GetIt.I.isReady<AuthRepository>(instance: authRepository),
+    GetIt.I.isReady<NotificationsService>(instance: notificationsService),
   ]);
 }
