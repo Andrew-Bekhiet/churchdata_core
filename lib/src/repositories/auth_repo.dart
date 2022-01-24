@@ -38,10 +38,7 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
   @mustCallSuper
   void initListeners() async {
     unawaited(
-      userSubject.next.then((value) {
-        if (!_disposed && !GetIt.I.isReadySync<AuthRepository>())
-          GetIt.I.signalReady(this);
-      }),
+      userSubject.next.then(signalReady),
     );
 
     if (GetIt.I<CacheRepository>().box('User').toMap().isNotEmpty) {
@@ -74,6 +71,12 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
           userSubject.add(null);
       },
     );
+  }
+
+  @protected
+  FutureOr<void> signalReady([U? user]) {
+    if (!_disposed && !GetIt.I.isReadySync<AuthRepository>())
+      GetIt.I.signalReady(this);
   }
 
   @protected
@@ -167,11 +170,12 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
   @protected
   void scheduleOnDisconnect() {
     try {
-      GetIt.I<FirebaseDatabase>()
-          .ref()
-          .child('Users/${currentUser!.uid}/lastSeen')
-          .onDisconnect()
-          .set(ServerValue.timestamp);
+      if (currentUser != null)
+        GetIt.I<FirebaseDatabase>()
+            .ref()
+            .child('Users/${currentUser!.uid}/lastSeen')
+            .onDisconnect()
+            .set(ServerValue.timestamp);
       // ignore: empty_catches
     } on Exception {}
   }
