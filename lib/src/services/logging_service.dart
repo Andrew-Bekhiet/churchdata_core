@@ -63,11 +63,13 @@ class LoggingService {
         : null;
 
     Sentry.configureScope(
-      (scope) => scope.user = SentryUser(
-        id: currentUser?.uid,
-        email: currentUser?.email,
-        extras: currentUser?.toJson(),
-      ),
+      (scope) => scope.user = currentUser != null
+          ? SentryUser(
+              id: currentUser.uid,
+              email: currentUser.email,
+              extras: currentUser.toJson(),
+            )
+          : null,
     );
 
     GetIt.I.signalReady(this);
