@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
-class DataObjectWidget<T extends DataObject> extends StatelessWidget {
+class DataObjectWidget<T extends DataObject> extends StatefulWidget {
   final T object;
 
   final void Function()? onLongPress;
@@ -17,9 +17,7 @@ class DataObjectWidget<T extends DataObject> extends StatelessWidget {
   final bool isDense;
   final bool showSubtitle;
 
-  final _secondLineMemoizer = AsyncMemoizer<String?>();
-
-  DataObjectWidget(
+  const DataObjectWidget(
     this.object, {
     Key? key,
     this.isDense = false,
@@ -34,19 +32,28 @@ class DataObjectWidget<T extends DataObject> extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<DataObjectWidget<T>> createState() => _DataObjectWidgetState<T>();
+}
+
+class _DataObjectWidgetState<T extends DataObject>
+    extends State<DataObjectWidget<T>> {
+  final _secondLineMemoizer = AsyncMemoizer<String?>();
+
+  @override
   Widget build(BuildContext context) {
     final Widget tile = ListTile(
-      tileColor: wrapInCard ? null : _getColor(context),
-      dense: isDense,
-      onLongPress: onLongPress,
-      onTap:
-          onTap ?? () => GetIt.I<DefaultDataObjectTapHandler>().onTap(object),
-      trailing: trailing,
-      title: title ?? Text(object.name),
-      subtitle: showSubtitle
-          ? subtitle ??
+      tileColor: widget.wrapInCard ? null : _getColor(context),
+      dense: widget.isDense,
+      onLongPress: widget.onLongPress,
+      onTap: widget.onTap ??
+          () => GetIt.I<DefaultDataObjectTapHandler>().onTap(widget.object),
+      trailing: widget.trailing,
+      title: widget.title ?? Text(widget.object.name),
+      subtitle: widget.showSubtitle
+          ? widget.subtitle ??
               FutureBuilder<String?>(
-                future: _secondLineMemoizer.runOnce(object.getSecondLine),
+                future:
+                    _secondLineMemoizer.runOnce(widget.object.getSecondLine),
                 builder: (cont, subtitleData) {
                   if (subtitleData.hasData) {
                     return Text(
@@ -57,23 +64,23 @@ class DataObjectWidget<T extends DataObject> extends StatelessWidget {
                   } else if (subtitleData.connectionState !=
                       ConnectionState.done) {
                     return LinearProgressIndicator(
-                      backgroundColor: object.color,
-                      valueColor: AlwaysStoppedAnimation(object.color),
+                      backgroundColor: widget.object.color,
+                      valueColor: AlwaysStoppedAnimation(widget.object.color),
                     );
                   }
                   return const SizedBox(height: 1, width: 1);
                 },
               )
           : null,
-      leading: photo ??
-          (object is PhotoObjectBase
+      leading: widget.photo ??
+          (widget.object is PhotoObjectBase
               ? PhotoObjectWidget(
-                  object as PhotoObjectBase,
-                  circleCrop: object is PersonBase,
+                  widget.object as PhotoObjectBase,
+                  circleCrop: widget.object is PersonBase,
                 )
               : null),
     );
-    return wrapInCard
+    return widget.wrapInCard
         ? Card(
             color: _getColor(context),
             child: tile,
@@ -82,18 +89,19 @@ class DataObjectWidget<T extends DataObject> extends StatelessWidget {
   }
 
   Color? _getColor(BuildContext context) {
-    if (object.color == null || object.color == Colors.transparent) return null;
+    if (widget.object.color == null ||
+        widget.object.color == Colors.transparent) return null;
 
-    if (object.color!.brightness > 170 &&
+    if (widget.object.color!.brightness > 170 &&
         Theme.of(context).brightness == Brightness.dark) {
       //refers to the contrasted text theme color
-      return object.color!
-          .darken(((265 - object.color!.brightness) / 255 * 100).toInt());
-    } else if (object.color!.brightness < 85 &&
+      return widget.object.color!.darken(
+          ((265 - widget.object.color!.brightness) / 255 * 100).toInt());
+    } else if (widget.object.color!.brightness < 85 &&
         Theme.of(context).brightness == Brightness.light) {
-      return object.color!
-          .lighten(((265 - object.color!.brightness) / 255 * 100).toInt());
+      return widget.object.color!.lighten(
+          ((265 - widget.object.color!.brightness) / 255 * 100).toInt());
     }
-    return object.color;
+    return widget.object.color;
   }
 }
