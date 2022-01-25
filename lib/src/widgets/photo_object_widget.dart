@@ -120,6 +120,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                       cacheManager: GetIt.I.isRegistered<BaseCacheManager>()
                           ? GetIt.I<BaseCacheManager>()
                           : null,
+                      fadeInDuration: Duration.zero,
                       useOldImageOnUrlChange: true,
                       fadeOutDuration: Duration.zero,
                       memCacheHeight: (constraints.maxHeight *
