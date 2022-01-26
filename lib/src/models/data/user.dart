@@ -1,7 +1,6 @@
 import 'package:async/async.dart';
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -9,7 +8,7 @@ part 'user.g.dart';
 
 @immutable
 @CopyWith(copyWithNull: true)
-class UserBase extends Equatable implements PhotoObjectBase {
+class UserBase extends Serializable implements PhotoObjectBase {
   final String uid;
   final String name;
   final String? email;
@@ -25,8 +24,9 @@ class UserBase extends Equatable implements PhotoObjectBase {
   });
 
   @override
-  List<Object?> get props => [uid, name, email, phone, permissions];
+  List<Object?> get props => [uid, ...super.props];
 
+  @override
   Json toJson() => {
         'Name': name,
         'Email': email,
