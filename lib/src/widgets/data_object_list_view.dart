@@ -1,5 +1,4 @@
 import 'package:churchdata_core/churchdata_core.dart';
-import 'package:churchdata_core/src/services/share_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:group_list_view/group_list_view.dart';
@@ -40,7 +39,9 @@ class DataObjectListView<G, T extends DataObject> extends StatefulWidget {
     this.onLongPress,
     this.emptyMsg,
     required this.autoDisposeController,
-  })  : assert(groupBuilder == null || isSubtype<G, DataObject>()),
+  })  : assert(isSubtype<G, void>() ||
+            isSubtype<G, DataObject>() ||
+            groupBuilder != null),
         super(key: key);
 
   @override
@@ -58,8 +59,23 @@ class _DataObjectListViewState<G, T extends DataObject>
   ItemBuilder<T> get _buildItem => widget.itemBuilder ?? defaultItemBuilder<T>;
   GroupBuilder<G> get _buildGroup =>
       widget.groupBuilder ??
-      // ignore: unnecessary_parenthesis
-      (defaultGroupBuilder<DataObject>) as GroupBuilder<G>;
+      (
+        G? o, {
+        void Function(G)? onLongPress,
+        void Function(G)? onTap,
+        bool? showSubtitle,
+        Widget? trailing,
+        Widget? subtitle,
+      }) =>
+          defaultGroupBuilder<DataObject>(
+            o as DataObject?,
+            onLongPress:
+                onLongPress != null ? (o) => onLongPress(o as G) : null,
+            onTap: onTap != null ? (o) => onTap(o as G) : null,
+            showSubtitle: showSubtitle,
+            trailing: trailing,
+            subtitle: subtitle,
+          );
 
   @override
   bool get wantKeepAlive => _builtOnce && ModalRoute.of(context)!.isCurrent;
@@ -196,7 +212,7 @@ class _DataObjectListViewState<G, T extends DataObject>
           current,
           onLongPress: widget.onLongPress ?? _defaultLongPress,
           onTap: (T current) async {
-            if (_controller.currentSelection != null) {
+            if (_controller.currentSelection == null) {
               widget.onTap == null
                   ? GetIt.I<DefaultDataObjectTapHandler>().onTap(current)
                   : widget.onTap!(current);
@@ -237,7 +253,7 @@ class _DataObjectListViewState<G, T extends DataObject>
               .join('\n'),
         );
       }
-      _controller.deselectAll();
+      _controller.exitSelectionMode();
     } else {
       _controller.select(current);
     }
