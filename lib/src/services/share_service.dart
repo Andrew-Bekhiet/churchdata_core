@@ -1,5 +1,6 @@
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:get_it/get_it.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ShareService {
@@ -32,7 +33,7 @@ class ShareService {
   final AndroidParameters androidParameters;
 
   Future<Uri> sharePerson(PersonBase person) async {
-    return (await FirebaseDynamicLinks.instance.buildShortLink(
+    return (await GetIt.I<FirebaseDynamicLinks>().buildShortLink(
       DynamicLinkParameters(
         uriPrefix: uriPrefix,
         link: Uri.https(
@@ -49,7 +50,7 @@ class ShareService {
   }
 
   Future<Uri> shareQuery(QueryInfo query) async {
-    return (await FirebaseDynamicLinks.instance.buildShortLink(
+    return (await GetIt.I<FirebaseDynamicLinks>().buildShortLink(
       DynamicLinkParameters(
         uriPrefix: uriPrefix,
         link: Uri.https(projectId + '.com', 'viewQuery', query.toJson()),
@@ -62,7 +63,7 @@ class ShareService {
   }
 
   Future<Uri> shareUser(UserBase user) async {
-    return (await FirebaseDynamicLinks.instance.buildShortLink(
+    return (await GetIt.I<FirebaseDynamicLinks>().buildShortLink(
       DynamicLinkParameters(
         uriPrefix: uriPrefix,
         link: Uri.https(
