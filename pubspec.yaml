@@ -1,6 +1,6 @@
 name: churchdata_core
 description: core library for Church projects
-version: 0.1.0
+version: 0.2.0
 homepage:
 
 environment:
