@@ -22,65 +22,58 @@ class UserPhotoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1,
-      child: StreamBuilder<DatabaseEvent>(
-        stream: GetIt.I<FirebaseDatabase>()
-            .ref()
-            .child('Users/${user.uid}/lastSeen')
-            .onValue,
-        builder: (context, activity) {
-          if (!user.hasPhoto)
-            return Stack(
-              children: [
-                Positioned.fill(
-                  child: Icon(Icons.account_circle,
-                      size: MediaQuery.of(context).size.height / 16.56),
-                ),
-                if (showActivityStatus &&
-                    activity.data?.snapshot.value == 'Active')
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Container(
-                      height: 15,
-                      width: 15,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(color: Colors.white),
-                        color: Colors.greenAccent,
-                      ),
-                    ),
-                  ),
-              ],
-            );
-
-          return Stack(
-            children: [
-              Positioned.fill(
-                child: PhotoObjectWidget(
-                  user,
-                  circleCrop: circleCrop,
-                  constraints: constraints,
-                  heroTag: heroTag,
-                  key: key,
-                ),
-              ),
-              if (showActivityStatus &&
-                  activity.data?.snapshot.value == 'Active')
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Container(
-                    height: 15,
-                    width: 15,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Colors.white),
-                      color: Colors.greenAccent,
-                    ),
-                  ),
-                ),
-            ],
-          );
-        },
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: PhotoObjectWidget(
+              user,
+              circleCrop: circleCrop,
+              constraints: constraints,
+              heroTag: heroTag,
+              key: key,
+            ),
+          ),
+          if (showActivityStatus)
+            _OnlineDot(
+              uid: user.uid,
+            ),
+        ],
       ),
+    );
+  }
+}
+
+class _OnlineDot extends StatelessWidget {
+  final String uid;
+  const _OnlineDot({
+    Key? key,
+    required this.uid,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<DatabaseEvent>(
+      stream: GetIt.I<FirebaseDatabase>()
+          .ref()
+          .child('Users/$uid/lastSeen')
+          .onValue,
+      builder: (context, activity) {
+        if (activity.data?.snapshot.value == 'Active')
+          return Align(
+            alignment: Alignment.bottomLeft,
+            child: Container(
+              height: 15,
+              width: 15,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: Colors.white),
+                color: Colors.greenAccent,
+              ),
+            ),
+          );
+
+        return const SizedBox.shrink();
+      },
     );
   }
 }
