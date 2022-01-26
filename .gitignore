@@ -26,6 +26,7 @@
 **/doc/api/
 .dart_tool/
 .packages
+.flutter-plugins-dependencies
 build/
 
 TODO.txt
