@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -62,14 +63,14 @@ Future<void> init({
 
   GetIt.I.registerSingleton<LoggingService>(
     loggingService,
-    signalsReady: true,
+    signalsReady: loggingService.runtimeType == LoggingService,
   );
 
   final cacheRepository =
       overrides[CacheRepository]?.call() ?? CacheRepository();
   GetIt.I.registerSingleton<CacheRepository>(
     cacheRepository,
-    signalsReady: true,
+    signalsReady: cacheRepository.runtimeType == CacheRepository,
     dispose: (r) => r.dispose(),
   );
 
@@ -118,7 +119,7 @@ Future<void> init({
   GetIt.I.registerSingleton<AuthRepository>(
     authRepository,
     dispose: (r) => r.dispose(),
-    signalsReady: true,
+    signalsReady: authRepository.runtimeType == AuthRepository,
   );
 
   final functionsService =
@@ -137,7 +138,7 @@ Future<void> init({
       overrides[NotificationsService]?.call() ?? NotificationsService();
   GetIt.I.registerSingleton<NotificationsService>(
     notificationsService,
-    signalsReady: true,
+    signalsReady: notificationsService.runtimeType == NotificationsService,
   );
 
   await Future.wait([
@@ -153,6 +154,7 @@ void registerFirebaseDependencies({
   FirebaseStorage? firebaseStorageOverride,
   FirebaseAuth? firebaseAuthOverride,
   FirebaseDatabase? firebaseDatabaseOverride,
+  FirebaseDynamicLinks? firebaseDynamicLinksOverride,
   FirebaseFunctions? firebaseFunctionsOverride,
   FirebaseMessaging? firebaseMessagingOverride,
 }) {
@@ -176,5 +178,8 @@ void registerFirebaseDependencies({
   );
   GetIt.I.registerSingleton<FirebaseMessaging>(
     firebaseMessagingOverride ?? FirebaseMessaging.instance,
+  );
+  GetIt.I.registerSingleton<FirebaseDynamicLinks>(
+    firebaseDynamicLinksOverride ?? FirebaseDynamicLinks.instance,
   );
 }
