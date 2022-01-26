@@ -63,7 +63,10 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
               future: widget.object.photoUrlCache.fetch(
                 () => widget.object.photoRef!.getCachedDownloadUrl(
                   (cache, newUrl) async {
-                    await DefaultCacheManager().removeFile(cache);
+                    await (GetIt.I.isRegistered<BaseCacheManager>()
+                            ? GetIt.I<BaseCacheManager>()
+                            : DefaultCacheManager())
+                        .removeFile(cache);
 
                     widget.object.photoUrlCache.invalidate();
 
