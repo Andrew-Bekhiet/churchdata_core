@@ -7,122 +7,169 @@ import 'package:get_it/get_it.dart';
 import '../fakes/fake_cache_repo.dart';
 
 void main() {
-  group('ThemeNotifier tests ->', () {
-    setUp(
-      () async {
-        GetIt.I.pushNewScope(scopeName: 'CacheTestsScope');
-        GetIt.I.registerSingleton<CacheRepository>(
-          FakeCacheRepo(),
-          dispose: (r) => r.dispose(),
-        );
+  group(
+    'ThemeNotifier tests ->',
+    () {
+      setUp(
+        () async {
+          GetIt.I.pushNewScope(scopeName: 'CacheTestsScope');
+          GetIt.I.registerSingleton<CacheRepository>(
+            FakeCacheRepo(),
+            dispose: (r) => r.dispose(),
+          );
 
-        await GetIt.I<CacheRepository>().openBox('Settings');
-      },
-    );
+          await GetIt.I<CacheRepository>().openBox('Settings');
+        },
+      );
 
-    tearDown(
-      () async {
-        await GetIt.I.reset();
-      },
-    );
+      tearDown(
+        () async {
+          await GetIt.I.reset();
+        },
+      );
 
-    test(
-      'Default Theme: light',
-      () async {
-        await GetIt.I<CacheRepository>()
-            .box('Settings')
-            .put('GreatFeastTheme', false);
+      test(
+        'Default Theme: light',
+        () async {
+          await GetIt.I<CacheRepository>()
+              .box('Settings')
+              .put('GreatFeastTheme', false);
 
-        final unit = ThemeNotifier.getDefault(darkTheme: false);
-        final MaterialColor primary = Colors.blueGrey;
-        const Color secondary = Colors.grey;
+          final unit = ThemeNotifier.getDefault(darkTheme: false);
+          const MaterialColor primary = Colors.blueGrey;
+          const Color secondary = Colors.grey;
 
-        expect(
-          unit,
-          predicate<ThemeData>(
-            (t) =>
-                t.colorScheme ==
-                    ColorScheme.fromSwatch(
-                      backgroundColor: Colors.grey[50],
-                      primarySwatch: primary,
-                      accentColor: secondary,
-                    ) &&
-                t.inputDecorationTheme ==
-                    InputDecorationTheme(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(color: primary),
+          expect(
+            unit,
+            predicate<ThemeData>(
+              (t) =>
+                  t.colorScheme ==
+                      ColorScheme.fromSwatch(
+                        backgroundColor: Colors.grey[50],
+                        primarySwatch: primary,
+                        accentColor: secondary,
+                      ) &&
+                  t.inputDecorationTheme ==
+                      InputDecorationTheme(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(color: primary),
+                        ),
+                      ) &&
+                  t.floatingActionButtonTheme ==
+                      const FloatingActionButtonThemeData(
+                          backgroundColor: primary) &&
+                  t.visualDensity == VisualDensity.adaptivePlatformDensity &&
+                  t.brightness == Brightness.light &&
+                  t.appBarTheme ==
+                      AppBarTheme(
+                        backgroundColor: primary,
+                        foregroundColor:
+                            Typography.material2018().black.headline6?.color,
+                        systemOverlayStyle: SystemUiOverlayStyle.dark,
+                      ) &&
+                  t.bottomAppBarTheme ==
+                      const BottomAppBarTheme(
+                        color: secondary,
+                        shape: CircularNotchedRectangle(),
                       ),
-                    ) &&
-                t.floatingActionButtonTheme ==
-                    FloatingActionButtonThemeData(backgroundColor: primary) &&
-                t.visualDensity == VisualDensity.adaptivePlatformDensity &&
-                t.brightness == Brightness.light &&
-                t.appBarTheme ==
-                    AppBarTheme(
-                      backgroundColor: primary,
-                      foregroundColor:
-                          Typography.material2018().black.headline6?.color,
-                      systemOverlayStyle: SystemUiOverlayStyle.dark,
-                    ) &&
-                t.bottomAppBarTheme ==
-                    const BottomAppBarTheme(
-                      color: secondary,
-                      shape: CircularNotchedRectangle(),
-                    ),
-          ),
-        );
-      },
-    );
+            ),
+          );
+        },
+      );
 
-    test(
-      'Default Theme: dark',
-      () async {
-        await GetIt.I<CacheRepository>()
-            .box('Settings')
-            .put('GreatFeastTheme', false);
+      test(
+        'Default Theme: dark',
+        () async {
+          await GetIt.I<CacheRepository>()
+              .box('Settings')
+              .put('GreatFeastTheme', false);
 
-        final unit = ThemeNotifier.getDefault(darkTheme: true);
-        final MaterialColor primary = Colors.blueGrey;
-        const Color secondary = Colors.grey;
+          final unit = ThemeNotifier.getDefault(darkTheme: true);
+          const MaterialColor primary = Colors.blueGrey;
+          const Color secondary = Colors.grey;
 
-        expect(
-          unit,
-          predicate<ThemeData>(
-            (t) =>
-                t.colorScheme ==
-                    ColorScheme.fromSwatch(
-                      backgroundColor: Colors.grey[850],
-                      brightness: Brightness.dark,
-                      primarySwatch: primary,
-                      accentColor: secondary,
-                    ) &&
-                t.inputDecorationTheme ==
-                    InputDecorationTheme(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(color: primary),
+          expect(
+            unit,
+            predicate<ThemeData>(
+              (t) =>
+                  t.colorScheme ==
+                      ColorScheme.fromSwatch(
+                        backgroundColor: Colors.grey[850],
+                        brightness: Brightness.dark,
+                        primarySwatch: primary,
+                        accentColor: secondary,
+                      ) &&
+                  t.inputDecorationTheme ==
+                      InputDecorationTheme(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(color: primary),
+                        ),
+                      ) &&
+                  t.floatingActionButtonTheme ==
+                      const FloatingActionButtonThemeData(
+                          backgroundColor: primary) &&
+                  t.visualDensity == VisualDensity.adaptivePlatformDensity &&
+                  t.brightness == Brightness.dark &&
+                  t.appBarTheme ==
+                      AppBarTheme(
+                        backgroundColor: primary,
+                        foregroundColor:
+                            Typography.material2018().white.headline6?.color,
+                        systemOverlayStyle: SystemUiOverlayStyle.light,
+                      ) &&
+                  t.bottomAppBarTheme ==
+                      const BottomAppBarTheme(
+                        color: secondary,
+                        shape: CircularNotchedRectangle(),
                       ),
-                    ) &&
-                t.floatingActionButtonTheme ==
-                    FloatingActionButtonThemeData(backgroundColor: primary) &&
-                t.visualDensity == VisualDensity.adaptivePlatformDensity &&
-                t.brightness == Brightness.dark &&
-                t.appBarTheme ==
-                    AppBarTheme(
-                      backgroundColor: primary,
-                      foregroundColor:
-                          Typography.material2018().white.headline6?.color,
-                      systemOverlayStyle: SystemUiOverlayStyle.light,
-                    ) &&
-                t.bottomAppBarTheme ==
-                    const BottomAppBarTheme(
-                      color: secondary,
-                      shape: CircularNotchedRectangle(),
-                    ),
-          ),
-        );
-      },
-    );
-  });
+            ),
+          );
+        },
+      );
+
+      test(
+        'ThemeNotifier instance',
+        () async {
+          await GetIt.I<CacheRepository>()
+              .box('Settings')
+              .put('GreatFeastTheme', false);
+          await GetIt.I<CacheRepository>().box('Settings').put(
+                'DarkTheme',
+                true,
+              );
+
+          const MaterialColor primary = Colors.blueGrey;
+          const Color secondary = Colors.grey;
+
+          final defaultTheme = ThemeNotifier.getDefault();
+          final defaultThemeLight = ThemeNotifier.getDefault(darkTheme: false);
+          final otherTheme =
+              ThemeNotifier.getDefault(greatFeastThemeOverride: true);
+
+          final unit = ThemeNotifier.withInitialThemeata(defaultTheme);
+
+          addTearDown(unit.dispose);
+
+          expect(unit.theme.colorScheme.primary, primary);
+          expect(unit.theme.colorScheme.secondary, secondary);
+          expect(
+            unit.stream,
+            emitsInOrder(
+              [
+                defaultTheme,
+                defaultThemeLight,
+                otherTheme,
+              ],
+            ),
+          );
+
+          unit
+            ..theme = defaultThemeLight
+            ..theme = otherTheme;
+        },
+      );
+    },
+  );
 }
