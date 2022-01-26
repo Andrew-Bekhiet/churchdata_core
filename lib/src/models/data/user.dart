@@ -24,7 +24,7 @@ class UserBase extends Serializable implements PhotoObjectBase {
   });
 
   @override
-  List<Object?> get props => [uid, ...super.props];
+  List<Object?> get props => [uid, name, email, phone, permissions];
 
   @override
   Json toJson() => {
