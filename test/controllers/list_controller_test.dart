@@ -265,6 +265,7 @@ void main() {
                   .orderBy('Name'),
               mapper: BasicDataObject.fromJsonDoc,
             ),
+            groupingStream: Stream.value(true),
             groupBy: (o) {
               return o.groupListsBy<Color?>((element) => element.color);
             },
@@ -351,6 +352,7 @@ void main() {
                   .orderBy('Name'),
               mapper: BasicDataObject.fromJsonDoc,
             ),
+            groupingStream: Stream.value(true),
             groupBy: (o) {
               return o.groupListsBy<Color?>((element) => element.color);
             },
