@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database_mocks/firebase_database_mocks.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -43,7 +44,7 @@ void main() {}
   );
 } */
 
-@GenerateMocks([FirebaseFunctions, FirebaseMessaging])
+@GenerateMocks([FirebaseFunctions, FirebaseMessaging, FirebaseDynamicLinks])
 void registerFirebaseMocks() {
   GetIt.I.registerSingleton<GoogleSignIn>(MockGoogleSignIn());
   GetIt.I.registerSingleton<FirebaseFirestore>(FakeFirebaseFirestore());
@@ -52,4 +53,5 @@ void registerFirebaseMocks() {
   GetIt.I.registerSingleton<FirebaseDatabase>(MockFirebaseDatabase());
   GetIt.I.registerSingleton<FirebaseFunctions>(MockFirebaseFunctions());
   GetIt.I.registerSingleton<FirebaseMessaging>(MockFirebaseMessaging());
+  GetIt.I.registerSingleton<FirebaseDynamicLinks>(MockFirebaseDynamicLinks());
 }
