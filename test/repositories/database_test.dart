@@ -7,8 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
-import '../churchdata_core_test.dart';
-import '../churchdata_core_test.mocks.dart';
+import '../churchdata_core.dart';
+import '../churchdata_core.mocks.dart';
 import '../fakes/fake_functions_repo.dart';
 import '../utils.dart';
 

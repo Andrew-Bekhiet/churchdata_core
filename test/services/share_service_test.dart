@@ -6,8 +6,8 @@ import 'package:mockito/mockito.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:share_plus_platform_interface/share_plus_platform_interface.dart';
 
-import '../churchdata_core_test.dart';
-import '../churchdata_core_test.mocks.dart';
+import '../churchdata_core.dart';
+import '../churchdata_core.mocks.dart';
 import 'share_service_test.mocks.dart';
 
 void main() {

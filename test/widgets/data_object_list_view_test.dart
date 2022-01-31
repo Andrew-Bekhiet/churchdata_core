@@ -10,7 +10,7 @@ import 'package:mock_data/mock_data.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../churchdata_core_test.dart';
+import '../churchdata_core.dart';
 import '../models/basic_data_object.dart';
 import '../utils.dart';
 import 'data_object_list_view_test.mocks.dart';

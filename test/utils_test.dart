@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'churchdata_core_test.dart';
+import 'churchdata_core.dart';
 
 void main() {
   group(

@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../churchdata_core_test.dart';
+import '../churchdata_core.dart';
 import '../models/basic_data_object.dart';
 import '../utils.dart';
 

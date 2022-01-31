@@ -6,7 +6,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mockito/annotations.dart';
 
-import 'churchdata_core_test.mocks.dart';
+import 'churchdata_core.mocks.dart';
 import 'fakes/fake_firestore.dart';
 import 'fakes/mock_google_sign_in.dart';
 import 'fakes/mock_storage_reference.dart';

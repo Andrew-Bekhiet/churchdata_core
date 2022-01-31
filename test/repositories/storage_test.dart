@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
-import '../churchdata_core_test.dart';
+import '../churchdata_core.dart';
 import '../fakes/fake_cache_repo.dart';
 
 void main() {

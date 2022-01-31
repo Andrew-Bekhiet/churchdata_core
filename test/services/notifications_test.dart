@@ -10,8 +10,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 
-import '../churchdata_core_test.dart';
-import '../churchdata_core_test.mocks.dart';
+import '../churchdata_core.dart';
+import '../churchdata_core.mocks.dart';
 import '../fakes/fake_cache_repo.dart';
 import '../fakes/fake_notifications_repo.dart';
 
