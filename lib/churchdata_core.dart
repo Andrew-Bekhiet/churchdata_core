@@ -54,7 +54,7 @@ export 'src/widgets.dart';
 ///    },
 ///  );
 /// ```
-Future<void> init({
+Future<void> initCore({
   required String sentryDSN,
   Map<Type, dynamic Function()> overrides = const {},
 }) async {
