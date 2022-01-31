@@ -80,16 +80,19 @@ class ShareService {
   }
 
   Future<Uri> shareObject<T>(T object) async {
-    if (object is PersonBase)
-      return sharePerson(object);
-    else if (object is UserBase)
-      return shareUser(object);
-    else if (object is QueryInfo) return shareQuery(object);
-
-    throw UnimplementedError(
-      'Expected an object of type PersonBase, UserBase or QuerInfo, but instead got type' +
-          object.runtimeType.toString(),
-    );
+    switch (T) {
+      case PersonBase:
+        return sharePerson(object as PersonBase);
+      case UserBase:
+        return shareUser(object as UserBase);
+      case QueryInfo:
+        return shareQuery(object as QueryInfo);
+      default:
+        throw UnimplementedError(
+          'Expected an object of type PersonBase, UserBase or QuerInfo, but instead got type' +
+              object.runtimeType.toString(),
+        );
+    }
   }
 
   Future<void> shareText(String text) async {

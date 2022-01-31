@@ -2,6 +2,7 @@ import 'package:churchdata_core/churchdata_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:share_plus_platform_interface/share_plus_platform_interface.dart';
@@ -10,6 +11,7 @@ import '../churchdata_core.dart';
 import '../churchdata_core.mocks.dart';
 import 'share_service_test.mocks.dart';
 
+@GenerateMocks([SharePlatform])
 void main() {
   group(
     'Share Service tests ->',

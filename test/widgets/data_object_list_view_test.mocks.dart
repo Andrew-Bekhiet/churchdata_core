@@ -65,8 +65,8 @@ class MockShareService extends _i1.Mock implements _i3.ShareService {
       (super.noSuchMethod(Invocation.method(#shareUser, [user]),
           returnValue: Future<Uri>.value(_FakeUri_2())) as _i4.Future<Uri>);
   @override
-  _i4.Future<Uri> shareDataObject(_i3.DataObject? object) =>
-      (super.noSuchMethod(Invocation.method(#shareDataObject, [object]),
+  _i4.Future<Uri> shareObject<T>(T? object) =>
+      (super.noSuchMethod(Invocation.method(#shareObject, [object]),
           returnValue: Future<Uri>.value(_FakeUri_2())) as _i4.Future<Uri>);
   @override
   _i4.Future<void> shareText(String? text) =>
