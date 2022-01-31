@@ -250,7 +250,7 @@ void main() {
           ))
               .sortedBy((o) => o.name);
 
-          when(GetIt.I<ShareService>().shareDataObject(objects[0]))
+          when(GetIt.I<ShareService>().shareObject(objects[0]))
               .thenAnswer((_) async => Uri.parse('test:url'));
           when(GetIt.I<ShareService>()
                   .shareText(objects[0].name + ': test:url'))
@@ -332,7 +332,7 @@ void main() {
           await tester
               .longPress(find.byType(DataObjectWidget<BasicDataObject>).first);
 
-          verify(GetIt.I<ShareService>().shareDataObject(objects[0]));
+          verify(GetIt.I<ShareService>().shareObject(objects[0]));
           verify(GetIt.I<ShareService>()
               .shareText(objects[0].name + ': test:url'));
           await tester.pumpAndSettle();

@@ -246,8 +246,7 @@ class _DataObjectListViewState<G, T extends DataObject>
                 .map((f) async =>
                     f.name +
                     ': ' +
-                    (await GetIt.I<ShareService>().shareDataObject(f))
-                        .toString())
+                    (await GetIt.I<ShareService>().shareObject(f)).toString())
                 .toList(),
           ))
               .join('\n'),
