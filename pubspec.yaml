@@ -40,6 +40,7 @@ dependencies:
   url_launcher: ^6.0.17
   group_list_view: ^1.1.1
   share_plus: ^3.0.4
+  firebase_remote_config: ^2.0.0
 
 dev_dependencies:
   flutter_test:

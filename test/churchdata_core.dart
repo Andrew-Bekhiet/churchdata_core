@@ -4,6 +4,7 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database_mocks/firebase_database_mocks.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:mockito/annotations.dart';
 
 import 'churchdata_core.mocks.dart';
@@ -11,7 +12,12 @@ import 'fakes/fake_firestore.dart';
 import 'fakes/mock_google_sign_in.dart';
 import 'fakes/mock_storage_reference.dart';
 
-@GenerateMocks([FirebaseFunctions, FirebaseMessaging, FirebaseDynamicLinks])
+@GenerateMocks([
+  FirebaseFunctions,
+  FirebaseMessaging,
+  FirebaseDynamicLinks,
+  FirebaseRemoteConfig
+])
 void registerFirebaseMocks() {
   registerFirebaseDependencies(
     googleSignInOverride: MockGoogleSignIn(),
@@ -22,5 +28,6 @@ void registerFirebaseMocks() {
     firebaseFunctionsOverride: MockFirebaseFunctions(),
     firebaseMessagingOverride: MockFirebaseMessaging(),
     firebaseDynamicLinksOverride: MockFirebaseDynamicLinks(),
+    firebaseRemoteConfigOverride: MockFirebaseRemoteConfig(),
   );
 }

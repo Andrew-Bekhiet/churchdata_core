@@ -2,18 +2,22 @@
 // in churchdata_core/test/churchdata_core.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i8;
+import 'dart:async' as _i9;
+import 'dart:ui' as _i12;
 
 import 'package:cloud_functions/cloud_functions.dart' as _i4;
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart'
     as _i3;
 import 'package:firebase_core/firebase_core.dart' as _i2;
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart' as _i9;
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart' as _i10;
 import 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links_platform_interface.dart'
     as _i6;
-import 'package:firebase_messaging/firebase_messaging.dart' as _i7;
+import 'package:firebase_messaging/firebase_messaging.dart' as _i8;
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart'
     as _i5;
+import 'package:firebase_remote_config/firebase_remote_config.dart' as _i11;
+import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart'
+    as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -39,6 +43,14 @@ class _FakeUri_4 extends _i1.Fake implements Uri {}
 
 class _FakeShortDynamicLink_5 extends _i1.Fake implements _i6.ShortDynamicLink {
 }
+
+class _FakeDateTime_6 extends _i1.Fake implements DateTime {}
+
+class _FakeRemoteConfigSettings_7 extends _i1.Fake
+    implements _i7.RemoteConfigSettings {}
+
+class _FakeRemoteConfigValue_8 extends _i1.Fake
+    implements _i7.RemoteConfigValue {}
 
 /// A class which mocks [FirebaseFunctions].
 ///
@@ -75,7 +87,7 @@ class MockFirebaseFunctions extends _i1.Mock implements _i4.FirebaseFunctions {
 /// A class which mocks [FirebaseMessaging].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockFirebaseMessaging extends _i1.Mock implements _i7.FirebaseMessaging {
+class MockFirebaseMessaging extends _i1.Mock implements _i8.FirebaseMessaging {
   MockFirebaseMessaging() {
     _i1.throwOnMissingStub(this);
   }
@@ -92,42 +104,42 @@ class MockFirebaseMessaging extends _i1.Mock implements _i7.FirebaseMessaging {
       (super.noSuchMethod(Invocation.getter(#isAutoInitEnabled),
           returnValue: false) as bool);
   @override
-  _i8.Stream<String> get onTokenRefresh =>
+  _i9.Stream<String> get onTokenRefresh =>
       (super.noSuchMethod(Invocation.getter(#onTokenRefresh),
-          returnValue: Stream<String>.empty()) as _i8.Stream<String>);
+          returnValue: Stream<String>.empty()) as _i9.Stream<String>);
   @override
   Map<dynamic, dynamic> get pluginConstants =>
       (super.noSuchMethod(Invocation.getter(#pluginConstants),
           returnValue: <dynamic, dynamic>{}) as Map<dynamic, dynamic>);
   @override
-  _i8.Future<_i5.RemoteMessage?> getInitialMessage() =>
+  _i9.Future<_i5.RemoteMessage?> getInitialMessage() =>
       (super.noSuchMethod(Invocation.method(#getInitialMessage, []),
               returnValue: Future<_i5.RemoteMessage?>.value())
-          as _i8.Future<_i5.RemoteMessage?>);
+          as _i9.Future<_i5.RemoteMessage?>);
   @override
-  _i8.Future<void> deleteToken() =>
+  _i9.Future<void> deleteToken() =>
       (super.noSuchMethod(Invocation.method(#deleteToken, []),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
   @override
-  _i8.Future<String?> getAPNSToken() =>
+  _i9.Future<String?> getAPNSToken() =>
       (super.noSuchMethod(Invocation.method(#getAPNSToken, []),
-          returnValue: Future<String?>.value()) as _i8.Future<String?>);
+          returnValue: Future<String?>.value()) as _i9.Future<String?>);
   @override
-  _i8.Future<String?> getToken({String? vapidKey}) => (super.noSuchMethod(
+  _i9.Future<String?> getToken({String? vapidKey}) => (super.noSuchMethod(
       Invocation.method(#getToken, [], {#vapidKey: vapidKey}),
-      returnValue: Future<String?>.value()) as _i8.Future<String?>);
+      returnValue: Future<String?>.value()) as _i9.Future<String?>);
   @override
   bool isSupported() => (super.noSuchMethod(Invocation.method(#isSupported, []),
       returnValue: false) as bool);
   @override
-  _i8.Future<_i5.NotificationSettings> getNotificationSettings() =>
+  _i9.Future<_i5.NotificationSettings> getNotificationSettings() =>
       (super.noSuchMethod(Invocation.method(#getNotificationSettings, []),
               returnValue: Future<_i5.NotificationSettings>.value(
                   _FakeNotificationSettings_3()))
-          as _i8.Future<_i5.NotificationSettings>);
+          as _i9.Future<_i5.NotificationSettings>);
   @override
-  _i8.Future<_i5.NotificationSettings> requestPermission(
+  _i9.Future<_i5.NotificationSettings> requestPermission(
           {bool? alert = true,
           bool? announcement = false,
           bool? badge = true,
@@ -147,9 +159,9 @@ class MockFirebaseMessaging extends _i1.Mock implements _i7.FirebaseMessaging {
               }),
               returnValue: Future<_i5.NotificationSettings>.value(
                   _FakeNotificationSettings_3()))
-          as _i8.Future<_i5.NotificationSettings>);
+          as _i9.Future<_i5.NotificationSettings>);
   @override
-  _i8.Future<void> sendMessage(
+  _i9.Future<void> sendMessage(
           {String? to,
           Map<String, String>? data,
           String? collapseKey,
@@ -166,37 +178,37 @@ class MockFirebaseMessaging extends _i1.Mock implements _i7.FirebaseMessaging {
             #ttl: ttl
           }),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
   @override
-  _i8.Future<void> setAutoInitEnabled(bool? enabled) =>
+  _i9.Future<void> setAutoInitEnabled(bool? enabled) =>
       (super.noSuchMethod(Invocation.method(#setAutoInitEnabled, [enabled]),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
   @override
-  _i8.Future<void> setForegroundNotificationPresentationOptions(
+  _i9.Future<void> setForegroundNotificationPresentationOptions(
           {bool? alert = false, bool? badge = false, bool? sound = false}) =>
       (super.noSuchMethod(
           Invocation.method(#setForegroundNotificationPresentationOptions, [],
               {#alert: alert, #badge: badge, #sound: sound}),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
   @override
-  _i8.Future<void> subscribeToTopic(String? topic) =>
+  _i9.Future<void> subscribeToTopic(String? topic) =>
       (super.noSuchMethod(Invocation.method(#subscribeToTopic, [topic]),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
   @override
-  _i8.Future<void> unsubscribeFromTopic(String? topic) =>
+  _i9.Future<void> unsubscribeFromTopic(String? topic) =>
       (super.noSuchMethod(Invocation.method(#unsubscribeFromTopic, [topic]),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
 }
 
 /// A class which mocks [FirebaseDynamicLinks].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFirebaseDynamicLinks extends _i1.Mock
-    implements _i9.FirebaseDynamicLinks {
+    implements _i10.FirebaseDynamicLinks {
   MockFirebaseDynamicLinks() {
     _i1.throwOnMissingStub(this);
   }
@@ -209,30 +221,30 @@ class MockFirebaseDynamicLinks extends _i1.Mock
       super.noSuchMethod(Invocation.setter(#app, _app),
           returnValueForMissingStub: null);
   @override
-  _i8.Stream<_i6.PendingDynamicLinkData> get onLink =>
+  _i9.Stream<_i6.PendingDynamicLinkData> get onLink =>
       (super.noSuchMethod(Invocation.getter(#onLink),
               returnValue: Stream<_i6.PendingDynamicLinkData>.empty())
-          as _i8.Stream<_i6.PendingDynamicLinkData>);
+          as _i9.Stream<_i6.PendingDynamicLinkData>);
   @override
   Map<dynamic, dynamic> get pluginConstants =>
       (super.noSuchMethod(Invocation.getter(#pluginConstants),
           returnValue: <dynamic, dynamic>{}) as Map<dynamic, dynamic>);
   @override
-  _i8.Future<_i6.PendingDynamicLinkData?> getInitialLink() =>
+  _i9.Future<_i6.PendingDynamicLinkData?> getInitialLink() =>
       (super.noSuchMethod(Invocation.method(#getInitialLink, []),
               returnValue: Future<_i6.PendingDynamicLinkData?>.value())
-          as _i8.Future<_i6.PendingDynamicLinkData?>);
+          as _i9.Future<_i6.PendingDynamicLinkData?>);
   @override
-  _i8.Future<_i6.PendingDynamicLinkData?> getDynamicLink(Uri? url) =>
+  _i9.Future<_i6.PendingDynamicLinkData?> getDynamicLink(Uri? url) =>
       (super.noSuchMethod(Invocation.method(#getDynamicLink, [url]),
               returnValue: Future<_i6.PendingDynamicLinkData?>.value())
-          as _i8.Future<_i6.PendingDynamicLinkData?>);
+          as _i9.Future<_i6.PendingDynamicLinkData?>);
   @override
-  _i8.Future<Uri> buildLink(_i6.DynamicLinkParameters? parameters) =>
+  _i9.Future<Uri> buildLink(_i6.DynamicLinkParameters? parameters) =>
       (super.noSuchMethod(Invocation.method(#buildLink, [parameters]),
-          returnValue: Future<Uri>.value(_FakeUri_4())) as _i8.Future<Uri>);
+          returnValue: Future<Uri>.value(_FakeUri_4())) as _i9.Future<Uri>);
   @override
-  _i8.Future<_i6.ShortDynamicLink> buildShortLink(
+  _i9.Future<_i6.ShortDynamicLink> buildShortLink(
           _i6.DynamicLinkParameters? parameters,
           {_i6.ShortDynamicLinkType? shortLinkType =
               _i6.ShortDynamicLinkType.short}) =>
@@ -240,5 +252,109 @@ class MockFirebaseDynamicLinks extends _i1.Mock
           Invocation.method(
               #buildShortLink, [parameters], {#shortLinkType: shortLinkType}),
           returnValue: Future<_i6.ShortDynamicLink>.value(
-              _FakeShortDynamicLink_5())) as _i8.Future<_i6.ShortDynamicLink>);
+              _FakeShortDynamicLink_5())) as _i9.Future<_i6.ShortDynamicLink>);
+}
+
+/// A class which mocks [FirebaseRemoteConfig].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFirebaseRemoteConfig extends _i1.Mock
+    implements _i11.FirebaseRemoteConfig {
+  MockFirebaseRemoteConfig() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.FirebaseApp get app => (super.noSuchMethod(Invocation.getter(#app),
+      returnValue: _FakeFirebaseApp_0()) as _i2.FirebaseApp);
+  @override
+  DateTime get lastFetchTime =>
+      (super.noSuchMethod(Invocation.getter(#lastFetchTime),
+          returnValue: _FakeDateTime_6()) as DateTime);
+  @override
+  _i7.RemoteConfigFetchStatus get lastFetchStatus =>
+      (super.noSuchMethod(Invocation.getter(#lastFetchStatus),
+              returnValue: _i7.RemoteConfigFetchStatus.noFetchYet)
+          as _i7.RemoteConfigFetchStatus);
+  @override
+  _i7.RemoteConfigSettings get settings => (super.noSuchMethod(
+      Invocation.getter(#settings),
+      returnValue: _FakeRemoteConfigSettings_7()) as _i7.RemoteConfigSettings);
+  @override
+  Map<dynamic, dynamic> get pluginConstants =>
+      (super.noSuchMethod(Invocation.getter(#pluginConstants),
+          returnValue: <dynamic, dynamic>{}) as Map<dynamic, dynamic>);
+  @override
+  bool get hasListeners =>
+      (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
+          as bool);
+  @override
+  _i9.Future<bool> activate() =>
+      (super.noSuchMethod(Invocation.method(#activate, []),
+          returnValue: Future<bool>.value(false)) as _i9.Future<bool>);
+  @override
+  _i9.Future<void> ensureInitialized() =>
+      (super.noSuchMethod(Invocation.method(#ensureInitialized, []),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+  @override
+  _i9.Future<void> fetch() => (super.noSuchMethod(Invocation.method(#fetch, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+  @override
+  _i9.Future<bool> fetchAndActivate() =>
+      (super.noSuchMethod(Invocation.method(#fetchAndActivate, []),
+          returnValue: Future<bool>.value(false)) as _i9.Future<bool>);
+  @override
+  Map<String, _i7.RemoteConfigValue> getAll() =>
+      (super.noSuchMethod(Invocation.method(#getAll, []),
+              returnValue: <String, _i7.RemoteConfigValue>{})
+          as Map<String, _i7.RemoteConfigValue>);
+  @override
+  bool getBool(String? key) => (super
+          .noSuchMethod(Invocation.method(#getBool, [key]), returnValue: false)
+      as bool);
+  @override
+  int getInt(String? key) =>
+      (super.noSuchMethod(Invocation.method(#getInt, [key]), returnValue: 0)
+          as int);
+  @override
+  double getDouble(String? key) => (super
+          .noSuchMethod(Invocation.method(#getDouble, [key]), returnValue: 0.0)
+      as double);
+  @override
+  String getString(String? key) =>
+      (super.noSuchMethod(Invocation.method(#getString, [key]), returnValue: '')
+          as String);
+  @override
+  _i7.RemoteConfigValue getValue(String? key) =>
+      (super.noSuchMethod(Invocation.method(#getValue, [key]),
+          returnValue: _FakeRemoteConfigValue_8()) as _i7.RemoteConfigValue);
+  @override
+  _i9.Future<void> setConfigSettings(
+          _i7.RemoteConfigSettings? remoteConfigSettings) =>
+      (super.noSuchMethod(
+          Invocation.method(#setConfigSettings, [remoteConfigSettings]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+  @override
+  _i9.Future<void> setDefaults(Map<String, dynamic>? defaultParameters) =>
+      (super.noSuchMethod(Invocation.method(#setDefaults, [defaultParameters]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+  @override
+  void addListener(_i12.VoidCallback? listener) =>
+      super.noSuchMethod(Invocation.method(#addListener, [listener]),
+          returnValueForMissingStub: null);
+  @override
+  void removeListener(_i12.VoidCallback? listener) =>
+      super.noSuchMethod(Invocation.method(#removeListener, [listener]),
+          returnValueForMissingStub: null);
+  @override
+  void dispose() => super.noSuchMethod(Invocation.method(#dispose, []),
+      returnValueForMissingStub: null);
+  @override
+  void notifyListeners() =>
+      super.noSuchMethod(Invocation.method(#notifyListeners, []),
+          returnValueForMissingStub: null);
 }
