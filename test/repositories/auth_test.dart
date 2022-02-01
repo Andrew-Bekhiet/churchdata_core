@@ -95,7 +95,7 @@ void main() async {
           test(
             'Loads user from cache first',
             () async {
-              final mockUser = MyMockUser(
+              MyMockUser mockUser = MyMockUser(
                   uid: 'uid',
                   displayName: 'User Name',
                   email: 'email@email.com',
@@ -131,34 +131,46 @@ void main() async {
                 },
               );
 
-              final firstUser = await GetIt.I<AuthRepository>().userStream.next;
-
               expect(
-                firstUser,
-                allOf(
-                  isNotNull,
-                  predicate<UserBase>((u) => u.email == 'stale email'),
-                  predicate<UserBase>((u) => u.name == 'stale name'),
-                  predicate<UserBase>((u) => u.phone == 'stale phone'),
-                  predicate<UserBase>((u) => u.uid == 'uid'),
+                GetIt.I<AuthRepository>().userStream,
+                emitsInOrder(
+                  [
+                    allOf(
+                      isNotNull,
+                      predicate<UserBase>((u) => u.email == 'stale email'),
+                      predicate<UserBase>((u) => u.name == 'stale name'),
+                      predicate<UserBase>((u) => u.phone == 'stale phone'),
+                      predicate<UserBase>((u) => u.uid == 'uid'),
+                    ),
+                    allOf(
+                      predicate<UserBase>(
+                          (u) => u.name == mockUser.displayName),
+                      predicate<UserBase>((u) => u.email == mockUser.email),
+                      predicate<UserBase>(
+                          (u) => u.phone == mockUser.phoneNumber),
+                      predicate<UserBase>((u) => u.uid == mockUser.uid),
+                    ),
+                  ],
                 ),
               );
 
-              await (GetIt.I<FirebaseAuth>() as MockFirebaseAuth)
-                  .signInWithCustomToken('');
-
-              final secondUser =
-                  await GetIt.I<AuthRepository>().userStream.next;
-
-              expect(
-                secondUser,
-                allOf(
-                  predicate<UserBase>((u) => u.name == mockUser.displayName),
-                  predicate<UserBase>((u) => u.email == mockUser.email),
-                  predicate<UserBase>((u) => u.phone == mockUser.phoneNumber),
-                  predicate<UserBase>((u) => u.uid == mockUser.uid),
+              mockUser = MyMockUser(
+                  displayName: mockUser.displayName,
+                  email: mockUser.email,
+                  phoneNumber: mockUser.phoneNumber,
+                  uid: mockUser.uid,
+                  refreshToken: 'rrr');
+              when(mockUser.getIdTokenResult()).thenAnswer(
+                (_) async => IdTokenResult(
+                  {
+                    'claims': {'personId': null},
+                  },
                 ),
               );
+
+              (GetIt.I<FirebaseAuth>() as MockFirebaseAuth)
+                  .userChangedStreamController
+                  .add(mockUser);
             },
           );
         },
