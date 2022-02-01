@@ -154,14 +154,26 @@ class NotificationsService {
     );
   }
 
-  Future<Notification?> getInitialMessage() async {
+  Future<Notification?> getInitialNotification() async {
     final message = await GetIt.I<FirebaseMessaging>().getInitialMessage();
-    if (message != null) return Notification.fromRemoteMessage(message);
+    if (message != null)
+      return Notification.fromRemoteMessage(message);
+    else {
+      final payload = (await FlutterLocalNotificationsPlugin()
+              .getNotificationAppLaunchDetails())
+          ?.payload;
+
+      if (payload != null) {
+        return GetIt.I<CacheRepository>()
+            .box<Notification>('Notifications')
+            .get(payload);
+      }
+    }
   }
 
   // coverage:ignore-start
-  Future<void> showInitialMessage(BuildContext context) async {
-    final pendingNotification = await getInitialMessage();
+  Future<void> showInitialNotification(BuildContext context) async {
+    final pendingNotification = await getInitialNotification();
 
     if (pendingNotification != null) {
       await showNotificationContents(context, pendingNotification);

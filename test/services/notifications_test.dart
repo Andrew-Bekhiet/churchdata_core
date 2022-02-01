@@ -323,7 +323,7 @@ void main() {
             (_) async => message,
           );
 
-          expect(await GetIt.I<NotificationsService>().getInitialMessage(),
+          expect(await GetIt.I<NotificationsService>().getInitialNotification(),
               Notification.fromRemoteMessage(message));
         },
       );
