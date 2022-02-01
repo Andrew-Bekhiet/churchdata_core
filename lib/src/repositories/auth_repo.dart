@@ -51,14 +51,34 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
       );
     }
 
-    authListener = GetIt.I<auth.FirebaseAuth>().userChanges().listen(
+    authListener = GetIt.I<auth.FirebaseAuth>().userChanges().distinct((o, n) {
+      return o?.refreshToken == n?.refreshToken &&
+          o?.uid == n?.uid &&
+          o?.email == n?.email &&
+          o?.phoneNumber == n?.phoneNumber &&
+          o?.phoneNumber == n?.phoneNumber &&
+          o?.emailVerified == n?.emailVerified &&
+          o?.displayName == n?.displayName &&
+          o?.isAnonymous == n?.isAnonymous &&
+          o?.metadata.creationTime == n?.metadata.creationTime &&
+          o?.metadata.lastSignInTime == n?.metadata.lastSignInTime &&
+          o?.photoURL == n?.photoURL &&
+          o?.tenantId == n?.tenantId;
+    }).listen(
       (user) async {
         if (user != null) {
+          await userTokenListener?.cancel();
           userTokenListener = GetIt.I<FirebaseDatabase>()
               .ref()
               .child('Users/${user.uid}/forceRefresh')
               .onValue
-              .listen((e) async {
+              .distinct(
+            (o, n) {
+              return o.snapshot.value == n.snapshot.value &&
+                  o.snapshot.key == n.snapshot.key &&
+                  o.snapshot.exists == n.snapshot.exists;
+            },
+          ).listen((e) async {
             if (e.snapshot.value != true) return;
 
             await refreshIdToken(user, true);
@@ -146,7 +166,11 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
         .ref()
         .child('.info/connected')
         .onValue
-        .listen(connectionChanged);
+        .distinct((o, n) {
+      return o.snapshot.value == n.snapshot.value &&
+          o.snapshot.key == n.snapshot.key &&
+          o.snapshot.exists == n.snapshot.exists;
+    }).listen(connectionChanged);
 
     userSubject.add(user);
     return user;
