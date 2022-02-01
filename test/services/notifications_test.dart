@@ -176,7 +176,7 @@ void main() {
                   sentTime: time,
                   data: {
                     'attachment':
-                        'https://churchdata.page.link/viewPerson?PersonId=id'
+                        'https://churchdata.page.link/PersonInfo?Id=id'
                   },
                 ),
               );
