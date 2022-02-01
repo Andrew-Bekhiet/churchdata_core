@@ -60,7 +60,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
           child: ConstrainedBox(
             constraints: constraints,
             child: FutureBuilder<String>(
-              future: widget.object.photoUrlCache.fetch(
+              future: widget.object.photoUrlCache.runOnce(
                 () => widget.object.photoRef!.getCachedDownloadUrl(
                   (cache, newUrl) async {
                     await (GetIt.I.isRegistered<BaseCacheManager>()

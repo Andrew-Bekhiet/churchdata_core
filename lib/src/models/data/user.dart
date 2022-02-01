@@ -1,4 +1,3 @@
-import 'package:async/async.dart';
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +44,5 @@ class UserBase extends Serializable implements PhotoObjectBase {
       GetIt.I<StorageRepository>().ref('UsersPhotos/' + uid);
 
   @override
-  final AsyncCache<String> photoUrlCache =
-      AsyncCache<String>(const Duration(days: 1));
+  final AsyncMemoizerCache<String> photoUrlCache = AsyncMemoizerCache<String>();
 }

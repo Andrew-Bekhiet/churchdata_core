@@ -1,5 +1,4 @@
 // coverage:ignore-file
-import 'package:async/async.dart';
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:flutter/material.dart';
 
@@ -8,8 +7,7 @@ abstract class PhotoObjectBase {
   final IconData defaultIcon;
   final bool hasPhoto;
 
-  final AsyncCache<String> photoUrlCache =
-      AsyncCache<String>(const Duration(days: 1));
+  final AsyncMemoizerCache<String> photoUrlCache = AsyncMemoizerCache<String>();
 
   PhotoObjectBase(this.defaultIcon, this.hasPhoto);
 
@@ -26,8 +24,7 @@ abstract class DataObjectWithPhoto extends DataObject
   DataObjectWithPhoto.fromJsonDoc(JsonDoc doc) : super.fromJsonDoc(doc);
 
   @override
-  final AsyncCache<String> photoUrlCache =
-      AsyncCache<String>(const Duration(days: 1));
+  final AsyncMemoizerCache<String> photoUrlCache = AsyncMemoizerCache<String>();
 }
 
 class SimplePhotoObject extends PhotoObjectBase {
