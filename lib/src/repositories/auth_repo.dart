@@ -67,7 +67,7 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
           await refreshIdToken(user);
         } else if (currentUser != null) {
           await userTokenListener?.cancel();
-        } else if (!_disposed && !GetIt.I.isReadySync<AuthRepository>())
+        } else if (!_disposed && !GetIt.I.isReadySync(instance: this))
           userSubject.add(null);
       },
     );
@@ -75,7 +75,7 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
 
   @protected
   FutureOr<void> signalReady([U? user]) {
-    if (!_disposed && !GetIt.I.isReadySync<AuthRepository>())
+    if (!_disposed && !GetIt.I.isReadySync(instance: this))
       GetIt.I.signalReady(this);
   }
 

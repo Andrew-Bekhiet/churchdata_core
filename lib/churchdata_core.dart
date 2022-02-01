@@ -75,7 +75,7 @@ Future<void> initCore({
     dispose: (r) => r.dispose(),
   );
 
-  await GetIt.I.isReady<CacheRepository>(instance: cacheRepository);
+  await GetIt.I.isReady(instance: cacheRepository);
 
   const secureStorage = FlutterSecureStorage();
   final containsEncryptionKey = await secureStorage.containsKey(key: 'key');
@@ -143,9 +143,9 @@ Future<void> initCore({
   );
 
   await Future.wait([
-    GetIt.I.isReady<LoggingService>(instance: loggingService),
-    GetIt.I.isReady<AuthRepository>(instance: authRepository),
-    GetIt.I.isReady<NotificationsService>(instance: notificationsService),
+    GetIt.I.isReady(instance: loggingService),
+    GetIt.I.isReady(instance: authRepository),
+    GetIt.I.isReady(instance: notificationsService),
   ]);
 }
 

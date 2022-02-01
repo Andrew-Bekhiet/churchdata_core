@@ -35,6 +35,7 @@ class LoggingService {
     await SentryFlutter.init(
       (options) => options
         ..dsn = sentryDSN
+        ..diagnosticLevel = SentryLevel.warning
         ..environment = kReleaseMode ? 'Production' : 'Debug',
     );
 
