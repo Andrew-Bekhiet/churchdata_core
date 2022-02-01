@@ -28,14 +28,14 @@ class DatabaseRepository {
   // coverage:ignore-end
 
   Future<DataObject?> getObjectFromLink(Uri deepLink) async {
-    if (deepLink.pathSegments[0] == 'viewPerson') {
-      if (deepLink.queryParameters['PersonId'] == '')
-        throw Exception('PersonId has an empty value which is not allowed');
+    if (deepLink.pathSegments[0] == 'PersonInfo') {
+      if (deepLink.queryParameters['Id'] == '')
+        throw Exception('Id has an empty value which is not allowed');
 
       return getPerson(
-        deepLink.queryParameters['PersonId']!,
+        deepLink.queryParameters['Id']!,
       );
-    } else if (deepLink.pathSegments[0] == 'viewUser') {
+    } else if (deepLink.pathSegments[0] == 'UserInfo') {
       if (deepLink.queryParameters['UID'] == '')
         throw Exception('UID has an empty value which is not allowed');
 

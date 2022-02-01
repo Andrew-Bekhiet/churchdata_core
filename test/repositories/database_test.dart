@@ -85,7 +85,7 @@ void main() {
         'Person from id',
         () async {
           final person = PersonBase(
-            ref: GetIt.I<DatabaseRepository>().doc('Persons/personId'),
+            ref: GetIt.I<DatabaseRepository>().doc('Persons/Id'),
             name: 'some person',
           );
           await person.set();
@@ -96,7 +96,7 @@ void main() {
           );
 
           expect(
-            await GetIt.I<DatabaseRepository>().getPerson('anotherPersonId'),
+            await GetIt.I<DatabaseRepository>().getPerson('anotherId'),
             isNull,
           );
         },
@@ -134,8 +134,8 @@ void main() {
                 () async => GetIt.I<DatabaseRepository>().getObjectFromLink(
                   Uri.https(
                     'churchdata.page.link',
-                    'viewPerson',
-                    {'PersonId': null},
+                    'PersonInfo',
+                    {'Id': null},
                   ),
                 ),
                 throwsException,
@@ -145,7 +145,7 @@ void main() {
                 () => GetIt.I<DatabaseRepository>().getObjectFromLink(
                   Uri.https(
                     'churchdata.page.link',
-                    'viewUser',
+                    'UserInfo',
                     {'UID': null},
                   ),
                 ),
@@ -167,8 +167,8 @@ void main() {
                 await GetIt.I<DatabaseRepository>().getObjectFromLink(
                   Uri.https(
                     'churchdata.page.link',
-                    'viewPerson',
-                    {'PersonId': 'person'},
+                    'PersonInfo',
+                    {'Id': 'person'},
                   ),
                 ),
                 person,
@@ -190,7 +190,7 @@ void main() {
                 await GetIt.I<DatabaseRepository>().getObjectFromLink(
                   Uri.https(
                     'churchdata.page.link',
-                    'viewUser',
+                    'UserInfo',
                     {'UID': 'userId234'},
                   ),
                 ),
