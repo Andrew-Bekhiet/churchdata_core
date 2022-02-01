@@ -39,8 +39,8 @@ class DataObjectListView<G, T extends DataObject> extends StatefulWidget {
     this.onLongPress,
     this.emptyMsg,
     required this.autoDisposeController,
-  })  : assert(isSubtype<G, void>() ||
-            isSubtype<G, DataObject>() ||
+  })  : assert(isSubtype<void, G>() ||
+            isSubtype<DataObject?, G>() ||
             groupBuilder != null),
         super(key: key);
 
