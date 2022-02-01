@@ -12,24 +12,33 @@ class StorageRepository {
 
 extension ReferenceX on Reference {
   Future<String> getCachedDownloadUrl(
-      [void Function(String oldUrl, String? newUrl)? onCacheChanged]) async {
+      {void Function(String oldUrl, String? newUrl)? onCacheChanged,
+      void Function(Exception e, String? cache)? onError}) async {
     final String? cache = GetIt.I<CacheRepository>()
         .box<String?>('PhotosURLsCache')
         .get(fullPath);
 
-    if (cache == null) {
-      final String url = await getDownloadURL();
+    try {
+      if (cache == null) {
+        final String url = await getDownloadURL();
 
-      await GetIt.I<CacheRepository>()
-          .box<String?>('PhotosURLsCache')
-          .put(fullPath, url);
+        await GetIt.I<CacheRepository>()
+            .box<String?>('PhotosURLsCache')
+            .put(fullPath, url);
 
-      return url;
+        return url;
+      }
+
+      _updateCache(cache, onCacheChanged);
+
+      return cache;
+    } on Exception catch (e) {
+      if (onError == null)
+        rethrow;
+      else
+        onError(e, cache);
+      return cache ?? '';
     }
-
-    _updateCache(cache, onCacheChanged);
-
-    return cache;
   }
 
   void _updateCache(

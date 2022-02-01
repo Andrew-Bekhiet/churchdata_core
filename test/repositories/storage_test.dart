@@ -40,7 +40,8 @@ void main() {
 
           expect(
             await ref.getCachedDownloadUrl(
-                (_, __) => fail('onCacheChanged was called on first time')),
+                onCacheChanged: (_, __) =>
+                    fail('onCacheChanged was called on first time')),
             firstUrl,
           );
           expect(
@@ -54,7 +55,7 @@ void main() {
 
           expect(
             await ref.getCachedDownloadUrl(
-              (c, u) {
+              onCacheChanged: (c, u) {
                 expect(c, firstUrl);
                 expect(u, changedUrl);
               },

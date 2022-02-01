@@ -62,11 +62,22 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
             child: FutureBuilder<String>(
               future: widget.object.photoUrlCache.runOnce(
                 () => widget.object.photoRef!.getCachedDownloadUrl(
-                  (cache, newUrl) async {
+                  onCacheChanged: (cache, newUrl) async {
                     await (GetIt.I.isRegistered<BaseCacheManager>()
                             ? GetIt.I<BaseCacheManager>()
                             : DefaultCacheManager())
                         .removeFile(cache);
+
+                    widget.object.photoUrlCache.invalidate();
+
+                    if (mounted && !disposed) setState(() {});
+                  },
+                  onError: (exception, cache) async {
+                    if (cache != null)
+                      await (GetIt.I.isRegistered<BaseCacheManager>()
+                              ? GetIt.I<BaseCacheManager>()
+                              : DefaultCacheManager())
+                          .removeFile(cache);
 
                     widget.object.photoUrlCache.invalidate();
 
