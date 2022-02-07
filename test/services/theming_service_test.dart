@@ -35,7 +35,7 @@ void main() {
               .box('Settings')
               .put('GreatFeastTheme', false);
 
-          final unit = ThemeNotifier.getDefault(darkTheme: false);
+          final unit = ThemingService.getDefault(darkTheme: false);
           const MaterialColor primary = Colors.blueGrey;
           const Color secondary = Colors.grey;
 
@@ -85,7 +85,7 @@ void main() {
               .box('Settings')
               .put('GreatFeastTheme', false);
 
-          final unit = ThemeNotifier.getDefault(darkTheme: true);
+          final unit = ThemingService.getDefault(darkTheme: true);
           const MaterialColor primary = Colors.blueGrey;
           const Color secondary = Colors.grey;
 
@@ -143,12 +143,12 @@ void main() {
           const MaterialColor primary = Colors.blueGrey;
           const Color secondary = Colors.grey;
 
-          final defaultTheme = ThemeNotifier.getDefault();
-          final defaultThemeLight = ThemeNotifier.getDefault(darkTheme: false);
+          final defaultTheme = ThemingService.getDefault();
+          final defaultThemeLight = ThemingService.getDefault(darkTheme: false);
           final otherTheme =
-              ThemeNotifier.getDefault(greatFeastThemeOverride: true);
+              ThemingService.getDefault(greatFeastThemeOverride: true);
 
-          final unit = ThemeNotifier.withInitialThemeata(defaultTheme);
+          final unit = ThemingService.withInitialThemeata(defaultTheme);
 
           addTearDown(unit.dispose);
 

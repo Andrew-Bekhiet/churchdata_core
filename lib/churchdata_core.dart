@@ -142,6 +142,20 @@ Future<void> initCore({
     launcherService,
   );
 
+  //Optional Services:
+
+  final shareService = overrides[ShareService]?.call();
+  if (shareService != null)
+    GetIt.I.registerSingleton<ShareService>(
+      shareService,
+    );
+
+  final themingService = overrides[ThemingService]?.call();
+  if (themingService != null)
+    GetIt.I.registerSingleton<ThemingService>(
+      themingService,
+    );
+
   await Future.wait([
     GetIt.I.isReady(instance: loggingService),
     GetIt.I.isReady(instance: authRepository),

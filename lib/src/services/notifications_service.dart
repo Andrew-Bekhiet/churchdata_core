@@ -170,6 +170,7 @@ class NotificationsService {
             .get(payload);
       }
     }
+    return null;
   }
 
   // coverage:ignore-start

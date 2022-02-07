@@ -5,5 +5,4 @@ export 'meta/order_options.dart';
 export 'meta/permissions_set.dart';
 export 'meta/property_metadata.dart';
 export 'meta/property_metadata.dart';
-export 'meta/theme_notifier.dart';
 export 'meta_objects.dart';

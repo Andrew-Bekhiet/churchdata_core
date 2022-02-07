@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ThemeNotifier {
+class ThemingService {
   static const MaterialColor black = MaterialColor(0xFF000000, <int, Color>{
     50: Color(0xFFE0E0E0),
     100: Color(0xFFB3B3B3),
@@ -124,9 +124,9 @@ class ThemeNotifier {
     }
   }
 
-  factory ThemeNotifier() => ThemeNotifier.withInitialThemeata(getDefault());
+  factory ThemingService() => ThemingService.withInitialThemeata(getDefault());
 
-  ThemeNotifier.withInitialThemeata(ThemeData initialTheme)
+  ThemingService.withInitialThemeata(ThemeData initialTheme)
       : _themeData = BehaviorSubject.seeded(initialTheme);
 
   final BehaviorSubject<ThemeData> _themeData;
