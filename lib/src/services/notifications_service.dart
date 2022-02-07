@@ -66,6 +66,7 @@ class NotificationsService {
   Future<void> initPlugins() async {
     GetIt.I<CacheRepository>()
       ..registerAdapter<Notification>(NotificationAdapter())
+      ..registerAdapter<NotificationSetting>(NotificationSettingAdapter())
       ..registerAdapter<NotificationType>(NotificationTypeAdapter());
 
     if (!kIsWeb) await AndroidAlarmManager.initialize();

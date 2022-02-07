@@ -95,6 +95,13 @@ Future<void> initCore({
     encryptionCipher: HiveAesCipher(encryptionKey),
   );
 
+  final notificationsService =
+      overrides[NotificationsService]?.call() ?? NotificationsService();
+  GetIt.I.registerSingleton<NotificationsService>(
+    notificationsService,
+    signalsReady: notificationsService.runtimeType == NotificationsService,
+  );
+
   await Future.wait(
     [
       GetIt.I<CacheRepository>().openBox('Settings'),
@@ -133,13 +140,6 @@ Future<void> initCore({
       overrides[LauncherService]?.call() ?? LauncherService();
   GetIt.I.registerSingleton<LauncherService>(
     launcherService,
-  );
-
-  final notificationsService =
-      overrides[NotificationsService]?.call() ?? NotificationsService();
-  GetIt.I.registerSingleton<NotificationsService>(
-    notificationsService,
-    signalsReady: notificationsService.runtimeType == NotificationsService,
   );
 
   await Future.wait([
