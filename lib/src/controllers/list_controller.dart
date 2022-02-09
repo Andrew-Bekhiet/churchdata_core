@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:flutter/foundation.dart';
@@ -73,6 +74,15 @@ class ListController<G, T extends DataObject> {
     return openedGroupsSubject!.valueOrNull;
   }
 
+  static Set<S> getEmptySet<S>() => isSubtype<DataObject?, S>()
+      ? HashSet<S>(
+          equals: (o, n) => (o as DataObject?)?.id == (n as DataObject?)?.id,
+          hashCode: (o) => (o as DataObject?)?.id.hashCode ?? null.hashCode,
+        )
+      : {};
+
+  static Set<S> setWrapper<S>(Iterable<S> old) => getEmptySet<S>()..addAll(old);
+
   ListController({
     required this.objectsPaginatableStream,
     Stream<String>? searchStream,
@@ -88,7 +98,7 @@ class ListController<G, T extends DataObject> {
         groupingSubject = BehaviorSubject<bool>.seeded(false),
         selectionSubject = BehaviorSubject<Set<T>?>.seeded(null),
         openedGroupsSubject = groupBy != null || groupByStream != null
-            ? BehaviorSubject<Set<G>>.seeded({})
+            ? BehaviorSubject<Set<G>>.seeded(getEmptySet<G>())
             : null {
     //
     _searchSubscription = searchStream?.listen(searchSubject.add,
@@ -160,25 +170,32 @@ class ListController<G, T extends DataObject> {
   }
 
   void select(T object) {
-    selectionSubject.add({...currentSelection ?? {}, object});
+    selectionSubject.add(
+      (currentSelection ?? getEmptySet<T>())..add(object),
+    );
   }
 
   void deselect(T object) {
-    selectionSubject.add({
-      ...(currentSelection ?? {}).difference({object})
-    });
+    selectionSubject.add(
+      (currentSelection ?? getEmptySet<T>()).difference(
+        setWrapper<T>({object}),
+      ),
+    );
   }
 
   void selectAll([List<T>? objects]) {
-    selectionSubject.add((objects ?? currentObjects).toSet());
+    selectionSubject.add(setWrapper<T>(objects ?? currentObjects));
   }
 
   void deselectAll([List<T>? objects]) {
     if (objects == null)
-      selectionSubject.add({});
+      selectionSubject.add(getEmptySet<T>());
     else
-      selectionSubject
-          .add({...(currentSelection ?? {}).difference(objects.toSet())});
+      selectionSubject.add(
+        (currentSelection ?? getEmptySet<T>()).difference(
+          setWrapper<T>(objects),
+        ),
+      );
   }
 
   void exitSelectionMode() {
@@ -186,11 +203,11 @@ class ListController<G, T extends DataObject> {
   }
 
   void enterSelectionMode() {
-    selectionSubject.add({});
+    selectionSubject.add(getEmptySet<T>());
   }
 
   void toggleSelected(T item) {
-    if ((currentSelection ?? {}).contains(item)) {
+    if ((currentSelection ?? getEmptySet<G>()).contains(item)) {
       deselect(item);
     } else {
       select(item);
@@ -199,19 +216,23 @@ class ListController<G, T extends DataObject> {
 
   void openGroup(G group) {
     assert(openedGroupsSubject != null);
-    openedGroupsSubject!.add({...currentOpenedGroups ?? {}, group});
+    openedGroupsSubject!.add(
+      (currentOpenedGroups ?? getEmptySet<G>())..add(group),
+    );
   }
 
   void closeGroup(G group) {
     assert(openedGroupsSubject != null);
-    openedGroupsSubject!.add({
-      ...(currentOpenedGroups ?? {}).difference({group}),
-    });
+    openedGroupsSubject!.add(
+      (currentOpenedGroups ?? getEmptySet<G>()).difference(
+        setWrapper<G>({group}),
+      ),
+    );
   }
 
   void toggleGroup(G group) {
     assert(openedGroupsSubject != null);
-    if ((currentOpenedGroups ?? {}).contains(group)) {
+    if ((currentOpenedGroups ?? getEmptySet<G>()).contains(group)) {
       closeGroup(group);
     } else {
       openGroup(group);
