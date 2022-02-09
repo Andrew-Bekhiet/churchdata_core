@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:churchdata_core/churchdata_core.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -75,13 +75,17 @@ class ListController<G, T extends DataObject> {
   }
 
   static Set<S> getEmptySet<S>() => isSubtype<DataObject?, S>()
-      ? HashSet<S>(
-          equals: (o, n) => (o as DataObject?)?.id == (n as DataObject?)?.id,
-          hashCode: (o) => (o as DataObject?)?.id.hashCode ?? null.hashCode,
+      ? EqualitySet<S>(
+          EqualityBy<S, String?>((o) => (o as DataObject?)?.id),
         )
-      : {};
+      : <S>{};
 
-  static Set<S> setWrapper<S>(Iterable<S> old) => getEmptySet<S>()..addAll(old);
+  static Set<S> setWrapper<S>(Iterable<S> old) => isSubtype<DataObject?, S>()
+      ? EqualitySet<S>.from(
+          EqualityBy<S, String?>((o) => (o as DataObject?)?.id),
+          old,
+        )
+      : old.toSet();
 
   ListController({
     required this.objectsPaginatableStream,
@@ -171,7 +175,7 @@ class ListController<G, T extends DataObject> {
 
   void select(T object) {
     selectionSubject.add(
-      (currentSelection ?? getEmptySet<T>())..add(object),
+      setWrapper<T>({...currentSelection ?? getEmptySet<T>(), object}),
     );
   }
 
@@ -217,7 +221,7 @@ class ListController<G, T extends DataObject> {
   void openGroup(G group) {
     assert(openedGroupsSubject != null);
     openedGroupsSubject!.add(
-      (currentOpenedGroups ?? getEmptySet<G>())..add(group),
+      setWrapper<G>({...currentOpenedGroups ?? getEmptySet<G>(), group}),
     );
   }
 
