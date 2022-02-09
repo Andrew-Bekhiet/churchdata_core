@@ -35,6 +35,7 @@ class PhotoObjectWidget extends StatefulWidget {
 
 class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
   bool disposed = false;
+  String? cachedUrl;
 
   @override
   void dispose() {
@@ -60,6 +61,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
           child: ConstrainedBox(
             constraints: constraints,
             child: FutureBuilder<String>(
+              initialData: cachedUrl,
               future: widget.object.photoUrlCache.runOnce(
                 () => widget.object.photoRef!.getCachedDownloadUrl(
                   onCacheChanged: (cache, newUrl) async {
@@ -90,9 +92,8 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                   return Center(child: ErrorWidget(data.error!));
 
                 if (!data.hasData)
-                  return AspectRatio(
-                    aspectRatio: constraints.biggest.aspectRatio,
-                    child: const CircularProgressIndicator(),
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
 
                 if (data.data == '')
@@ -100,6 +101,8 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                     widget.object.defaultIcon,
                     size: constraints.maxHeight,
                   );
+
+                cachedUrl = data.data;
 
                 final photo = Material(
                   type: MaterialType.transparency,
@@ -119,8 +122,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                               useOldImageOnUrlChange: true,
                               imageUrl: data.data!,
                               progressIndicatorBuilder:
-                                  (context, url, progress) => AspectRatio(
-                                aspectRatio: constraints.biggest.aspectRatio,
+                                  (context, url, progress) => Center(
                                 child: CircularProgressIndicator(
                                   value: progress.progress,
                                 ),
@@ -142,8 +144,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                           .toInt(),
                       imageUrl: data.data!,
                       progressIndicatorBuilder: (context, url, progress) =>
-                          AspectRatio(
-                        aspectRatio: constraints.biggest.aspectRatio,
+                          Center(
                         child: CircularProgressIndicator(
                           value: progress.progress,
                         ),
