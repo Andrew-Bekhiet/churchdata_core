@@ -12,5 +12,8 @@ class LastEdit extends Serializable {
   LastEdit.fromJson(Json json) : this(json['UID'], json['Time']?.toDate());
 
   @override
-  Json toJson() => {'UID': uid, 'Time': time};
+  Json toJson() => {
+        'UID': uid,
+        'Time': time,
+      };
 }
