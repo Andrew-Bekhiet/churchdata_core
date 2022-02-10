@@ -53,6 +53,8 @@ class PaginatableStream<T extends DataObject> {
 
           return query.limit(limit).snapshots().map(
             (snapshot) {
+              if (snapshot.docs.isEmpty) return [];
+
               _canPaginateBackward =
                   _canPaginateForward = snapshot.size >= limit;
               _middlePointer = snapshot.docs[(snapshot.size / 2).floor()];
