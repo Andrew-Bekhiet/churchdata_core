@@ -100,6 +100,7 @@ Future<void> initCore({
   GetIt.I.registerSingleton<NotificationsService>(
     notificationsService,
     signalsReady: notificationsService.runtimeType == NotificationsService,
+    dispose: (n) => n.dispose(),
   );
 
   await Future.wait(

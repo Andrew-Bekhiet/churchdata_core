@@ -4,6 +4,9 @@ import 'package:mockito/mockito.dart';
 class FakeNotificationsService extends NotificationsService {
   @override
   Future<void> initPlugins() async {}
+
+  @override
+  Future<void> listenToFirebaseMessaging() async {}
 }
 
 class MockNotificationsService extends Mock implements NotificationsService {

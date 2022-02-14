@@ -12,63 +12,28 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
 class NotificationsService {
-  static Future<void> onNotificationClick(String? payload) async {
-    throw UnimplementedError('onNotificationClick is not implemented');
-  }
-
-  static Future<void> storeNotification(RemoteMessage message) async {
-    final bool registered = GetIt.I.isRegistered<CacheRepository>();
-
-    if (!registered) {
-      GetIt.I.registerSingleton<CacheRepository>(
-        CacheRepository(),
-        signalsReady: true,
-        dispose: (r) => r.dispose(),
-      );
-
-      await GetIt.I.isReady<CacheRepository>();
-    }
-
-    final bool isBoxOpen =
-        GetIt.I<CacheRepository>().isBoxOpen('Notifications');
-    if (!isBoxOpen)
-      await GetIt.I<CacheRepository>().openBox<Notification>('Notifications');
-
-    await GetIt.I<CacheRepository>().box<Notification>('Notifications').add(
-          Notification.fromRemoteMessage(message),
-        );
-
-    if (!isBoxOpen)
-      await GetIt.I<CacheRepository>()
-          .box<Notification>('Notifications')
-          .close();
-    if (!registered) GetIt.I.unregister<CacheRepository>();
-  }
-
-  static Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
-    await storeNotification(message);
-  }
-
-  ///Must be overriden in another class when UI is available to
-  ///make something with the notification
-  static Future<void> onForegroundMessage(RemoteMessage message) async {
-    await storeNotification(message);
-
-    //Show some alert or notification content
-  }
+  late final StreamSubscription<RemoteMessage>? onForegroundMessageSubscription;
 
   NotificationsService() {
+    listenToFirebaseMessaging();
     initPlugins();
+  }
+
+  @protected
+  void listenToFirebaseMessaging() {
+    FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
+    onForegroundMessageSubscription =
+        FirebaseMessaging.onMessage.listen(onForegroundMessage);
+  }
+
+  @mustCallSuper
+  Future<void> dispose() async {
+    await onForegroundMessageSubscription?.cancel();
   }
 
   // coverage:ignore-start
   @protected
   Future<void> initPlugins() async {
-    GetIt.I<CacheRepository>()
-      ..registerAdapter<Notification>(NotificationAdapter())
-      ..registerAdapter<NotificationSetting>(NotificationSettingAdapter())
-      ..registerAdapter<NotificationType>(NotificationTypeAdapter());
-
     if (!kIsWeb) await AndroidAlarmManager.initialize();
 
     await FlutterLocalNotificationsPlugin().initialize(
@@ -182,4 +147,53 @@ class NotificationsService {
     }
   }
   // coverage:ignore-end
+
+  //
+  //Static callbacks
+  //
+
+  static Future<void> onNotificationClick(String? payload) async {
+    throw UnimplementedError('onNotificationClick is not implemented');
+  }
+
+  static Future<void> storeNotification(RemoteMessage message) async {
+    final bool registered = GetIt.I.isRegistered<CacheRepository>();
+
+    if (!registered) {
+      GetIt.I.registerSingleton<CacheRepository>(
+        CacheRepository(),
+        signalsReady: true,
+        dispose: (r) => r.dispose(),
+      );
+
+      await GetIt.I.isReady<CacheRepository>();
+    }
+
+    final bool isBoxOpen =
+        GetIt.I<CacheRepository>().isBoxOpen('Notifications');
+    if (!isBoxOpen)
+      await GetIt.I<CacheRepository>().openBox<Notification>('Notifications');
+
+    await GetIt.I<CacheRepository>().box<Notification>('Notifications').add(
+          Notification.fromRemoteMessage(message),
+        );
+
+    if (!isBoxOpen)
+      await GetIt.I<CacheRepository>()
+          .box<Notification>('Notifications')
+          .close();
+    if (!registered) GetIt.I.unregister<CacheRepository>();
+  }
+
+  static Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
+    await storeNotification(message);
+  }
+
+  ///Must be overriden in another class when UI is available to
+  ///make something with the notification
+  static Future<void> onForegroundMessage(RemoteMessage message) async {
+    await storeNotification(message);
+
+    //Show some alert or notification content
+  }
 }

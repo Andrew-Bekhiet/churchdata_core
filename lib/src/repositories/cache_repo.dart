@@ -1,6 +1,7 @@
 // coverage:ignore-file
 import 'dart:typed_data';
 
+import 'package:churchdata_core/churchdata_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -8,7 +9,15 @@ export 'package:hive/hive.dart' show HiveAesCipher;
 
 class CacheRepository implements HiveInterface {
   CacheRepository() {
-    Hive.initFlutter().then((_) => GetIt.I.signalReady(this));
+    Hive.initFlutter().then((_) {
+      if (!isAdapterRegistered(NotificationAdapter().typeId))
+        registerAdapter<Notification>(NotificationAdapter());
+      if (!isAdapterRegistered(NotificationSettingAdapter().typeId))
+        registerAdapter<NotificationSetting>(NotificationSettingAdapter());
+      if (!isAdapterRegistered(NotificationTypeAdapter().typeId))
+        registerAdapter<NotificationType>(NotificationTypeAdapter());
+      GetIt.I.signalReady(this);
+    });
   }
 
   @override
