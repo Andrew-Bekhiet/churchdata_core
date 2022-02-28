@@ -70,7 +70,10 @@ class NotificationsService {
   }
 
   Future<void> showNotificationContents(
-      BuildContext context, Notification notification) async {
+    BuildContext context,
+    Notification notification, {
+    List<Widget>? actions,
+  }) async {
     final DataObject? attachment = notification.attachmentLink != null
         ? await GetIt.I<DatabaseRepository>().getObjectFromLink(
             Uri.parse(notification.attachmentLink!),
@@ -85,6 +88,7 @@ class NotificationsService {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        actions: actions,
         title: Text(notification.title),
         content: SizedBox(
           width: MediaQuery.of(context).size.width * 85 / 100,
