@@ -31,3 +31,5 @@ build/
 
 TODO.txt
 coverage/
+
+.flutter-plugins
