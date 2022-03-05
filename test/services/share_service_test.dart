@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:share_plus_platform_interface/share_plus_platform_interface.dart';
 
 import '../churchdata_core.dart';
@@ -18,7 +17,6 @@ void main() {
     () {
       setUp(
         () async {
-          Share.disableSharePlatformOverride = true;
           SharePlatform.instance = MockSharePlatform();
           when((SharePlatform.instance as MockSharePlatform).share(any))
               .thenAnswer((_) async => Never);
