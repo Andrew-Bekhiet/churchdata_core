@@ -34,7 +34,7 @@ abstract class _$QueryInfoCWProxy {
     String? operator,
     bool? order,
     String? orderBy,
-    dynamic queryValue,
+    dynamic? queryValue,
   });
 }
 
@@ -84,23 +84,24 @@ class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
     Object? queryValue = const $CopyWithPlaceholder(),
   }) {
     return QueryInfo(
-      collection: collection == const $CopyWithPlaceholder()
-          ? _value.collection
-          // ignore: cast_nullable_to_non_nullable
-          : collection as CollectionReference<Map<String, dynamic>>,
+      collection:
+          collection == const $CopyWithPlaceholder() || collection == null
+              ? _value.collection
+              // ignore: cast_nullable_to_non_nullable
+              : collection as CollectionReference<Map<String, dynamic>>,
       descending: descending == const $CopyWithPlaceholder()
           ? _value.descending
           // ignore: cast_nullable_to_non_nullable
           : descending as bool?,
-      fieldPath: fieldPath == const $CopyWithPlaceholder()
+      fieldPath: fieldPath == const $CopyWithPlaceholder() || fieldPath == null
           ? _value.fieldPath
           // ignore: cast_nullable_to_non_nullable
           : fieldPath as String,
-      operator: operator == const $CopyWithPlaceholder()
+      operator: operator == const $CopyWithPlaceholder() || operator == null
           ? _value.operator
           // ignore: cast_nullable_to_non_nullable
           : operator as String,
-      order: order == const $CopyWithPlaceholder()
+      order: order == const $CopyWithPlaceholder() || order == null
           ? _value.order
           // ignore: cast_nullable_to_non_nullable
           : order as bool,
@@ -108,16 +109,17 @@ class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
           ? _value.orderBy
           // ignore: cast_nullable_to_non_nullable
           : orderBy as String?,
-      queryValue: queryValue == const $CopyWithPlaceholder()
-          ? _value.queryValue
-          // ignore: cast_nullable_to_non_nullable
-          : queryValue as dynamic,
+      queryValue:
+          queryValue == const $CopyWithPlaceholder() || queryValue == null
+              ? _value.queryValue
+              // ignore: cast_nullable_to_non_nullable
+              : queryValue as dynamic,
     );
   }
 }
 
 extension $QueryInfoCopyWith on QueryInfo {
-  /// Returns a callable class that can be used as follows: `instanceOfclass QueryInfo with EquatableMixin implements PhotoObjectBase, DataObject.name.copyWith(...)` or like so:`instanceOfclass QueryInfo with EquatableMixin implements PhotoObjectBase, DataObject.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfclass QueryInfo extends Serializable with Viewable.name.copyWith(...)` or like so:`instanceOfclass QueryInfo extends Serializable with Viewable.name.copyWith.fieldName(...)`.
   _$QueryInfoCWProxy get copyWith => _$QueryInfoCWProxyImpl(this);
 
   /// Copies the object with the specific fields set to `null`. If you pass `false` as a parameter, nothing will be done and it will be ignored. Don't do it. Prefer `copyWith(field: null)` or `QueryInfo(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.

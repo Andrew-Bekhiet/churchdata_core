@@ -27,7 +27,7 @@ export 'src/widgets.dart';
 
 ///Registers `GetIt` singleton instances for the repositories
 ///
-///Don't forget to register `DefaultDataObjectTapHandler` as
+///Don't forget to register `DefaultViewableObjectTapHandler` as
 ///soon as the app builds the navigator
 ///
 ///Use [overrides] to override repository and/or services to

@@ -4,7 +4,7 @@ import 'package:churchdata_core/churchdata_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
-class PaginatableStream<T extends DataObject> {
+class PaginatableStream<T extends DocumentObject> {
   final Subject<QueryOfJson> query;
   final int limit;
   final T Function(JsonQueryDoc) mapper;

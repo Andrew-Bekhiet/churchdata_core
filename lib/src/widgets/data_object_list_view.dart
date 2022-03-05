@@ -214,7 +214,7 @@ class _DataObjectListViewState<G, T extends DataObject>
           onTap: (T current) async {
             if (_controller.currentSelection == null) {
               widget.onTap == null
-                  ? GetIt.I<DefaultDataObjectTapHandler>().onTap(current)
+                  ? GetIt.I<DefaultViewableObjectTapHandler>().onTap(current)
                   : widget.onTap!(current);
             } else {
               _controller.toggleSelected(current);
@@ -289,7 +289,7 @@ Widget defaultItemBuilder<T extends DataObject>(
   Widget? trailing,
   Widget? subtitle,
 }) =>
-    DataObjectWidget<T>(
+    ViewableObjectWidget<T>(
       object,
       subtitle: subtitle,
       onLongPress: onLongPress != null ? () => onLongPress(object) : null,
@@ -307,7 +307,7 @@ Widget defaultGroupBuilder<G extends DataObject>(
 }) {
   if (object == null) return const Text('غير محددة');
 
-  return DataObjectWidget<G>(
+  return ViewableObjectWidget<G>(
     object,
     wrapInCard: false,
     showSubtitle: showSubtitle ?? false,
@@ -320,7 +320,7 @@ Widget defaultGroupBuilder<G extends DataObject>(
         if (trailing != null) trailing,
         IconButton(
           onPressed: () {
-            GetIt.I<DefaultDataObjectTapHandler>().onTap(object);
+            GetIt.I<DefaultViewableObjectTapHandler>().onTap(object);
           },
           icon: const Icon(Icons.info_outlined),
         ),

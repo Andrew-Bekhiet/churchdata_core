@@ -1,7 +1,6 @@
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -10,7 +9,7 @@ part 'query_info.g.dart';
 ///Class represnting Query object
 @immutable
 @CopyWith(copyWithNull: true)
-class QueryInfo with EquatableMixin implements PhotoObjectBase, DataObject {
+class QueryInfo extends Serializable with Viewable {
   final CollectionReference<Json> collection;
 
   final String fieldPath;
@@ -91,48 +90,7 @@ class QueryInfo with EquatableMixin implements PhotoObjectBase, DataObject {
 
   // coverage:ignore-start
   @override
-  Reference? get photoRef => null;
-
-  @override
-  bool get hasPhoto => false;
-
-  @override
-  IconData get defaultIcon => Icons.search;
-
-  @override
-  AsyncMemoizerCache<String> get photoUrlCache => AsyncMemoizerCache<String>();
-
-  @override
-  Future<String?> getSecondLine() async {
-    return null;
-  }
-
-  @override
-  String get id =>
-      throw UnsupportedError('`id` is unsupported on Query object');
-
-  @override
   String get name => 'بحث مفصل';
-
-  @override
-  List<Object?> get props => toJson().values.toList();
-
-  @override
-  JsonRef get ref =>
-      throw UnsupportedError('`ref` is unsupported on Query object');
-
-  @override
-  Future<void> set({Json? merge}) {
-    throw UnsupportedError('`set` is unsupported on Query object');
-  }
-
-  @override
-  Future<void> update({Json old = const {}}) {
-    throw UnsupportedError('`update` is unsupported on Query object');
-  }
-
-  @override
-  Color? get color => null;
-
   // coverage:ignore-end
+
 }

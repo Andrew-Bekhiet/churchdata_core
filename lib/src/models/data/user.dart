@@ -7,8 +7,9 @@ part 'user.g.dart';
 
 @immutable
 @CopyWith(copyWithNull: true)
-class UserBase extends Serializable implements PhotoObjectBase {
+class UserBase extends Serializable with Viewable implements PhotoObjectBase {
   final String uid;
+  @override
   final String name;
   final String? email;
   final String? phone;

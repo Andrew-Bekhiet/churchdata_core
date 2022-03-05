@@ -59,11 +59,11 @@ class _$ChurchCWProxyImpl implements _$ChurchCWProxy {
           ? _value.address
           // ignore: cast_nullable_to_non_nullable
           : address as String?,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      ref: ref == const $CopyWithPlaceholder()
+      ref: ref == const $CopyWithPlaceholder() || ref == null
           ? _value.ref
           // ignore: cast_nullable_to_non_nullable
           : ref as DocumentReference<Map<String, dynamic>>,
@@ -146,11 +146,11 @@ class _$PersonStateCWProxyImpl implements _$PersonStateCWProxy {
           ? _value.color
           // ignore: cast_nullable_to_non_nullable
           : color as Color?,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      ref: ref == const $CopyWithPlaceholder()
+      ref: ref == const $CopyWithPlaceholder() || ref == null
           ? _value.ref
           // ignore: cast_nullable_to_non_nullable
           : ref as DocumentReference<Map<String, dynamic>>,
@@ -221,11 +221,11 @@ class _$CollegeCWProxyImpl implements _$CollegeCWProxy {
     Object? ref = const $CopyWithPlaceholder(),
   }) {
     return College(
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      ref: ref == const $CopyWithPlaceholder()
+      ref: ref == const $CopyWithPlaceholder() || ref == null
           ? _value.ref
           // ignore: cast_nullable_to_non_nullable
           : ref as DocumentReference<Map<String, dynamic>>,
@@ -292,11 +292,11 @@ class _$FatherCWProxyImpl implements _$FatherCWProxy {
           ? _value.churchId
           // ignore: cast_nullable_to_non_nullable
           : churchId as DocumentReference<Map<String, dynamic>>?,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      ref: ref == const $CopyWithPlaceholder()
+      ref: ref == const $CopyWithPlaceholder() || ref == null
           ? _value.ref
           // ignore: cast_nullable_to_non_nullable
           : ref as DocumentReference<Map<String, dynamic>>,
@@ -367,11 +367,11 @@ class _$JobCWProxyImpl implements _$JobCWProxy {
     Object? ref = const $CopyWithPlaceholder(),
   }) {
     return Job(
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      ref: ref == const $CopyWithPlaceholder()
+      ref: ref == const $CopyWithPlaceholder() || ref == null
           ? _value.ref
           // ignore: cast_nullable_to_non_nullable
           : ref as DocumentReference<Map<String, dynamic>>,
@@ -426,11 +426,11 @@ class _$PersonTypeCWProxyImpl implements _$PersonTypeCWProxy {
     Object? ref = const $CopyWithPlaceholder(),
   }) {
     return PersonType(
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      ref: ref == const $CopyWithPlaceholder()
+      ref: ref == const $CopyWithPlaceholder() || ref == null
           ? _value.ref
           // ignore: cast_nullable_to_non_nullable
           : ref as DocumentReference<Map<String, dynamic>>,
@@ -486,11 +486,11 @@ class _$ServingTypeCWProxyImpl implements _$ServingTypeCWProxy {
     Object? ref = const $CopyWithPlaceholder(),
   }) {
     return ServingType(
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      ref: ref == const $CopyWithPlaceholder()
+      ref: ref == const $CopyWithPlaceholder() || ref == null
           ? _value.ref
           // ignore: cast_nullable_to_non_nullable
           : ref as DocumentReference<Map<String, dynamic>>,
@@ -560,19 +560,20 @@ class _$StudyYearCWProxyImpl implements _$StudyYearCWProxy {
     Object? ref = const $CopyWithPlaceholder(),
   }) {
     return StudyYear(
-      grade: grade == const $CopyWithPlaceholder()
+      grade: grade == const $CopyWithPlaceholder() || grade == null
           ? _value.grade
           // ignore: cast_nullable_to_non_nullable
           : grade as int,
-      isCollegeYear: isCollegeYear == const $CopyWithPlaceholder()
-          ? _value.isCollegeYear
-          // ignore: cast_nullable_to_non_nullable
-          : isCollegeYear as bool,
-      name: name == const $CopyWithPlaceholder()
+      isCollegeYear:
+          isCollegeYear == const $CopyWithPlaceholder() || isCollegeYear == null
+              ? _value.isCollegeYear
+              // ignore: cast_nullable_to_non_nullable
+              : isCollegeYear as bool,
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      ref: ref == const $CopyWithPlaceholder()
+      ref: ref == const $CopyWithPlaceholder() || ref == null
           ? _value.ref
           // ignore: cast_nullable_to_non_nullable
           : ref as DocumentReference<Map<String, dynamic>>,
@@ -638,11 +639,11 @@ class _$SchoolCWProxyImpl implements _$SchoolCWProxy {
           ? _value.address
           // ignore: cast_nullable_to_non_nullable
           : address as String?,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      ref: ref == const $CopyWithPlaceholder()
+      ref: ref == const $CopyWithPlaceholder() || ref == null
           ? _value.ref
           // ignore: cast_nullable_to_non_nullable
           : ref as DocumentReference<Map<String, dynamic>>,

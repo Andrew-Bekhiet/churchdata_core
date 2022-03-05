@@ -189,7 +189,8 @@ void main() {
 
               expect(find.text(remoteNotification.title), findsOneWidget);
               expect(find.text(person.name), findsOneWidget);
-              expect(find.byType(DataObjectWidget<DataObject>), findsOneWidget);
+              expect(
+                  find.byType(ViewableObjectWidget<Viewable>), findsOneWidget);
               expect(find.text(remoteNotification.body), findsOneWidget);
               expect(
                 find.text(DateFormat('yyyy/M/d h:m a', 'ar-EG').format(time)),

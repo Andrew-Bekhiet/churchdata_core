@@ -74,7 +74,7 @@ class NotificationsService {
     Notification notification, {
     List<Widget>? actions,
   }) async {
-    final DataObject? attachment = notification.attachmentLink != null
+    final Viewable? attachment = notification.attachmentLink != null
         ? await GetIt.I<DatabaseRepository>().getObjectFromLink(
             Uri.parse(notification.attachmentLink!),
           )
@@ -101,7 +101,7 @@ class NotificationsService {
                   style: const TextStyle(fontSize: 18),
                 ),
                 if (attachment != null)
-                  DataObjectWidget(attachment)
+                  ViewableObjectWidget(attachment)
                 else if (notification.attachmentLink != null)
                   CachedNetworkImage(
                     useOldImageOnUrlChange: true,

@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 
 @immutable
 abstract class PhotoObjectBase {
-  final IconData defaultIcon;
-  final bool hasPhoto;
-
   final AsyncMemoizerCache<String> photoUrlCache = AsyncMemoizerCache<String>();
 
-  PhotoObjectBase(this.defaultIcon, this.hasPhoto);
-
+  PhotoObjectBase();
   factory PhotoObjectBase.reference(Reference ref) => SimplePhotoObject(ref);
 
+  IconData get defaultIcon;
+  bool get hasPhoto;
   Reference? get photoRef;
 }
 
@@ -28,8 +26,14 @@ abstract class DataObjectWithPhoto extends DataObject
 }
 
 class SimplePhotoObject extends PhotoObjectBase {
-  SimplePhotoObject(this.photoRef) : super(Icons.help, true);
+  SimplePhotoObject(this.photoRef);
 
   @override
   final Reference photoRef;
+
+  @override
+  IconData get defaultIcon => Icons.help;
+
+  @override
+  bool get hasPhoto => true;
 }

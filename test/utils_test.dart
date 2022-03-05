@@ -98,7 +98,7 @@ void main() {
       );
 
       testWidgets(
-        'DefaultDataObjectTapHandler',
+        'DefaultViewableObjectTapHandler',
         (tester) async {
           registerFirebaseMocks();
           GetIt.I.registerSingleton(DatabaseRepository());
@@ -132,7 +132,7 @@ void main() {
             ),
           );
 
-          final unit = DefaultDataObjectTapHandler(key)
+          final unit = DefaultViewableObjectTapHandler(key)
             ..onTap(
               PersonBase(
                   ref: GetIt.I<DatabaseRepository>().doc('Persons/person'),

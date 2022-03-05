@@ -48,11 +48,11 @@ class _$OrderOptionsCWProxyImpl implements _$OrderOptionsCWProxy {
     Object? orderBy = const $CopyWithPlaceholder(),
   }) {
     return OrderOptions(
-      asc: asc == const $CopyWithPlaceholder()
+      asc: asc == const $CopyWithPlaceholder() || asc == null
           ? _value.asc
           // ignore: cast_nullable_to_non_nullable
           : asc as bool,
-      orderBy: orderBy == const $CopyWithPlaceholder()
+      orderBy: orderBy == const $CopyWithPlaceholder() || orderBy == null
           ? _value.orderBy
           // ignore: cast_nullable_to_non_nullable
           : orderBy as String,

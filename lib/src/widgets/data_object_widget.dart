@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
-class DataObjectWidget<T extends DataObject> extends StatefulWidget {
+class ViewableObjectWidget<T extends Viewable> extends StatefulWidget {
   final T object;
 
   final void Function()? onLongPress;
@@ -17,7 +17,7 @@ class DataObjectWidget<T extends DataObject> extends StatefulWidget {
   final bool isDense;
   final bool showSubtitle;
 
-  const DataObjectWidget(
+  const ViewableObjectWidget(
     this.object, {
     Key? key,
     this.isDense = false,
@@ -32,11 +32,12 @@ class DataObjectWidget<T extends DataObject> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<DataObjectWidget<T>> createState() => _DataObjectWidgetState<T>();
+  State<ViewableObjectWidget<T>> createState() =>
+      _ViewableObjectWidgetState<T>();
 }
 
-class _DataObjectWidgetState<T extends DataObject>
-    extends State<DataObjectWidget<T>> {
+class _ViewableObjectWidgetState<T extends Viewable>
+    extends State<ViewableObjectWidget<T>> {
   final _secondLineMemoizer = AsyncMemoizer<String?>();
 
   @override
@@ -46,7 +47,7 @@ class _DataObjectWidgetState<T extends DataObject>
       dense: widget.isDense,
       onLongPress: widget.onLongPress,
       onTap: widget.onTap ??
-          () => GetIt.I<DefaultDataObjectTapHandler>().onTap(widget.object),
+          () => GetIt.I<DefaultViewableObjectTapHandler>().onTap(widget.object),
       trailing: widget.trailing,
       title: widget.title ?? Text(widget.object.name),
       subtitle: widget.showSubtitle

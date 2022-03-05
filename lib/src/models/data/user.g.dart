@@ -74,19 +74,20 @@ class _$UserBaseCWProxyImpl implements _$UserBaseCWProxy {
           ? _value.email
           // ignore: cast_nullable_to_non_nullable
           : email as String?,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      permissions: permissions == const $CopyWithPlaceholder()
-          ? _value.permissions
-          // ignore: cast_nullable_to_non_nullable
-          : permissions as PermissionsSet,
+      permissions:
+          permissions == const $CopyWithPlaceholder() || permissions == null
+              ? _value.permissions
+              // ignore: cast_nullable_to_non_nullable
+              : permissions as PermissionsSet,
       phone: phone == const $CopyWithPlaceholder()
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
           : phone as String?,
-      uid: uid == const $CopyWithPlaceholder()
+      uid: uid == const $CopyWithPlaceholder() || uid == null
           ? _value.uid
           // ignore: cast_nullable_to_non_nullable
           : uid as String,
@@ -95,7 +96,7 @@ class _$UserBaseCWProxyImpl implements _$UserBaseCWProxy {
 }
 
 extension $UserBaseCopyWith on UserBase {
-  /// Returns a callable class that can be used as follows: `instanceOfclass UserBase extends Serializable implements PhotoObjectBase.name.copyWith(...)` or like so:`instanceOfclass UserBase extends Serializable implements PhotoObjectBase.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfclass UserBase extends Serializable with Viewable implements PhotoObjectBase.name.copyWith(...)` or like so:`instanceOfclass UserBase extends Serializable with Viewable implements PhotoObjectBase.name.copyWith.fieldName(...)`.
   _$UserBaseCWProxy get copyWith => _$UserBaseCWProxyImpl(this);
 
   /// Copies the object with the specific fields set to `null`. If you pass `false` as a parameter, nothing will be done and it will be ignored. Don't do it. Prefer `copyWith(field: null)` or `UserBase(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.

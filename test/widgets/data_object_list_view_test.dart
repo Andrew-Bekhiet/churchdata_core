@@ -28,7 +28,7 @@ void main() {
 
           GetIt.I.registerSingleton(DatabaseRepository());
           GetIt.I.registerSingleton<ShareService>(MockShareService());
-          // GetIt.I.registerSingleton(DefaultDataObjectTapHandler());
+          // GetIt.I.registerSingleton(DefaultViewableObjectTapHandler());
         },
       );
 
@@ -73,13 +73,13 @@ void main() {
           expect(
             find.descendant(
               of: find.byType(ListView),
-              matching: find.byType(DataObjectWidget<BasicDataObject>),
+              matching: find.byType(ViewableObjectWidget<BasicDataObject>),
             ),
             findsWidgets,
           );
           expect(
             find.widgetWithText(
-              DataObjectWidget<BasicDataObject>,
+              ViewableObjectWidget<BasicDataObject>,
               objects.first.name,
             ),
             findsOneWidget,
@@ -87,14 +87,14 @@ void main() {
 
           await tester.scrollUntilVisible(
             find.widgetWithText(
-              DataObjectWidget<BasicDataObject>,
+              ViewableObjectWidget<BasicDataObject>,
               objects[pageLimit - 1].name,
             ),
             scrollDelta,
           );
           await tester.scrollUntilVisible(
             find.widgetWithText(
-              DataObjectWidget<BasicDataObject>,
+              ViewableObjectWidget<BasicDataObject>,
               objects[pageLimit].name,
             ),
             scrollDelta,
@@ -105,21 +105,21 @@ void main() {
 
           expect(
             find.widgetWithText(
-              DataObjectWidget<BasicDataObject>,
+              ViewableObjectWidget<BasicDataObject>,
               objects.first.name,
             ),
             findsNothing,
           );
           expect(
             find.widgetWithText(
-              DataObjectWidget<BasicDataObject>,
+              ViewableObjectWidget<BasicDataObject>,
               objects[pageLimit - 1].name,
             ),
             findsNothing,
           );
           await tester.scrollUntilVisible(
             find.widgetWithText(
-              DataObjectWidget<BasicDataObject>,
+              ViewableObjectWidget<BasicDataObject>,
               objects[pageLimit * 2].name,
             ),
             scrollDelta,
@@ -127,7 +127,7 @@ void main() {
           await tester.dragUntilVisible(
             find.byType(Scrollable),
             find.widgetWithText(
-              DataObjectWidget<BasicDataObject>,
+              ViewableObjectWidget<BasicDataObject>,
               objects[pageLimit].name,
             ),
             //Scrolling up to check kthe first widget
@@ -202,7 +202,7 @@ void main() {
           );
           expect(
             find.widgetWithText(
-              DataObjectWidget<BasicDataObject>,
+              ViewableObjectWidget<BasicDataObject>,
               objects.first.name,
             ),
             findsNothing,
@@ -216,7 +216,7 @@ void main() {
 
           await tester.scrollUntilVisible(
             find.widgetWithText(
-              DataObjectWidget<BasicDataObject>,
+              ViewableObjectWidget<BasicDataObject>,
               objects.first.name,
             ),
             scrollDelta,
@@ -231,7 +231,7 @@ void main() {
 
           await tester.scrollUntilVisible(
             find.widgetWithText(
-              DataObjectWidget<BasicDataObject>,
+              ViewableObjectWidget<BasicDataObject>,
               objects[2].name,
             ),
             scrollDelta,
@@ -278,13 +278,13 @@ void main() {
           );
           await tester.pumpAndSettle();
 
-          await tester
-              .longPress(find.byType(DataObjectWidget<BasicDataObject>).first);
+          await tester.longPress(
+              find.byType(ViewableObjectWidget<BasicDataObject>).first);
           await tester.pumpAndSettle();
 
           expect(
             find.descendant(
-              of: find.byType(DataObjectWidget<BasicDataObject>),
+              of: find.byType(ViewableObjectWidget<BasicDataObject>),
               matching: find.byType(Checkbox),
             ),
             findsWidgets,
@@ -302,7 +302,7 @@ void main() {
           );
 
           await tester
-              .tap(find.byType(DataObjectWidget<BasicDataObject>).first);
+              .tap(find.byType(ViewableObjectWidget<BasicDataObject>).first);
           await tester.pumpAndSettle();
 
           expect(
@@ -315,7 +315,7 @@ void main() {
           );
 
           await tester
-              .tap(find.byType(DataObjectWidget<BasicDataObject>).first);
+              .tap(find.byType(ViewableObjectWidget<BasicDataObject>).first);
           await tester.pumpAndSettle();
 
           expect(
@@ -329,8 +329,8 @@ void main() {
             ),
           );
 
-          await tester
-              .longPress(find.byType(DataObjectWidget<BasicDataObject>).first);
+          await tester.longPress(
+              find.byType(ViewableObjectWidget<BasicDataObject>).first);
 
           verify(GetIt.I<ShareService>().shareObject(objects[0]));
           verify(GetIt.I<ShareService>()

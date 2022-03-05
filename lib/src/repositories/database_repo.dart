@@ -27,7 +27,7 @@ class DatabaseRepository {
       get runTransaction => GetIt.I<FirebaseFirestore>().runTransaction;
   // coverage:ignore-end
 
-  Future<DataObject?> getObjectFromLink(Uri deepLink) async {
+  Future<Viewable?> getObjectFromLink(Uri deepLink) async {
     if (deepLink.pathSegments[0] == 'PersonInfo') {
       if (deepLink.queryParameters['Id'] == '')
         throw Exception('Id has an empty value which is not allowed');

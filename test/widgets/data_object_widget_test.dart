@@ -55,14 +55,14 @@ void main() {
               );
 
               GetIt.I.registerSingleton(
-                DefaultDataObjectTapHandler(navigator),
+                DefaultViewableObjectTapHandler(navigator),
               );
 
               unawaited(
                 navigator.currentState!.push(
                   MaterialPageRoute(
                     builder: (context) => Scaffold(
-                      body: DataObjectWidget<PersonBase>(person),
+                      body: ViewableObjectWidget<PersonBase>(person),
                     ),
                   ),
                 ),
@@ -118,14 +118,14 @@ void main() {
               );
 
               GetIt.I.registerSingleton(
-                DefaultDataObjectTapHandler(navigator),
+                DefaultViewableObjectTapHandler(navigator),
               );
 
               unawaited(
                 navigator.currentState!.push(
                   MaterialPageRoute(
                     builder: (context) => Scaffold(
-                      body: DataObjectWidget<PersonBase>(
+                      body: ViewableObjectWidget<PersonBase>(
                         person,
                         trailing: const SizedBox(
                           width: 56,
@@ -219,14 +219,14 @@ void main() {
           );
 
           GetIt.I.registerSingleton(
-            DefaultDataObjectTapHandler(navigator),
+            DefaultViewableObjectTapHandler(navigator),
           );
 
           unawaited(
             navigator.currentState!.push(
               MaterialPageRoute(
                 builder: (context) => Scaffold(
-                  body: DataObjectWidget<PersonBase>(
+                  body: ViewableObjectWidget<PersonBase>(
                     person,
                     onLongPress: () => longPressed = true,
                   ),
@@ -236,14 +236,14 @@ void main() {
           );
           await tester.pumpAndSettle();
 
-          await tester.tap(find.byType(DataObjectWidget<PersonBase>));
+          await tester.tap(find.byType(ViewableObjectWidget<PersonBase>));
           await tester.pumpAndSettle();
 
           expect(find.text('PersonInfo'), findsOneWidget);
           navigator.currentState!.pop();
           await tester.pumpAndSettle();
 
-          await tester.longPress(find.byType(DataObjectWidget<PersonBase>));
+          await tester.longPress(find.byType(ViewableObjectWidget<PersonBase>));
 
           expect(longPressed, isTrue);
         },
