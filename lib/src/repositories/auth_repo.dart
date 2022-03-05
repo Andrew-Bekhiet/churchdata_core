@@ -56,7 +56,6 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
           o?.uid == n?.uid &&
           o?.email == n?.email &&
           o?.phoneNumber == n?.phoneNumber &&
-          o?.phoneNumber == n?.phoneNumber &&
           o?.emailVerified == n?.emailVerified &&
           o?.displayName == n?.displayName &&
           o?.isAnonymous == n?.isAnonymous &&
