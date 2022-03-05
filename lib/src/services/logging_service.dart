@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'dart:developer';
 
-import 'package:churchdata_core/src/repositories/auth_repo.dart';
+import 'package:churchdata_core/churchdata_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -59,21 +60,27 @@ class LoggingService {
       );
     };
 
-    final currentUser = GetIt.I.isRegistered<AuthRepository>()
-        ? GetIt.I<AuthRepository>().currentUser
-        : null;
-
-    Sentry.configureScope(
-      (scope) => scope.user = currentUser != null
-          ? SentryUser(
-              id: currentUser.uid,
-              email: currentUser.email,
-              extras: currentUser.toJson(),
-            )
-          : null,
-    );
-
     GetIt.I.signalReady(this);
+
+    if (GetIt.I.isRegistered<AuthRepository>())
+      unawaited(
+        GetIt.I.allReady().then(
+          (_) async {
+            if (!GetIt.I.isRegistered<AuthRepository>()) return;
+
+            final currentUser = await GetIt.I<AuthRepository>().userStream.next;
+            Sentry.configureScope(
+              (scope) => scope.user = currentUser != null
+                  ? SentryUser(
+                      id: currentUser.uid,
+                      email: currentUser.email,
+                      extras: currentUser.toJson(),
+                    )
+                  : null,
+            );
+          },
+        ),
+      );
   }
 
   Future<void> log(String msg) async {
