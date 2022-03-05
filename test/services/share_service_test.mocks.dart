@@ -6,6 +6,7 @@ import 'dart:async' as _i3;
 import 'dart:ui' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:share_plus_platform_interface/share_plus_platform_interface.dart'
     as _i2;
 
@@ -21,7 +22,9 @@ import 'package:share_plus_platform_interface/share_plus_platform_interface.dart
 /// A class which mocks [SharePlatform].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSharePlatform extends _i1.Mock implements _i2.SharePlatform {
+class MockSharePlatform extends _i1.Mock
+    with MockPlatformInterfaceMixin
+    implements _i2.SharePlatform {
   MockSharePlatform() {
     _i1.throwOnMissingStub(this);
   }
