@@ -1,3 +1,4 @@
+import 'package:churchdata_core/churchdata_core.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:get_it/get_it.dart';
 
@@ -13,12 +14,12 @@ class FunctionsService {
   }
 
   Future<HttpsCallableResult> recoverDocument(
-    String deletedPath, {
+    JsonRef deletedDoc, {
     bool keepBackup = true,
     bool nested = true,
   }) async {
     return httpsCallable('recoverDoc')({
-      'deletedPath': deletedPath,
+      'deletedPath': deletedDoc.path,
       'keepBackup': keepBackup,
       'nested': nested,
     });

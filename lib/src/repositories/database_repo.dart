@@ -132,7 +132,7 @@ class DatabaseRepository {
     if (dialogResult == true) {
       try {
         await GetIt.I<FunctionsService>().recoverDocument(
-          documentRef.path,
+          documentRef,
           keepBackup: keepBackup,
           nested: nested,
         );
