@@ -17,6 +17,9 @@ class MetaObject extends DataObject {
   Json toJson() {
     return {'Name': name};
   }
+
+  MetaObject copyWithName({dynamic name = const $CopyWithPlaceholder()}) =>
+      MetaObject(ref, name ?? this.name);
 }
 
 @CopyWith(copyWithNull: true)
@@ -30,11 +33,11 @@ class Church extends MetaObject {
 
   final String? address;
 
-  const Church(
-      {required DocumentReference<Json> ref,
-      required String name,
-      this.address})
-      : super(ref, name);
+  const Church({
+    required DocumentReference<Json> ref,
+    required String name,
+    this.address,
+  }) : super(ref, name);
 
   Church.createNew()
       : this(
@@ -63,6 +66,10 @@ class Church extends MetaObject {
             .snapshots())
         .map((s) => s.docs.map(Father.fromDoc).toList());
   }
+
+  @override
+  Church copyWithName({dynamic name = const $CopyWithPlaceholder()}) =>
+      copyWith(name: name);
 }
 
 @CopyWith(copyWithNull: true)
@@ -98,6 +105,10 @@ class PersonState extends MetaObject {
           name: data.data()!['Name'],
           color: data.data()!['Color'],
         );
+
+  @override
+  PersonState copyWithName({dynamic name = const $CopyWithPlaceholder()}) =>
+      copyWith(name: name);
 }
 
 @CopyWith(copyWithNull: true)
@@ -123,6 +134,10 @@ class College extends MetaObject {
           ref: data.reference,
           name: data.data()!['Name'],
         );
+
+  @override
+  College copyWithName({dynamic name = const $CopyWithPlaceholder()}) =>
+      copyWith(name: name);
 }
 
 @CopyWith(copyWithNull: true)
@@ -166,6 +181,10 @@ class Father extends MetaObject {
           name: data.data()!['Name'],
           churchId: data.data()!['ChurchId'],
         );
+
+  @override
+  Father copyWithName({dynamic name = const $CopyWithPlaceholder()}) =>
+      copyWith(name: name);
 }
 
 @CopyWith(copyWithNull: true)
@@ -191,6 +210,10 @@ class Job extends MetaObject {
           ref: data.reference,
           name: data.data()!['Name'],
         );
+
+  @override
+  Job copyWithName({dynamic name = const $CopyWithPlaceholder()}) =>
+      copyWith(name: name);
 }
 
 @CopyWith(copyWithNull: true)
@@ -216,6 +239,10 @@ class PersonType extends MetaObject {
           ref: data.reference,
           name: data.data()!['Name'],
         );
+
+  @override
+  PersonType copyWithName({dynamic name = const $CopyWithPlaceholder()}) =>
+      copyWith(name: name);
 }
 
 @CopyWith(copyWithNull: true)
@@ -242,6 +269,10 @@ class ServingType extends MetaObject {
           ref: data.reference,
           name: data.data()!['Name'],
         );
+
+  @override
+  ServingType copyWithName({dynamic name = const $CopyWithPlaceholder()}) =>
+      copyWith(name: name);
 }
 
 @CopyWith(copyWithNull: true)
@@ -286,6 +317,10 @@ class StudyYear extends MetaObject {
           grade: data.data()!['Grade'],
           isCollegeYear: data.data()!['IsCollegeYear'],
         );
+
+  @override
+  StudyYear copyWithName({dynamic name = const $CopyWithPlaceholder()}) =>
+      copyWith(name: name);
 }
 
 @CopyWith(copyWithNull: true)
@@ -333,6 +368,10 @@ class School extends MetaObject {
           name: data.data()!['Name'],
           address: data.data()!['Address'],
         );
+
+  @override
+  School copyWithName({dynamic name = const $CopyWithPlaceholder()}) =>
+      copyWith(name: name);
 }
 
 class PreferredStudyYear extends StudyYear {
