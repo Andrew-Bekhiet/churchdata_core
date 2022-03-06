@@ -34,7 +34,7 @@ abstract class _$QueryInfoCWProxy {
     String? operator,
     bool? order,
     String? orderBy,
-    dynamic? queryValue,
+    dynamic queryValue,
   });
 }
 
