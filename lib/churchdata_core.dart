@@ -11,6 +11,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -101,6 +102,13 @@ Future<void> initCore({
     notificationsService,
     signalsReady: notificationsService.runtimeType == NotificationsService,
     dispose: (n) => n.dispose(),
+  );
+
+  final localNotificationsPlugin =
+      overrides[FlutterLocalNotificationsPlugin]?.call() ??
+          FlutterLocalNotificationsPlugin();
+  GetIt.I.registerSingleton<FlutterLocalNotificationsPlugin>(
+    localNotificationsPlugin,
   );
 
   await Future.wait(

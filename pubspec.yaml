@@ -11,25 +11,25 @@ dependencies:
   flutter:
     sdk: flutter
 
-  android_alarm_manager_plus: ^2.0.4
+  android_alarm_manager_plus: ^2.0.5
   async: ^2.8.2
   cached_network_image: ^3.2.0
-  cloud_firestore: ^3.1.7
-  cloud_functions: ^3.2.7
+  cloud_firestore: ^3.1.10
+  cloud_functions: ^3.2.9
   copy_with_extension: ^4.0.0
   equatable: ^2.0.3
-  firebase_auth: ^3.3.6
-  firebase_database: ^9.0.6
-  firebase_dynamic_links: ^4.0.5
-  firebase_messaging: ^11.2.6
-  firebase_storage: ^10.2.7
+  firebase_auth: ^3.3.9
+  firebase_database: ^9.0.8
+  firebase_dynamic_links: ^4.0.8
+  firebase_messaging: ^11.2.8
+  firebase_storage: ^10.2.9
   flutter_cache_manager: ^3.3.0
-  flutter_local_notifications: ^9.2.0
+  flutter_local_notifications: ^9.4.0
   flutter_secure_storage: ^5.0.2
   get_it: ^7.2.0
-  google_maps_flutter: ^2.1.1
+  google_maps_flutter: ^2.1.2
   google_maps_flutter_web: ^0.3.2+1
-  google_sign_in: ^5.2.3
+  google_sign_in: ^5.2.4
   hive_flutter: ^1.1.0
   intl: ^0.17.0
   rxdart: ^0.27.3
@@ -37,17 +37,17 @@ dependencies:
   timeago: ^3.2.2
   tinycolor2: ^2.0.0
   tuple: ^2.0.0
-  url_launcher: ^6.0.18
+  url_launcher: ^6.0.20
   group_list_view: ^1.1.1
   share_plus: ^3.1.0
-  firebase_remote_config: ^2.0.0
+  firebase_remote_config: ^2.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^1.0.4
-  mockito: ^5.0.17
+  mockito: ^5.1.0
   build_runner: ^2.1.7
   copy_with_extension_gen: ^4.0.1
   hive_generator: ^1.1.2
@@ -55,7 +55,7 @@ dev_dependencies:
   fake_cloud_firestore:
     git:
       url: https://github.com/Andrew-Bekhiet/fake_cloud_firestore
-      ref: 051a03a2a1d2064f19f17e12db2a71876308bac0
+      ref: master
   firebase_storage_mocks: ^0.5.0
   firebase_auth_mocks: ^0.8.2
   firebase_database_mocks: ^0.3.2

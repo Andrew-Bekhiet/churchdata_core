@@ -26,7 +26,10 @@ void main() {
 
           GetIt.I.registerSingleton<CacheRepository>(FakeCacheRepo());
           GetIt.I.registerSingleton<NotificationsService>(
-              FakeNotificationsService());
+            FakeNotificationsService(),
+            signalsReady: true,
+            dispose: (n) => n.dispose(),
+          );
         },
       );
 
@@ -305,27 +308,70 @@ void main() {
         },
       );
 
-      test(
-        'Initial message',
-        () async {
-          final time = DateTime.now();
-          final message = RemoteMessage(
-            category: 'category',
-            messageId: 'id',
-            notification:
-                const RemoteNotification(body: 'body', title: 'title'),
-            sentTime: time,
-            data: {'senderUID': 'uid'},
+      group(
+        'Initial notification',
+        () {
+          test(
+            'Firebase messaging',
+            () async {
+              final time = DateTime.now();
+              final message = RemoteMessage(
+                category: 'category',
+                messageId: 'id',
+                notification:
+                    const RemoteNotification(body: 'body', title: 'title'),
+                sentTime: time,
+                data: {'senderUID': 'uid'},
+              );
+
+              when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
+                      .getInitialMessage())
+                  .thenAnswer(
+                (_) async => message,
+              );
+
+              expect(
+                  await GetIt.I<NotificationsService>()
+                      .getInitialNotification(),
+                  Notification.fromRemoteMessage(message));
+            },
           );
 
-          when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
-                  .getInitialMessage())
-              .thenAnswer(
-            (_) async => message,
-          );
+          test(
+            'Local notification',
+            () async {
+              final time = DateTime.now();
+              final notification = Notification.fromRemoteMessage(
+                RemoteMessage(
+                  category: 'category',
+                  messageId: 'NotificationId',
+                  notification:
+                      const RemoteNotification(body: 'body', title: 'title'),
+                  sentTime: time,
+                  data: {'senderUID': 'uid'},
+                ),
+              );
 
-          expect(await GetIt.I<NotificationsService>().getInitialNotification(),
-              Notification.fromRemoteMessage(message));
+              await GetIt.I<CacheRepository>()
+                  .openBox<Notification>('Notifications');
+              await GetIt.I<CacheRepository>()
+                  .box<Notification>('Notifications')
+                  .put(
+                    'NotificationId',
+                    notification,
+                  );
+              when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
+                      .getInitialMessage())
+                  .thenAnswer(
+                (_) async => null,
+              );
+
+              expect(
+                await GetIt.I<NotificationsService>().getInitialNotification(),
+                notification,
+              );
+            },
+          );
         },
       );
     },

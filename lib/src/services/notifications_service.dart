@@ -36,7 +36,7 @@ class NotificationsService {
   Future<void> initPlugins() async {
     if (!kIsWeb) await AndroidAlarmManager.initialize();
 
-    await FlutterLocalNotificationsPlugin().initialize(
+    await GetIt.I<FlutterLocalNotificationsPlugin>().initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings('warning'),
       ),
@@ -129,7 +129,7 @@ class NotificationsService {
     if (message != null)
       return Notification.fromRemoteMessage(message);
     else {
-      final payload = (await FlutterLocalNotificationsPlugin()
+      final payload = (await GetIt.I<FlutterLocalNotificationsPlugin>()
               .getNotificationAppLaunchDetails())
           ?.payload;
 
@@ -142,7 +142,6 @@ class NotificationsService {
     return null;
   }
 
-  // coverage:ignore-start
   Future<void> showInitialNotification(BuildContext context) async {
     final pendingNotification = await getInitialNotification();
 
@@ -150,7 +149,6 @@ class NotificationsService {
       await showNotificationContents(context, pendingNotification);
     }
   }
-  // coverage:ignore-end
 
   //
   //Static callbacks

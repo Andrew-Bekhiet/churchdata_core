@@ -4,6 +4,7 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database_mocks/firebase_database_mocks.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:mockito/annotations.dart';
 
@@ -19,6 +20,7 @@ import 'fakes/mock_storage_reference.dart';
   FirebaseRemoteConfig
 ])
 void registerFirebaseMocks() {
+  FirebaseMessagingPlatform.instance = FakeFirebaseMessagingPlatform();
   registerFirebaseDependencies(
     googleSignInOverride: MockGoogleSignIn(),
     firebaseFirestoreOverride: FakeFirebaseFirestore(),
@@ -30,4 +32,9 @@ void registerFirebaseMocks() {
     firebaseDynamicLinksOverride: MockFirebaseDynamicLinks(),
     firebaseRemoteConfigOverride: MockFirebaseRemoteConfig(),
   );
+}
+
+class FakeFirebaseMessagingPlatform extends FirebaseMessagingPlatform {
+  @override
+  void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {}
 }
