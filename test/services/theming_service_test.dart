@@ -8,7 +8,7 @@ import '../fakes/fake_cache_repo.dart';
 
 void main() {
   group(
-    'ThemeNotifier tests ->',
+    'ThemingService tests ->',
     () {
       setUp(
         () async {
@@ -35,6 +35,7 @@ void main() {
               .box('Settings')
               .put('GreatFeastTheme', false);
 
+          ThemingService();
           final unit = ThemingService.getDefault(darkTheme: false);
           const MaterialColor primary = Colors.blueGrey;
           const Color secondary = Colors.grey;
@@ -130,7 +131,7 @@ void main() {
       );
 
       test(
-        'ThemeNotifier instance',
+        'ThemingService instance',
         () async {
           await GetIt.I<CacheRepository>()
               .box('Settings')

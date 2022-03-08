@@ -96,6 +96,7 @@ void main() {
               expect(unit.order, isTrue);
               expect(unit.orderBy, 'fieldOrder');
               expect(unit.descending, isTrue);
+              expect(unit.color, isNull);
 
               expect(unit.toJson(), queryJson);
             },

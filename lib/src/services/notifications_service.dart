@@ -31,7 +31,6 @@ class NotificationsService {
     await onForegroundMessageSubscription?.cancel();
   }
 
-  // coverage:ignore-start
   @protected
   Future<void> initPlugins() async {
     if (!kIsWeb) await AndroidAlarmManager.initialize();
@@ -45,7 +44,6 @@ class NotificationsService {
 
     GetIt.I.signalReady(this);
   }
-  // coverage:ignore-end
 
   Future<bool> schedulePeriodic(
     Duration duration,

@@ -215,6 +215,89 @@ void main() {
           );
         },
       );
+
+      test(
+        'Sharing Object',
+        () async {
+          final unit = ShareService(
+            projectId: 'projectId',
+            uriPrefix: 'uriPrefix',
+          );
+
+          final shortDynamicLink = ShortDynamicLink(
+            type: ShortDynamicLinkType.unguessable,
+            shortUrl: Uri.https('shortUrl', 'wefyygud'),
+          );
+
+          when((GetIt.I<FirebaseDynamicLinks>() as MockFirebaseDynamicLinks)
+              .buildShortLink(
+            any,
+            shortLinkType: ShortDynamicLinkType.unguessable,
+          )).thenAnswer(
+            (_) async => shortDynamicLink,
+          );
+
+          expect(
+            await unit.shareObject(
+              UserBase(
+                uid: 'uid',
+                name: 'u',
+              ),
+            ),
+            await unit.shareUser(
+              UserBase(
+                uid: 'uid',
+                name: 'u',
+              ),
+            ),
+          );
+
+          expect(
+            await unit.shareObject(
+              PersonBase(
+                ref: GetIt.I<DatabaseRepository>().doc('Persons/p'),
+                name: 'p',
+              ),
+            ),
+            await unit.sharePerson(
+              PersonBase(
+                ref: GetIt.I<DatabaseRepository>().doc('Persons/p'),
+                name: 'p',
+              ),
+            ),
+          );
+          expect(
+            await unit.shareObject(
+              QueryInfo.fromJson(
+                const {
+                  'collection': 'collection',
+                  'fieldPath': 'fieldPath',
+                  'operator': '=',
+                  'queryValue': null,
+                  'order': 'true',
+                  'orderBy': 'fieldOrder',
+                  'descending': 'true',
+                },
+              ),
+            ),
+            await unit.shareQuery(
+              QueryInfo.fromJson(
+                const {
+                  'collection': 'collection',
+                  'fieldPath': 'fieldPath',
+                  'operator': '=',
+                  'queryValue': null,
+                  'order': 'true',
+                  'orderBy': 'fieldOrder',
+                  'descending': 'true',
+                },
+              ),
+            ),
+          );
+
+          expect(unit.shareObject(Object()), throwsUnimplementedError);
+        },
+      );
     },
   );
 }

@@ -52,7 +52,7 @@ void main() {
       );
 
       testWidgets(
-        'Functionallity',
+        'Obsecuring Text',
         (tester) async {
           await tester.pumpWidget(
             wrapWithMaterialApp(
@@ -89,6 +89,47 @@ void main() {
           expect(find.byIcon(Icons.visibility), findsOneWidget);
           expect(find.byIcon(Icons.visibility_off), findsNothing);
           expect(isObsecuringText(), isTrue);
+        },
+      );
+
+      testWidgets(
+        'Submitting and validation',
+        (tester) async {
+          bool submitted = false;
+
+          await tester.pumpWidget(
+            wrapWithMaterialApp(
+              Scaffold(
+                body: PasswordFormField(
+                  key: const Key('PasswordField'),
+                  onFieldSubmitted: (_) => submitted = true,
+                ),
+              ),
+            ),
+          );
+
+          await tester.enterText(
+            find.descendant(
+              of: find.byKey(const Key('PasswordField')),
+              matching: find.byType(TextField),
+              matchRoot: true,
+            ),
+            '',
+          );
+          await tester.testTextInput.receiveAction(TextInputAction.done);
+          tester
+              .firstState<FormFieldState>(
+                find.descendant(
+                  of: find.byKey(const Key('PasswordField')),
+                  matching: find.byType(TextFormField),
+                  matchRoot: true,
+                ),
+              )
+              .validate();
+          await tester.pumpAndSettle();
+
+          expect(submitted, isTrue);
+          expect(find.text('برجاء ادخال كلمة السر'), findsOneWidget);
         },
       );
     },
