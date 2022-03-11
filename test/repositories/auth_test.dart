@@ -185,7 +185,10 @@ void main() async {
 
           await PersonBase(ref: personRef, name: 'Person').set();
 
-          addTearDown(personRef.delete);
+          addTearDown(() async {
+            await GetIt.I.resetScope();
+            await personRef.delete();
+          });
 
           const uid = 'this_is_user_uid';
           final mockUser = MyMockUser(
