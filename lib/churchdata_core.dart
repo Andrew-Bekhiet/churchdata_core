@@ -96,19 +96,19 @@ Future<void> initCore({
     encryptionCipher: HiveAesCipher(encryptionKey),
   );
 
+  final localNotificationsPlugin =
+      overrides[FlutterLocalNotificationsPlugin]?.call() ??
+          FlutterLocalNotificationsPlugin();
+  GetIt.I.registerSingleton<FlutterLocalNotificationsPlugin>(
+    localNotificationsPlugin,
+  );
+
   final notificationsService =
       overrides[NotificationsService]?.call() ?? NotificationsService();
   GetIt.I.registerSingleton<NotificationsService>(
     notificationsService,
     signalsReady: notificationsService.runtimeType == NotificationsService,
     dispose: (n) => n.dispose(),
-  );
-
-  final localNotificationsPlugin =
-      overrides[FlutterLocalNotificationsPlugin]?.call() ??
-          FlutterLocalNotificationsPlugin();
-  GetIt.I.registerSingleton<FlutterLocalNotificationsPlugin>(
-    localNotificationsPlugin,
   );
 
   await Future.wait(
