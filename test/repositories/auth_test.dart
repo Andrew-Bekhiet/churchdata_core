@@ -184,6 +184,7 @@ void main() async {
               .doc('this_is_person_id');
 
           await PersonBase(ref: personRef, name: 'Person').set();
+
           addTearDown(personRef.delete);
 
           const uid = 'this_is_user_uid';
