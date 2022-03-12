@@ -19,7 +19,7 @@ abstract class _$QueryInfoCWProxy {
 
   QueryInfo orderBy(String? orderBy);
 
-  QueryInfo queryValue(dynamic queryValue);
+  QueryInfo queryValue(Object? queryValue);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `QueryInfo(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -34,7 +34,7 @@ abstract class _$QueryInfoCWProxy {
     String? operator,
     bool? order,
     String? orderBy,
-    dynamic queryValue,
+    Object? queryValue,
   });
 }
 
@@ -64,7 +64,7 @@ class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
   QueryInfo orderBy(String? orderBy) => this(orderBy: orderBy);
 
   @override
-  QueryInfo queryValue(dynamic queryValue) => this(queryValue: queryValue);
+  QueryInfo queryValue(Object? queryValue) => this(queryValue: queryValue);
 
   @override
 
@@ -109,11 +109,10 @@ class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
           ? _value.orderBy
           // ignore: cast_nullable_to_non_nullable
           : orderBy as String?,
-      queryValue:
-          queryValue == const $CopyWithPlaceholder() || queryValue == null
-              ? _value.queryValue
-              // ignore: cast_nullable_to_non_nullable
-              : queryValue as dynamic,
+      queryValue: queryValue == const $CopyWithPlaceholder()
+          ? _value.queryValue
+          // ignore: cast_nullable_to_non_nullable
+          : queryValue as Object?,
     );
   }
 }
@@ -131,6 +130,7 @@ extension $QueryInfoCopyWith on QueryInfo {
   QueryInfo copyWithNull({
     bool descending = false,
     bool orderBy = false,
+    bool queryValue = false,
   }) {
     return QueryInfo(
       collection: collection,
@@ -139,7 +139,7 @@ extension $QueryInfoCopyWith on QueryInfo {
       operator: operator,
       order: order,
       orderBy: orderBy == true ? null : this.orderBy,
-      queryValue: queryValue,
+      queryValue: queryValue == true ? null : this.queryValue,
     );
   }
 }

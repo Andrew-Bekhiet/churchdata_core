@@ -14,7 +14,7 @@ class QueryInfo extends Serializable with Viewable {
 
   final String fieldPath;
   final String operator;
-  final dynamic queryValue;
+  final Object? queryValue;
 
   final bool order;
 
@@ -73,10 +73,10 @@ class QueryInfo extends Serializable with Viewable {
           : queryValue is bool
               ? 'B' + queryValue.toString()
               : queryValue is JsonRef
-                  ? 'D' + (queryValue as JsonRef).path
+                  ? 'D' + (queryValue! as JsonRef).path
                   : (queryValue is DateTime
                       ? 'T' +
-                          (queryValue as DateTime)
+                          (queryValue! as DateTime)
                               .millisecondsSinceEpoch
                               .toString()
                       : (queryValue is int

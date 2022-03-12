@@ -184,7 +184,7 @@ void main() {
               expect(unit.fieldPath, 'fieldPath');
               expect(unit.operator, '<');
               expect(unit.queryValue, const TypeMatcher<JsonRef>());
-              expect((unit.queryValue as JsonRef).path, 'collection/path');
+              expect((unit.queryValue! as JsonRef).path, 'collection/path');
               expect(unit.order, isFalse);
               expect(unit.orderBy, 'fieldOrder');
               expect(unit.descending, isTrue);
@@ -215,7 +215,7 @@ void main() {
               expect(unit.fieldPath, 'fieldPath');
               expect(unit.operator, '>');
               expect(unit.queryValue, const TypeMatcher<DateTime>());
-              expect((unit.queryValue as DateTime).millisecondsSinceEpoch,
+              expect((unit.queryValue! as DateTime).millisecondsSinceEpoch,
                   1641052756360);
               expect(unit.order, isTrue);
               expect(unit.orderBy, 'fieldOrder');
