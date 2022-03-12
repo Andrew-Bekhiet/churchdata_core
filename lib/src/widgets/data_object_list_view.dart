@@ -63,6 +63,7 @@ class _DataObjectListViewState<G, T extends DataObject>
         G? o, {
         void Function(G)? onLongPress,
         void Function(G)? onTap,
+        void Function()? onTapOnNull,
         bool? showSubtitle,
         Widget? trailing,
         Widget? subtitle,
@@ -72,6 +73,7 @@ class _DataObjectListViewState<G, T extends DataObject>
             onLongPress:
                 onLongPress != null ? (o) => onLongPress(o as G) : null,
             onTap: onTap != null ? (o) => onTap(o as G) : null,
+            onTapOnNull: onTapOnNull,
             showSubtitle: showSubtitle,
             trailing: trailing,
             subtitle: subtitle,
@@ -139,6 +141,11 @@ class _DataObjectListViewState<G, T extends DataObject>
               child: _buildGroup(
                 groupedData.data!.keys.elementAt(i),
                 onTap: (o) {
+                  _controller.toggleGroup(
+                    groupedData.data!.keys.elementAt(i),
+                  );
+                },
+                onTapOnNull: () {
                   _controller.toggleGroup(
                     groupedData.data!.keys.elementAt(i),
                   );
@@ -277,6 +284,7 @@ typedef GroupBuilder<G> = Widget Function(
   G?, {
   void Function(G)? onLongPress,
   void Function(G)? onTap,
+  void Function()? onTapOnNull,
   bool? showSubtitle,
   Widget? trailing,
   Widget? subtitle,
@@ -301,11 +309,22 @@ Widget defaultGroupBuilder<G extends DataObject>(
   G? object, {
   void Function(G)? onLongPress,
   void Function(G)? onTap,
+  void Function()? onTapOnNull,
   bool? showSubtitle,
   Widget? trailing,
   Widget? subtitle,
 }) {
-  if (object == null) return const Text('غير محددة');
+  if (object == null)
+    return ListTile(
+      title: const Text('غير محددة'),
+      subtitle: showSubtitle ?? false ? subtitle : null,
+      onTap:
+          onTap != null && object != null ? () => onTap(object) : onTapOnNull,
+      onLongPress: onLongPress != null && object != null
+          ? () => onLongPress(object)
+          : null,
+      trailing: trailing,
+    );
 
   return ViewableObjectWidget<G>(
     object,

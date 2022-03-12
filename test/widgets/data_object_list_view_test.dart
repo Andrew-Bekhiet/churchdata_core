@@ -181,6 +181,7 @@ void main() {
                     showSubtitle,
                     subtitle,
                     trailing,
+                    onTapOnNull,
                   }) =>
                       Container(
                     key: ValueKey(c),
