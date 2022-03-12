@@ -9,7 +9,8 @@ class PropertyMetadata<T> extends Equatable {
   final String name;
   final String label;
   final T? defaultValue;
-  final Query<Json>? collection;
+  final String? collectionName;
+  final Query<Json>? query;
 
   Type get type => T;
 
@@ -17,7 +18,8 @@ class PropertyMetadata<T> extends Equatable {
     required this.name,
     required this.label,
     required this.defaultValue,
-    this.collection,
+    this.collectionName,
+    this.query,
   });
 
   @override
@@ -25,7 +27,8 @@ class PropertyMetadata<T> extends Equatable {
         name,
         label,
         defaultValue,
-        collection,
         type,
+        collectionName,
+        query,
       ];
 }

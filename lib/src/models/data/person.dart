@@ -173,9 +173,10 @@ class PersonBase extends DataObjectWithPhoto {
           name: 'StudyYear',
           label: 'سنة الدراسة',
           defaultValue: null,
-          collection: GetIt.I<DatabaseRepository>()
+          query: GetIt.I<DatabaseRepository>()
               .collection('StudyYears')
               .orderBy('Grade'),
+          collectionName: 'StudyYears',
         ),
         'Gender': const PropertyMetadata<bool>(
           name: 'Gender',
@@ -206,33 +207,37 @@ class PersonBase extends DataObjectWithPhoto {
           name: 'School',
           label: 'المدرسة',
           defaultValue: null,
-          collection: GetIt.I<DatabaseRepository>()
+          query: GetIt.I<DatabaseRepository>()
               .collection('Schools')
               .orderBy('Name'),
+          collectionName: 'Schools',
         ),
         'College': PropertyMetadata<JsonRef>(
           name: 'College',
           label: 'الكلية',
           defaultValue: null,
-          collection: GetIt.I<DatabaseRepository>()
+          query: GetIt.I<DatabaseRepository>()
               .collection('Colleges')
               .orderBy('Name'),
+          collectionName: 'Colleges',
         ),
         'Church': PropertyMetadata<JsonRef>(
           name: 'Church',
           label: 'الكنيسة',
           defaultValue: null,
-          collection: GetIt.I<DatabaseRepository>()
+          query: GetIt.I<DatabaseRepository>()
               .collection('Churches')
               .orderBy('Name'),
+          collectionName: 'Churches',
         ),
         'CFather': PropertyMetadata<JsonRef>(
           name: 'CFather',
           label: 'أب الاعتراف',
           defaultValue: null,
-          collection: GetIt.I<DatabaseRepository>()
+          query: GetIt.I<DatabaseRepository>()
               .collection('Fathers')
               .orderBy('Name'),
+          collectionName: 'Fathers',
         ),
         'Notes': const PropertyMetadata<String>(
           name: 'Notes',
@@ -268,8 +273,9 @@ class PersonBase extends DataObjectWithPhoto {
           name: 'LastEdit',
           label: 'أخر تعديل',
           defaultValue: const {},
-          collection:
+          query:
               GetIt.I<DatabaseRepository>().collection('Users').orderBy('Name'),
+          collectionName: 'Users',
         ),
         'HasPhoto': const PropertyMetadata<bool>(
           name: 'HasPhoto',
