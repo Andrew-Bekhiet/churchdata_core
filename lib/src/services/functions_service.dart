@@ -24,4 +24,8 @@ class FunctionsService {
       'nested': nested,
     });
   }
+
+  Future<HttpsCallableResult> registerFCMToken(String token) async {
+    return httpsCallable('registerFCMToken')({'token': token});
+  }
 }

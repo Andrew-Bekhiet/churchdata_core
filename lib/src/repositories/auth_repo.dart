@@ -68,29 +68,31 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
 
   @protected
   void onUserChanged(auth.User? user) async {
-        if (user != null) {
-          await userTokenListener?.cancel();
-          userTokenListener = GetIt.I<FirebaseDatabase>()
-              .ref()
-              .child('Users/${user.uid}/forceRefresh')
-              .onValue
-              .distinct(
-            (o, n) {
-              return o.snapshot.value == n.snapshot.value &&
-                  o.snapshot.key == n.snapshot.key &&
-                  o.snapshot.exists == n.snapshot.exists;
-            },
-          ).listen((e) async {
-            if (e.snapshot.value != true) return;
+    if (user != null) {
+      await userTokenListener?.cancel();
+      userTokenListener = GetIt.I<FirebaseDatabase>()
+          .ref()
+          .child('Users/${user.uid}/forceRefresh')
+          .onValue
+          .distinct(
+        (o, n) {
+          return o.snapshot.value == n.snapshot.value &&
+              o.snapshot.key == n.snapshot.key &&
+              o.snapshot.exists == n.snapshot.exists;
+        },
+      ).listen((e) async {
+        if (e.snapshot.value != true) return;
 
-            await refreshIdToken(user, true);
-          });
+        await refreshIdToken(user, true);
+      });
 
-          await refreshIdToken(user);
-        } else if (currentUser != null) {
-          await userTokenListener?.cancel();
-        } else if (!_disposed && !GetIt.I.isReadySync(instance: this))
-          userSubject.add(null);
+      await refreshIdToken(user);
+
+      await GetIt.I<NotificationsService>().registerFCMToken();
+    } else if (currentUser != null) {
+      await userTokenListener?.cancel();
+    } else if (!_disposed && !GetIt.I.isReadySync(instance: this))
+      userSubject.add(null);
   }
 
   @protected

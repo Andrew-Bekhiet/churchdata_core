@@ -8,6 +8,7 @@ import 'package:mockito/mockito.dart';
 
 import '../churchdata_core.dart';
 import '../fakes/fake_cache_repo.dart';
+import '../fakes/fake_notifications_repo.dart';
 import '../fakes/mock_user.dart';
 
 void main() async {
@@ -20,6 +21,18 @@ void main() async {
           FakeCacheRepo(),
           dispose: (r) => r.dispose(),
         );
+
+        GetIt.I.registerSingleton<NotificationsService>(
+          MockNotificationsService(),
+          signalsReady: true,
+        );
+
+        // when(
+        //   (GetIt.I<NotificationsService>() as MockNotificationsService)
+        //       .registerFCMToken(
+        //     cachedToken: anyNamed('cachedToken'),
+        //   ),
+        // ).thenAnswer((_) async => true);
 
         await GetIt.I<CacheRepository>().openBox('User');
 

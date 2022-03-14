@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:churchdata_core/churchdata_core.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' hide Notification;
 import 'package:flutter_test/flutter_test.dart';
@@ -13,6 +14,7 @@ import 'package:mockito/mockito.dart';
 import '../churchdata_core.dart';
 import '../churchdata_core.mocks.dart';
 import '../fakes/fake_cache_repo.dart';
+import '../fakes/fake_functions_repo.dart';
 import '../fakes/fake_notifications_repo.dart';
 
 void main() {
@@ -372,8 +374,204 @@ void main() {
               );
             },
           );
+
+          group(
+            'Registering FCM Token',
+            () {
+              setUp(
+                () async {
+                  await GetIt.I<CacheRepository>().openBox('User');
+                  await GetIt.I<CacheRepository>().openBox('Settings');
+
+                  GetIt.I.pushNewScope(
+                    scopeName: 'RegisteringFCMTokenScope',
+                    init: (i) => i
+                      ..registerSingleton<FunctionsService>(FunctionsService())
+                      ..registerSingleton<FirebaseFunctions>(
+                          MockFirebaseFunctions())
+                      ..registerSingleton<NotificationsService>(
+                        NotificationsService(),
+                        signalsReady: true,
+                        dispose: (n) => n.dispose(),
+                      )
+                      ..registerSingleton<AuthRepository>(
+                        FakeAuthRepo(),
+                        signalsReady: true,
+                        dispose: (a) => a.dispose(),
+                      ),
+                  );
+
+                  final fakeHttpsCallable = FakeHttpsCallable();
+                  when(fakeHttpsCallable(any))
+                      .thenAnswer((_) async => FakeHttpsCallableResult());
+                  when((GetIt.I<FirebaseFunctions>() as MockFirebaseFunctions)
+                          .httpsCallable('registerFCMToken'))
+                      .thenReturn(fakeHttpsCallable);
+
+                  when(fakeHttpsCallable(any))
+                      .thenAnswer((_) async => FakeHttpsCallableResult());
+
+                  when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
+                          .isSupported())
+                      .thenReturn(true);
+                  when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
+                          .requestPermission())
+                      .thenAnswer(
+                    (_) async => const NotificationSettings(
+                      alert: AppleNotificationSetting.enabled,
+                      announcement: AppleNotificationSetting.enabled,
+                      badge: AppleNotificationSetting.enabled,
+                      carPlay: AppleNotificationSetting.enabled,
+                      lockScreen: AppleNotificationSetting.enabled,
+                      notificationCenter: AppleNotificationSetting.enabled,
+                      showPreviews: AppleShowPreviewSetting.whenAuthenticated,
+                      sound: AppleNotificationSetting.enabled,
+                      authorizationStatus: AuthorizationStatus.authorized,
+                    ),
+                  );
+                  when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
+                          .getToken())
+                      .thenAnswer((_) async => 'FCM-Token');
+                  when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
+                          .onTokenRefresh)
+                      .thenAnswer((_) => Stream.value('FCM-Token'));
+                },
+              );
+
+              tearDown(() async {
+                await GetIt.I.reset();
+              });
+
+              test(
+                'Normal',
+                () async {
+                  expect(
+                    GetIt.I<NotificationsService>().onFCMTokenRefresh,
+                    isNull,
+                  );
+
+                  expect(
+                    await GetIt.I<NotificationsService>().registerFCMToken(),
+                    isTrue,
+                  );
+
+                  //Don't inline
+                  final rslt =
+                      (GetIt.I<FirebaseFunctions>() as MockFirebaseFunctions)
+                          .httpsCallable('registerFCMToken');
+                  verify(
+                    rslt(
+                      argThat(
+                        predicate<Map>((a) => a['token'] == 'FCM-Token'),
+                      ),
+                    ),
+                  );
+                  expect(
+                      GetIt.I<CacheRepository>()
+                          .box('Settings')
+                          .get('Registered_FCM_Token'),
+                      'FCM-Token');
+                  expect(
+                    GetIt.I<NotificationsService>().onFCMTokenRefresh,
+                    isNotNull,
+                  );
+                },
+              );
+              test(
+                'onFCMTokenRefresh',
+                () async {
+                  final stream = StreamController<String>.broadcast();
+
+                  addTearDown(stream.close);
+
+                  when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
+                          .onTokenRefresh)
+                      .thenAnswer((_) => stream.stream);
+
+                  expect(
+                    GetIt.I<NotificationsService>().onFCMTokenRefresh,
+                    isNull,
+                  );
+
+                  expect(
+                    await GetIt.I<NotificationsService>().registerFCMToken(),
+                    isTrue,
+                  );
+                  expect(
+                    GetIt.I<NotificationsService>().onFCMTokenRefresh,
+                    isNotNull,
+                  );
+
+                  final next = stream.stream.next;
+                  stream.add('FCM-Token-Changed!');
+                  await next;
+
+                  expect(
+                      GetIt.I<CacheRepository>()
+                          .box('Settings')
+                          .get('Registered_FCM_Token'),
+                      'FCM-Token-Changed!');
+
+                  final rslt =
+                      (GetIt.I<FirebaseFunctions>() as MockFirebaseFunctions)
+                          .httpsCallable('registerFCMToken');
+                  verify(
+                    rslt(
+                      argThat(
+                        predicate<Map>(
+                            (a) => a['token'] == 'FCM-Token-Changed!'),
+                      ),
+                    ),
+                  );
+                },
+              );
+              test(
+                'Permission denied',
+                () async {
+                  when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
+                          .requestPermission())
+                      .thenAnswer(
+                    (_) async => const NotificationSettings(
+                      alert: AppleNotificationSetting.enabled,
+                      announcement: AppleNotificationSetting.enabled,
+                      badge: AppleNotificationSetting.enabled,
+                      carPlay: AppleNotificationSetting.enabled,
+                      lockScreen: AppleNotificationSetting.enabled,
+                      notificationCenter: AppleNotificationSetting.enabled,
+                      showPreviews: AppleShowPreviewSetting.whenAuthenticated,
+                      sound: AppleNotificationSetting.enabled,
+                      authorizationStatus: AuthorizationStatus.denied,
+                    ),
+                  );
+
+                  expect(
+                    await GetIt.I<NotificationsService>().registerFCMToken(),
+                    isFalse,
+                  );
+                },
+              );
+              test(
+                'Unsupported device',
+                () async {
+                  when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
+                          .isSupported())
+                      .thenReturn(false);
+
+                  expect(
+                    await GetIt.I<NotificationsService>().registerFCMToken(),
+                    isFalse,
+                  );
+                },
+              );
+            },
+          );
         },
       );
     },
   );
+}
+
+class FakeAuthRepo extends AuthRepository {
+  @override
+  UserBase? get currentUser => UserBase(uid: 'uid', name: 'name');
 }

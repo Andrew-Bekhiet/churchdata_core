@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 
 class NotificationsService {
   late final StreamSubscription<RemoteMessage>? onForegroundMessageSubscription;
+  StreamSubscription<String?>? onFCMTokenRefresh;
 
   NotificationsService() {
     listenToFirebaseMessaging();
@@ -29,6 +30,7 @@ class NotificationsService {
   @mustCallSuper
   Future<void> dispose() async {
     await onForegroundMessageSubscription?.cancel();
+    await onFCMTokenRefresh?.cancel();
   }
 
   @protected
@@ -146,6 +148,40 @@ class NotificationsService {
     if (pendingNotification != null) {
       await showNotificationContents(context, pendingNotification);
     }
+  }
+
+  Future<bool> registerFCMToken({String? cachedToken}) async {
+    if (GetIt.I<AuthRepository>().currentUser != null &&
+        GetIt.I<FirebaseMessaging>().isSupported()) {
+      final permission = await GetIt.I<FirebaseMessaging>().requestPermission();
+
+      if (permission.authorizationStatus == AuthorizationStatus.authorized ||
+          permission.authorizationStatus == AuthorizationStatus.provisional) {
+        final token =
+            cachedToken ?? await GetIt.I<FirebaseMessaging>().getToken();
+
+        if (token != null &&
+            GetIt.I<CacheRepository>()
+                    .box('Settings')
+                    .get('Registered_FCM_Token') !=
+                token) {
+          await GetIt.I<FunctionsService>().registerFCMToken(token);
+
+          await GetIt.I<CacheRepository>().box('Settings').put(
+                'Registered_FCM_Token',
+                token,
+              );
+
+          onFCMTokenRefresh ??=
+              GetIt.I<FirebaseMessaging>().onTokenRefresh.listen(
+                    (t) => registerFCMToken(cachedToken: t),
+                  );
+
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   //

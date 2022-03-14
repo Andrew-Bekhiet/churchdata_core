@@ -7,6 +7,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'churchdata_core.mocks.dart';
 import 'fakes/fake_firestore.dart';
@@ -34,7 +36,9 @@ void registerFirebaseMocks() {
   );
 }
 
-class FakeFirebaseMessagingPlatform extends FirebaseMessagingPlatform {
+class FakeFirebaseMessagingPlatform extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseMessagingPlatform {
   @override
   void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {}
 }

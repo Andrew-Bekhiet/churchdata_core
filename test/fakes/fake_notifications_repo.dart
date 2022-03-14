@@ -23,6 +23,11 @@ class FakeNotificationsService extends NotificationsService {
   }
 
   FakeNotificationsService._();
+
+  @override
+  Future<bool> registerFCMToken({String? cachedToken}) async {
+    return true;
+  }
 }
 
 class MockNotificationsService extends Mock implements NotificationsService {
@@ -50,6 +55,11 @@ class MockNotificationsService extends Mock implements NotificationsService {
             #rescheduleOnReboot: rescheduleOnReboot,
           }),
           returnValue: Future<bool>.value(true)) as Future<bool>;
+
+  @override
+  Future<bool> registerFCMToken({String? cachedToken}) async {
+    return true;
+  }
 }
 
 class FakeFlutterLocalNotificationsPlugin
