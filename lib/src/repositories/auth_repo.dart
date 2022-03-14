@@ -63,8 +63,11 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
           o?.metadata.lastSignInTime == n?.metadata.lastSignInTime &&
           o?.photoURL == n?.photoURL &&
           o?.tenantId == n?.tenantId;
-    }).listen(
-      (user) async {
+    }).listen(onUserChanged);
+  }
+
+  @protected
+  void onUserChanged(auth.User? user) async {
         if (user != null) {
           await userTokenListener?.cancel();
           userTokenListener = GetIt.I<FirebaseDatabase>()
@@ -88,8 +91,6 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
           await userTokenListener?.cancel();
         } else if (!_disposed && !GetIt.I.isReadySync(instance: this))
           userSubject.add(null);
-      },
-    );
   }
 
   @protected
