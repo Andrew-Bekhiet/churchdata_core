@@ -94,12 +94,16 @@ extension NextItem<T> on Stream<T> {
 
     subscription
       ..onData((data) async {
-        await subscription.cancel();
-        completer.complete(data);
+        if (!completer.isCompleted) {
+          completer.complete(data);
+          await subscription.cancel();
+        }
       })
       ..onError((data) async {
-        await subscription.cancel();
-        completer.completeError(data);
+        if (!completer.isCompleted) {
+          completer.completeError(data);
+          await subscription.cancel();
+        }
       });
 
     return completer.future;

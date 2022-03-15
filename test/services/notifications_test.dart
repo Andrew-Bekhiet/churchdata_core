@@ -10,6 +10,7 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart' hide Notification;
 
 import '../churchdata_core.dart';
 import '../churchdata_core.mocks.dart';
@@ -480,7 +481,7 @@ void main() {
               test(
                 'onFCMTokenRefresh',
                 () async {
-                  final stream = StreamController<String>.broadcast();
+                  final stream = BehaviorSubject<String>();
 
                   addTearDown(stream.close);
 
@@ -502,9 +503,9 @@ void main() {
                     isNotNull,
                   );
 
-                  final next = stream.stream.next;
                   stream.add('FCM-Token-Changed!');
-                  await next;
+                  await stream.next;
+                  await stream.next;
 
                   expect(
                       GetIt.I<CacheRepository>()

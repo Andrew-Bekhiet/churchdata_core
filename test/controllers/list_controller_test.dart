@@ -157,6 +157,7 @@ void main() {
               );
 
               await unit.searchSubject.next;
+              await unit.searchSubject.next;
 
               unit.searchSubject.add('someguy');
               unit.searchSubject.add('some');
