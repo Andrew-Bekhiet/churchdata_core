@@ -108,6 +108,31 @@ extension NextItem<T> on Stream<T> {
 
     return completer.future;
   }
+
+  ///Awaits until element that statify condition is emitted
+  ///and returns it
+  Future<T> nextWhere(bool Function(T) test) {
+    final completer = Completer<T>();
+    final subscription = listen((_) {}, onError: (_) {});
+
+    subscription
+      ..onData((data) async {
+        if (!completer.isCompleted && test(data)) {
+          completer.complete(data);
+          await subscription.cancel();
+        }
+      })
+      ..onError((data) async {
+        if (!completer.isCompleted) {
+          completer.completeError(data);
+          await subscription.cancel();
+        }
+      });
+
+    return completer.future;
+  }
+
+  Future<T> get nextNonNull => nextWhere((o) => o != null);
 }
 
 extension SplitList<T> on List<T> {
