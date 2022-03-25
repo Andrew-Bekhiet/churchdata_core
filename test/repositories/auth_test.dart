@@ -1,6 +1,5 @@
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -8,6 +7,7 @@ import 'package:mockito/mockito.dart';
 
 import '../churchdata_core.dart';
 import '../fakes/fake_cache_repo.dart';
+import '../fakes/fake_firebase_auth.dart';
 import '../fakes/fake_notifications_repo.dart';
 import '../fakes/mock_user.dart';
 
@@ -90,7 +90,7 @@ void main() async {
                 init: (i) {
                   i
                     ..registerSingleton<FirebaseAuth>(
-                      MockFirebaseAuth(signedIn: true, mockUser: mockUser),
+                      MockFirebaseAuth(mockUser: mockUser),
                     )
                     ..registerSingleton<AuthRepository>(
                       AuthRepository(),
@@ -134,7 +134,7 @@ void main() async {
                 init: (i) {
                   i
                     ..registerSingleton<FirebaseAuth>(
-                      MockFirebaseAuth(signedIn: true, mockUser: mockUser),
+                      MockFirebaseAuth(mockUser: mockUser),
                     )
                     ..registerSingleton<AuthRepository>(
                       AuthRepository(),
@@ -222,7 +222,7 @@ void main() async {
             init: (i) {
               i
                 ..registerSingleton<FirebaseAuth>(
-                  MockFirebaseAuth(signedIn: true, mockUser: mockUser),
+                  MockFirebaseAuth(mockUser: mockUser),
                 )
                 ..registerSingleton<AuthRepository>(
                   AuthRepository(),
@@ -290,7 +290,7 @@ void main() async {
             init: (i) {
               i
                 ..registerSingleton<FirebaseAuth>(
-                  MockFirebaseAuth(signedIn: true, mockUser: mockUser),
+                  MockFirebaseAuth(mockUser: mockUser),
                 )
                 ..registerSingleton<AuthRepository>(
                   AuthRepository(),
@@ -356,7 +356,7 @@ void main() async {
                 init: (i) {
                   i
                     ..registerSingleton<FirebaseAuth>(
-                      MockFirebaseAuth(signedIn: true, mockUser: mockUser),
+                      MockFirebaseAuth(mockUser: mockUser),
                     )
                     ..registerSingleton<AuthRepository>(
                       AuthRepository(),
@@ -404,7 +404,7 @@ void main() async {
                 init: (i) {
                   i
                     ..registerSingleton<FirebaseAuth>(
-                      MockFirebaseAuth(signedIn: true, mockUser: mockUser),
+                      MockFirebaseAuth(mockUser: mockUser),
                     )
                     ..registerSingleton<AuthRepository>(
                       AuthRepository(),

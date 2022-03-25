@@ -39,7 +39,7 @@ dependencies:
   tuple: ^2.0.0
   url_launcher: ^6.0.20
   group_list_view: ^1.1.1
-  share_plus: ^3.1.0
+  share_plus: ^4.0.3
   firebase_remote_config: ^2.0.2
 
 dev_dependencies:
@@ -52,10 +52,7 @@ dev_dependencies:
   copy_with_extension_gen: ^4.0.1
   hive_generator: ^1.1.2
   hive_test: ^1.0.1
-  fake_cloud_firestore:
-    git:
-      url: https://github.com/Andrew-Bekhiet/fake_cloud_firestore
-      ref: master
+  fake_cloud_firestore: ^1.2.2
   firebase_storage_mocks: ^0.5.0
   firebase_auth_mocks: ^0.8.2
   firebase_database_mocks: ^0.3.2
