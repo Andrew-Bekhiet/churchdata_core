@@ -188,7 +188,16 @@ class ListController<G, T extends DataObject> {
   }
 
   void selectAll([List<T>? objects]) {
-    selectionSubject.add(setWrapper<T>(objects ?? currentObjects));
+    if (objects != null)
+      selectionSubject.add(setWrapper<T>(objects));
+    else if (groupingSubject.value)
+      selectionSubject.add(
+        setWrapper<T>(
+          currentGroupedObjects.values.fold([], (p, c) => [...p, ...c]),
+        ),
+      );
+    else
+      selectionSubject.add(setWrapper<T>(currentObjects));
   }
 
   void deselectAll([List<T>? objects]) {

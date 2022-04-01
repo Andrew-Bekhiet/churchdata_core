@@ -35,6 +35,7 @@ class PhotoObjectWidget extends StatefulWidget {
 
 class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
   bool disposed = false;
+  bool error = false;
   String? cachedUrl;
 
   @override
@@ -53,7 +54,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
               width: parentConstraints.maxHeight,
             );
 
-        if (!widget.object.hasPhoto)
+        if (!widget.object.hasPhoto || error)
           return Icon(widget.object.defaultIcon, size: constraints.maxHeight);
 
         return Hero(
@@ -82,6 +83,8 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                           .removeFile(cache);
 
                     widget.object.photoUrlCache.invalidate();
+
+                    error = true;
 
                     if (mounted && !disposed) setState(() {});
                   },

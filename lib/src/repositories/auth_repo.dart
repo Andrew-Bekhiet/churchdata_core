@@ -221,7 +221,9 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
     await GetIt.I<FirebaseDatabase>()
         .ref()
         .child('Users/${currentUser!.uid}/lastSeen')
-        .set(DateTime.now().millisecondsSinceEpoch);
+        .set(DateTime.now().millisecondsSinceEpoch)
+        .timeout(Duration(seconds: 7))
+        .catchError((d) {});
   }
 
   @mustCallSuper

@@ -246,10 +246,14 @@ class _DataObjectListViewState<G, T extends DataObject>
 
   void _defaultLongPress(T current) async {
     if (_controller.currentSelection != null) {
-      if (_controller.currentSelection!.isNotEmpty) {
+      final currentSelection = _controller.currentSelection!;
+
+      _controller.exitSelectionMode();
+
+      if (currentSelection.isNotEmpty) {
         await GetIt.I<ShareService>().shareText(
           (await Future.wait(
-            _controller.currentSelection!
+            currentSelection
                 .map((f) async =>
                     f.name +
                     ': ' +
@@ -259,7 +263,6 @@ class _DataObjectListViewState<G, T extends DataObject>
               .join('\n'),
         );
       }
-      _controller.exitSelectionMode();
     } else {
       _controller.select(current);
     }
