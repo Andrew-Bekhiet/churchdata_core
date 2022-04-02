@@ -3,16 +3,15 @@ import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:churchdata_core/churchdata_core.dart';
+import 'package:churchdata_core_mocks/churchdata_core.dart';
+import 'package:churchdata_core_mocks/fakes/fake_cache_repo.dart';
+import 'package:churchdata_core_mocks/utils.dart';
 import 'package:file/file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
-
-import '../churchdata_core.dart';
-import '../fakes/fake_cache_repo.dart';
-import '../utils.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

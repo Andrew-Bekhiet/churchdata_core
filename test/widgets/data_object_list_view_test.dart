@@ -1,6 +1,10 @@
 import 'dart:math';
 
 import 'package:churchdata_core/churchdata_core.dart';
+import 'package:churchdata_core_mocks/churchdata_core.dart';
+import 'package:churchdata_core_mocks/models/basic_data_object.dart';
+import 'package:churchdata_core_mocks/utils.dart';
+import 'package:churchdata_core_mocks/widgets/data_object_list_view_test.mocks.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,11 +13,6 @@ import 'package:group_list_view/group_list_view.dart';
 import 'package:mock_data/mock_data.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-
-import '../churchdata_core.dart';
-import '../models/basic_data_object.dart';
-import '../utils.dart';
-import 'data_object_list_view_test.mocks.dart';
 
 @GenerateMocks([ShareService])
 void main() {

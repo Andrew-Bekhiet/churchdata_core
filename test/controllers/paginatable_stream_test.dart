@@ -1,12 +1,11 @@
 import 'package:churchdata_core/churchdata_core.dart';
+import 'package:churchdata_core_mocks/churchdata_core.dart';
+import 'package:churchdata_core_mocks/models/basic_data_object.dart';
+import 'package:churchdata_core_mocks/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
-
-import '../churchdata_core.dart';
-import '../models/basic_data_object.dart';
-import '../utils.dart';
 
 void main() {
   group(

@@ -2,6 +2,11 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:churchdata_core/churchdata_core.dart';
+import 'package:churchdata_core_mocks/churchdata_core.dart';
+import 'package:churchdata_core_mocks/churchdata_core.mocks.dart';
+import 'package:churchdata_core_mocks/fakes/fake_cache_repo.dart';
+import 'package:churchdata_core_mocks/fakes/fake_functions_repo.dart';
+import 'package:churchdata_core_mocks/fakes/fake_notifications_repo.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' hide Notification;
@@ -11,12 +16,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart' hide Notification;
-
-import '../churchdata_core.dart';
-import '../churchdata_core.mocks.dart';
-import '../fakes/fake_cache_repo.dart';
-import '../fakes/fake_functions_repo.dart';
-import '../fakes/fake_notifications_repo.dart';
 
 void main() {
   group(

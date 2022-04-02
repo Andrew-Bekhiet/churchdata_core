@@ -1,10 +1,9 @@
 import 'package:churchdata_core/churchdata_core.dart';
+import 'package:churchdata_core_mocks/fakes/fake_cache_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-
-import '../fakes/fake_cache_repo.dart';
 
 void main() {
   group(
