@@ -222,7 +222,7 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
         .ref()
         .child('Users/${currentUser!.uid}/lastSeen')
         .set(DateTime.now().millisecondsSinceEpoch)
-        .timeout(Duration(seconds: 7))
+        .timeout(const Duration(seconds: 7))
         .catchError((d) {});
   }
 
