@@ -19,7 +19,7 @@ class ViewableObjectWidget<T extends Viewable> extends StatefulWidget {
 
   const ViewableObjectWidget(
     this.object, {
-    Key? key,
+    super.key,
     this.isDense = false,
     this.onLongPress,
     this.onTap,
@@ -29,7 +29,7 @@ class ViewableObjectWidget<T extends Viewable> extends StatefulWidget {
     this.wrapInCard = true,
     this.photo,
     this.showSubtitle = true,
-  }) : super(key: key);
+  });
 
   @override
   State<ViewableObjectWidget<T>> createState() =>

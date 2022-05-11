@@ -11,7 +11,7 @@ part 'meta_objects.g.dart';
 
 @immutable
 class MetaObject extends DataObject {
-  const MetaObject(DocumentReference<Json> ref, String name) : super(ref, name);
+  const MetaObject(super.ref, super.name);
 
   @override
   Json toJson() {

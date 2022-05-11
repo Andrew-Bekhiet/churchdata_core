@@ -11,12 +11,11 @@ class UserPhotoWidget extends StatelessWidget {
   final Object? heroTag;
 
   const UserPhotoWidget(this.user,
-      {Key? key,
+      {super.key,
       this.showActivityStatus = true,
       this.circleCrop = true,
       this.constraints,
-      this.heroTag})
-      : super(key: key);
+      this.heroTag});
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +45,8 @@ class UserPhotoWidget extends StatelessWidget {
 class _OnlineDot extends StatelessWidget {
   final String uid;
   const _OnlineDot({
-    Key? key,
     required this.uid,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

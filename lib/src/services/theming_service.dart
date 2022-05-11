@@ -37,7 +37,7 @@ class ThemingService {
           GetIt.I<CacheRepository>().box('Settings').get(
                 'DarkTheme',
                 defaultValue:
-                    WidgetsBinding.instance?.window.platformBrightness ==
+                    WidgetsBinding.instance.window.platformBrightness ==
                         Brightness.dark,
               );
 

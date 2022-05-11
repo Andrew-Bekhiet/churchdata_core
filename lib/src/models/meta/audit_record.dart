@@ -17,10 +17,10 @@ class AuditRecord extends DocumentObject {
     required this.by,
   }) : super(ref);
 
-  AuditRecord.fromJsonDoc(JsonDoc doc)
+  AuditRecord.fromJsonDoc(super.doc)
       : by = doc.data()?['By'],
         time = (doc.data()!['Time'] as Timestamp).toDate(),
-        super.fromJsonDoc(doc);
+        super.fromJsonDoc();
 
   final DateTime time;
   final String? by;

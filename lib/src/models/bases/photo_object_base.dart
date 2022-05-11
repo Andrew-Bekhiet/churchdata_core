@@ -16,10 +16,9 @@ abstract class PhotoObjectBase {
 
 abstract class DataObjectWithPhoto extends DataObject
     implements PhotoObjectBase {
-  DataObjectWithPhoto(JsonRef ref, String name) : super(ref, name);
-  DataObjectWithPhoto.fromJson(Json data, JsonRef ref)
-      : super.fromJson(data, ref);
-  DataObjectWithPhoto.fromJsonDoc(JsonDoc doc) : super.fromJsonDoc(doc);
+  DataObjectWithPhoto(super.ref, super.name);
+  DataObjectWithPhoto.fromJson(super.data, super.ref) : super.fromJson();
+  DataObjectWithPhoto.fromJsonDoc(super.doc) : super.fromJsonDoc();
 
   @override
   final AsyncMemoizerCache<String> photoUrlCache = AsyncMemoizerCache<String>();

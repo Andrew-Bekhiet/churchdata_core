@@ -7,10 +7,10 @@ class CopiablePropertyWidget extends StatelessWidget {
   const CopiablePropertyWidget(
     this.propName,
     this.value, {
-    Key? key,
+    super.key,
     this.showErrorIfEmpty = true,
     this.additionalOptions,
-  }) : super(key: key);
+  });
 
   final String propName;
   final String? value;
@@ -59,8 +59,7 @@ class CopiablePropertyWidget extends StatelessWidget {
 class PhoneNumberProperty extends StatelessWidget {
   const PhoneNumberProperty(
       this.propName, this.value, this.phoneCall, this.contactAdd,
-      {Key? key, this.showErrorIfEmpty = true})
-      : super(key: key);
+      {super.key, this.showErrorIfEmpty = true});
 
   final bool showErrorIfEmpty;
   final String propName;

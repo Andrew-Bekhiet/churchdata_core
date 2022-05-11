@@ -31,7 +31,7 @@ class DataObjectListView<G, T extends DataObject> extends StatefulWidget {
   final String? emptyMsg;
 
   DataObjectListView({
-    Key? key,
+    super.key,
     required this.controller,
     this.itemBuilder,
     this.groupBuilder,
@@ -39,10 +39,9 @@ class DataObjectListView<G, T extends DataObject> extends StatefulWidget {
     this.onLongPress,
     this.emptyMsg,
     required this.autoDisposeController,
-  })  : assert(isSubtype<void, G>() ||
+  }) : assert(isSubtype<void, G>() ||
             isSubtype<DataObject?, G>() ||
-            groupBuilder != null),
-        super(key: key);
+            groupBuilder != null);
 
   @override
   _DataObjectListViewState<G, T> createState() =>

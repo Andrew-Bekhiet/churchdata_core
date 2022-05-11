@@ -9,11 +9,11 @@ abstract class DataObject extends DocumentObject with Viewable {
   @override
   final String name;
 
-  const DataObject(JsonRef ref, this.name) : super(ref);
+  const DataObject(super.ref, this.name);
 
-  DataObject.fromJson(Json data, JsonRef ref)
+  DataObject.fromJson(super.data, super.ref)
       : name = data['Name'] ?? '',
-        super.fromJson(data, ref);
+        super.fromJson();
 
   DataObject.fromJsonDoc(JsonDoc doc)
       : this.fromJson(doc.data()!, doc.reference);

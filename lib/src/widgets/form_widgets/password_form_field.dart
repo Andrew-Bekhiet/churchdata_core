@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class PasswordFormField extends StatefulWidget {
   const PasswordFormField({
-    Key? key,
+    super.key,
     this.padding,
     this.labelText,
     this.initialValue,
@@ -14,7 +14,7 @@ class PasswordFormField extends StatefulWidget {
     this.textInputAction,
     this.autoFillHints = const [AutofillHints.password],
     this.focusNode,
-  }) : super(key: key);
+  });
 
   final EdgeInsetsGeometry? padding;
   final String? labelText;

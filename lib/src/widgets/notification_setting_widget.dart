@@ -14,12 +14,12 @@ class NotificationSettingWidget extends StatefulWidget {
   final Function notificationCallback;
 
   const NotificationSettingWidget({
-    Key? key,
+    super.key,
     required this.label,
     required this.hiveKey,
     required this.alarmId,
     required this.notificationCallback,
-  }) : super(key: key);
+  });
 
   @override
   _NotificationSettingWidgetState createState() =>
