@@ -427,6 +427,7 @@ void main() {
                       showPreviews: AppleShowPreviewSetting.whenAuthenticated,
                       sound: AppleNotificationSetting.enabled,
                       authorizationStatus: AuthorizationStatus.authorized,
+                      timeSensitive: AppleNotificationSetting.disabled,
                     ),
                   );
                   when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
@@ -541,6 +542,7 @@ void main() {
                       showPreviews: AppleShowPreviewSetting.whenAuthenticated,
                       sound: AppleNotificationSetting.enabled,
                       authorizationStatus: AuthorizationStatus.denied,
+                      timeSensitive: AppleNotificationSetting.disabled,
                     ),
                   );
 

@@ -56,7 +56,11 @@ class CacheRepository implements HiveInterface {
   }
 
   @override
-  void init(String path) {
+  void init(
+    String? path, {
+    HiveStorageBackendPreference backendPreference =
+        HiveStorageBackendPreference.native,
+  }) {
     return Hive.init(path);
   }
 
@@ -85,10 +89,12 @@ class CacheRepository implements HiveInterface {
     String? path,
     Uint8List? bytes,
     List<int>? encryptionKey,
+    String? collection,
   }) {
     return Hive.openBox<E>(
       name,
       bytes: bytes,
+      collection: collection,
       compactionStrategy: compactionStrategy,
       crashRecovery: crashRecovery,
       encryptionCipher: encryptionCipher,
@@ -98,17 +104,17 @@ class CacheRepository implements HiveInterface {
   }
 
   @override
-  Future<LazyBox<E>> openLazyBox<E>(
-    String name, {
-    HiveCipher? encryptionCipher,
-    KeyComparator keyComparator = defaultKeyComparator,
-    CompactionStrategy compactionStrategy = defaultCompactionStrategy,
-    bool crashRecovery = true,
-    String? path,
-    List<int>? encryptionKey,
-  }) {
+  Future<LazyBox<E>> openLazyBox<E>(String name,
+      {HiveCipher? encryptionCipher,
+      KeyComparator keyComparator = defaultKeyComparator,
+      CompactionStrategy compactionStrategy = defaultCompactionStrategy,
+      bool crashRecovery = true,
+      String? path,
+      List<int>? encryptionKey,
+      String? collection}) {
     return Hive.openLazyBox<E>(
       name,
+      collection: collection,
       compactionStrategy: compactionStrategy,
       crashRecovery: crashRecovery,
       encryptionCipher: encryptionCipher,
