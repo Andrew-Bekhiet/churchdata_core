@@ -27,6 +27,7 @@ class Church extends MetaObject {
   static Stream<List<Church>> getAll() {
     return GetIt.I<DatabaseRepository>()
         .collection('Churches')
+        .orderBy('Name')
         .snapshots()
         .map((s) => s.docs.map(Church.fromDoc).toList());
   }
@@ -77,6 +78,7 @@ class PersonState extends MetaObject {
   static Stream<List<PersonState>> getAll() {
     return GetIt.I<DatabaseRepository>()
         .collection('States')
+        .orderBy('Name')
         .snapshots()
         .map((s) => s.docs.map(PersonState.fromDoc).toList());
   }
@@ -116,6 +118,7 @@ class College extends MetaObject {
   static Stream<List<College>> getAll() {
     return GetIt.I<DatabaseRepository>()
         .collection('Colleges')
+        .orderBy('Name')
         .snapshots()
         .map((s) => s.docs.map(College.fromDoc).toList());
   }
@@ -145,6 +148,7 @@ class Father extends MetaObject {
   static Stream<List<Father>> getAll() {
     return GetIt.I<DatabaseRepository>()
         .collection('Fathers')
+        .orderBy('Name')
         .snapshots()
         .map((s) => s.docs.map(Father.fromDoc).toList());
   }
@@ -192,6 +196,7 @@ class Job extends MetaObject {
   static Stream<List<Job>> getAll() {
     return GetIt.I<DatabaseRepository>()
         .collection('Jobs')
+        .orderBy('Name')
         .snapshots()
         .map((s) => s.docs.map(Job.fromDoc).toList());
   }
@@ -221,6 +226,7 @@ class PersonType extends MetaObject {
   static Stream<List<PersonType>> getAll() {
     return GetIt.I<DatabaseRepository>()
         .collection('Types')
+        .orderBy('Name')
         .snapshots()
         .map((s) => s.docs.map(PersonType.fromDoc).toList());
   }
@@ -250,6 +256,7 @@ class ServingType extends MetaObject {
   static Stream<List<ServingType>> getAll() {
     return GetIt.I<DatabaseRepository>()
         .collection('ServingTypes')
+        .orderBy('Name')
         .snapshots()
         .map((s) => s.docs.map(ServingType.fromDoc).toList());
   }
@@ -280,6 +287,7 @@ class StudyYear extends MetaObject {
   static Stream<List<StudyYear>> getAll() {
     return GetIt.I<DatabaseRepository>()
         .collection('StudyYears')
+        .orderBy('Grade')
         .snapshots()
         .map((s) => s.docs.map(StudyYear.fromDoc).toList());
   }
@@ -328,6 +336,7 @@ class School extends MetaObject {
   static Stream<List<School>> getAll() {
     return GetIt.I<DatabaseRepository>()
         .collection('Schools')
+        .orderBy('Name')
         .snapshots()
         .map((s) => s.docs.map(School.fromDoc).toList());
   }
