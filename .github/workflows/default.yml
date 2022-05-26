@@ -38,9 +38,9 @@ jobs:
         if: ${{ steps.source-changed.outputs.any_changed == 'true' }}
         with:
           path: ${{ env.PUB_CACHE }}
-          key: flutter-dependencies-v2-${{hashFiles('pubspec.yaml')}}
+          key: flutter-dependencies-v3-${{hashFiles('pubspec.yaml')}}
           restore-keys: |
-            flutter-dependencies-v2-
+            flutter-dependencies-v3-
 
       - name: Install dependencies
         if: ${{ steps.source-changed.outputs.any_changed == 'true' }}
