@@ -136,7 +136,7 @@ class NotificationsService {
       if (payload != null) {
         return GetIt.I<CacheRepository>()
             .box<Notification>('Notifications')
-            .get(payload);
+            .getAt(int.parse(payload));
       }
     }
     return null;
