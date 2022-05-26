@@ -27,7 +27,7 @@ jobs:
         if: ${{ steps.source-changed.outputs.any_changed == 'true' }}
         with:
           path: ${{ runner.tool_cache }}/flutter
-          key: flutter-2.10.3-stable
+          key: flutter-3.0.1-stable
 
       - uses: subosito/flutter-action@v2
         if: ${{ steps.source-changed.outputs.any_changed == 'true' }}
