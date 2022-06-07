@@ -128,7 +128,7 @@ class College extends MetaObject {
 
   College.createNew()
       : this(
-          ref: GetIt.I<DatabaseRepository>().collection('States').doc(),
+          ref: GetIt.I<DatabaseRepository>().collection('Colleges').doc(),
           name: '',
         );
 
@@ -304,7 +304,7 @@ class StudyYear extends MetaObject {
 
   StudyYear.createNew()
       : this(
-          ref: GetIt.I<DatabaseRepository>().collection('States').doc(),
+          ref: GetIt.I<DatabaseRepository>().collection('StudyYears').doc(),
           name: '',
           grade: 0,
         );
@@ -351,7 +351,7 @@ class School extends MetaObject {
 
   School.createNew()
       : this(
-          ref: GetIt.I<DatabaseRepository>().collection('States').doc(),
+          ref: GetIt.I<DatabaseRepository>().collection('Schools').doc(),
           name: '',
         );
 
