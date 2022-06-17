@@ -38,9 +38,11 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
   @mustCallSuper
   void initListeners() async {
     unawaited(
-      userSubject.next
-          .then(signalReady)
-          .then((value) => GetIt.I<NotificationsService>().registerFCMToken()),
+      userSubject.next.then(signalReady),
+    );
+    unawaited(
+      userSubject.nextNonNull
+          .then((_) => GetIt.I<NotificationsService>().registerFCMToken()),
     );
 
     if (GetIt.I<CacheRepository>().box('User').toMap().isNotEmpty) {
