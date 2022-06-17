@@ -38,7 +38,9 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
   @mustCallSuper
   void initListeners() async {
     unawaited(
-      userSubject.next.then(signalReady),
+      userSubject.next
+          .then(signalReady)
+          .then((value) => GetIt.I<NotificationsService>().registerFCMToken()),
     );
 
     if (GetIt.I<CacheRepository>().box('User').toMap().isNotEmpty) {
@@ -87,8 +89,6 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
       });
 
       await refreshIdToken(user);
-
-      await GetIt.I<NotificationsService>().registerFCMToken();
     } else if (currentUser != null) {
       await userTokenListener?.cancel();
     } else if (!_disposed && !GetIt.I.isReadySync(instance: this))
