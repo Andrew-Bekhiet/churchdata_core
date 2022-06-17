@@ -138,14 +138,14 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
   @protected
 
   ///Must be ovrerriden if using any type other than [UserBase] or [PersonBase]
-  U refreshFromIdToken(
+  FutureOr<U> refreshFromIdToken(
     Json idTokenClaims, {
     auth.User? firebaseUser,
     String? uid,
     String? name,
     String? email,
     String? phone,
-  }) {
+  }) async {
     final U user = UserBase(
       uid: firebaseUser?.uid ?? uid!,
       name: firebaseUser?.displayName ?? name ?? '',
@@ -155,7 +155,7 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
     ) as U;
 
     if (idTokenClaims['personId'] != currentUserData?.ref.id) {
-      personListener?.cancel();
+      await personListener?.cancel();
       personListener = GetIt.I<DatabaseRepository>()
           .collection('Persons')
           .doc(idTokenClaims['personId'])
