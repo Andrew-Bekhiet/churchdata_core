@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:churchdata_core/churchdata_core.dart';
-import 'package:churchdata_core/src/services/updates_service.dart';
 import 'package:churchdata_core_mocks/churchdata_core.dart';
 import 'package:churchdata_core_mocks/services/updates_service_test.mocks.dart';
 import 'package:churchdata_core_mocks/utils.dart';

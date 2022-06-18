@@ -3,7 +3,6 @@ library churchdata_core;
 import 'dart:convert';
 
 import 'package:churchdata_core/churchdata_core.dart';
-import 'package:churchdata_core/src/services/updates_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
