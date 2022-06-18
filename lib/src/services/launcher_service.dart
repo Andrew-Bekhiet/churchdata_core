@@ -3,7 +3,11 @@ import 'package:url_launcher/url_launcher.dart' as l;
 
 class LauncherService {
   Future<bool> launch(String url) async {
-    return l.launchUrl(Uri.parse(url));
+    return launchUrl(Uri.parse(url));
+  }
+
+  Future<bool> launchUrl(Uri url) async {
+    return l.launchUrl(url);
   }
 
   Future<bool> launchSMSChat(String fomattedPhone) async {
