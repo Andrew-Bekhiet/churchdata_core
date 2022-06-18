@@ -7,7 +7,7 @@ class LauncherService {
   }
 
   Future<bool> launchUrl(Uri url) async {
-    return l.launchUrl(url);
+    return l.launchUrl(url, mode: l.LaunchMode.externalApplication);
   }
 
   Future<bool> launchSMSChat(String fomattedPhone) async {
