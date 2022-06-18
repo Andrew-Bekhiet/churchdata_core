@@ -112,7 +112,7 @@ class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
       queryValue: queryValue == const $CopyWithPlaceholder()
           ? _value.queryValue
           // ignore: cast_nullable_to_non_nullable
-          : queryValue as Object?,
+          : queryValue,
     );
   }
 }
