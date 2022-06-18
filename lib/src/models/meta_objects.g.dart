@@ -72,7 +72,7 @@ class _$ChurchCWProxyImpl implements _$ChurchCWProxy {
 }
 
 extension $ChurchCopyWith on Church {
-  /// Returns a callable class that can be used as follows: `instanceOfclass Church extends MetaObject.name.copyWith(...)` or like so:`instanceOfclass Church extends MetaObject.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfChurch.copyWith(...)` or like so:`instanceOfChurch.copyWith.fieldName(...)`.
   _$ChurchCWProxy get copyWith => _$ChurchCWProxyImpl(this);
 
   /// Copies the object with the specific fields set to `null`. If you pass `false` as a parameter, nothing will be done and it will be ignored. Don't do it. Prefer `copyWith(field: null)` or `Church(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -159,7 +159,7 @@ class _$PersonStateCWProxyImpl implements _$PersonStateCWProxy {
 }
 
 extension $PersonStateCopyWith on PersonState {
-  /// Returns a callable class that can be used as follows: `instanceOfclass PersonState extends MetaObject.name.copyWith(...)` or like so:`instanceOfclass PersonState extends MetaObject.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfPersonState.copyWith(...)` or like so:`instanceOfPersonState.copyWith.fieldName(...)`.
   _$PersonStateCWProxy get copyWith => _$PersonStateCWProxyImpl(this);
 
   /// Copies the object with the specific fields set to `null`. If you pass `false` as a parameter, nothing will be done and it will be ignored. Don't do it. Prefer `copyWith(field: null)` or `PersonState(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -234,7 +234,7 @@ class _$CollegeCWProxyImpl implements _$CollegeCWProxy {
 }
 
 extension $CollegeCopyWith on College {
-  /// Returns a callable class that can be used as follows: `instanceOfclass College extends MetaObject.name.copyWith(...)` or like so:`instanceOfclass College extends MetaObject.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfCollege.copyWith(...)` or like so:`instanceOfCollege.copyWith.fieldName(...)`.
   _$CollegeCWProxy get copyWith => _$CollegeCWProxyImpl(this);
 }
 
@@ -305,7 +305,7 @@ class _$FatherCWProxyImpl implements _$FatherCWProxy {
 }
 
 extension $FatherCopyWith on Father {
-  /// Returns a callable class that can be used as follows: `instanceOfclass Father extends MetaObject.name.copyWith(...)` or like so:`instanceOfclass Father extends MetaObject.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfFather.copyWith(...)` or like so:`instanceOfFather.copyWith.fieldName(...)`.
   _$FatherCWProxy get copyWith => _$FatherCWProxyImpl(this);
 
   /// Copies the object with the specific fields set to `null`. If you pass `false` as a parameter, nothing will be done and it will be ignored. Don't do it. Prefer `copyWith(field: null)` or `Father(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -380,7 +380,7 @@ class _$JobCWProxyImpl implements _$JobCWProxy {
 }
 
 extension $JobCopyWith on Job {
-  /// Returns a callable class that can be used as follows: `instanceOfclass Job extends MetaObject.name.copyWith(...)` or like so:`instanceOfclass Job extends MetaObject.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfJob.copyWith(...)` or like so:`instanceOfJob.copyWith.fieldName(...)`.
   _$JobCWProxy get copyWith => _$JobCWProxyImpl(this);
 }
 
@@ -439,7 +439,7 @@ class _$PersonTypeCWProxyImpl implements _$PersonTypeCWProxy {
 }
 
 extension $PersonTypeCopyWith on PersonType {
-  /// Returns a callable class that can be used as follows: `instanceOfclass PersonType extends MetaObject.name.copyWith(...)` or like so:`instanceOfclass PersonType extends MetaObject.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfPersonType.copyWith(...)` or like so:`instanceOfPersonType.copyWith.fieldName(...)`.
   _$PersonTypeCWProxy get copyWith => _$PersonTypeCWProxyImpl(this);
 }
 
@@ -499,7 +499,7 @@ class _$ServingTypeCWProxyImpl implements _$ServingTypeCWProxy {
 }
 
 extension $ServingTypeCopyWith on ServingType {
-  /// Returns a callable class that can be used as follows: `instanceOfclass ServingType extends MetaObject.name.copyWith(...)` or like so:`instanceOfclass ServingType extends MetaObject.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfServingType.copyWith(...)` or like so:`instanceOfServingType.copyWith.fieldName(...)`.
   _$ServingTypeCWProxy get copyWith => _$ServingTypeCWProxyImpl(this);
 }
 
@@ -582,7 +582,7 @@ class _$StudyYearCWProxyImpl implements _$StudyYearCWProxy {
 }
 
 extension $StudyYearCopyWith on StudyYear {
-  /// Returns a callable class that can be used as follows: `instanceOfclass StudyYear extends MetaObject.name.copyWith(...)` or like so:`instanceOfclass StudyYear extends MetaObject.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfStudyYear.copyWith(...)` or like so:`instanceOfStudyYear.copyWith.fieldName(...)`.
   _$StudyYearCWProxy get copyWith => _$StudyYearCWProxyImpl(this);
 }
 
@@ -652,7 +652,7 @@ class _$SchoolCWProxyImpl implements _$SchoolCWProxy {
 }
 
 extension $SchoolCopyWith on School {
-  /// Returns a callable class that can be used as follows: `instanceOfclass School extends MetaObject.name.copyWith(...)` or like so:`instanceOfclass School extends MetaObject.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfSchool.copyWith(...)` or like so:`instanceOfSchool.copyWith.fieldName(...)`.
   _$SchoolCWProxy get copyWith => _$SchoolCWProxyImpl(this);
 
   /// Copies the object with the specific fields set to `null`. If you pass `false` as a parameter, nothing will be done and it will be ignored. Don't do it. Prefer `copyWith(field: null)` or `School(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.

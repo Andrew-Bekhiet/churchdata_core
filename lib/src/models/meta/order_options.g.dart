@@ -61,6 +61,6 @@ class _$OrderOptionsCWProxyImpl implements _$OrderOptionsCWProxy {
 }
 
 extension $OrderOptionsCopyWith on OrderOptions {
-  /// Returns a callable class that can be used as follows: `instanceOfclass OrderOptions extends Equatable.name.copyWith(...)` or like so:`instanceOfclass OrderOptions extends Equatable.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfOrderOptions.copyWith(...)` or like so:`instanceOfOrderOptions.copyWith.fieldName(...)`.
   _$OrderOptionsCWProxy get copyWith => _$OrderOptionsCWProxyImpl(this);
 }

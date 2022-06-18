@@ -112,13 +112,13 @@ class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
       queryValue: queryValue == const $CopyWithPlaceholder()
           ? _value.queryValue
           // ignore: cast_nullable_to_non_nullable
-          : queryValue,
+          : queryValue as Object?,
     );
   }
 }
 
 extension $QueryInfoCopyWith on QueryInfo {
-  /// Returns a callable class that can be used as follows: `instanceOfclass QueryInfo extends Serializable with Viewable.name.copyWith(...)` or like so:`instanceOfclass QueryInfo extends Serializable with Viewable.name.copyWith.fieldName(...)`.
+  /// Returns a callable class that can be used as follows: `instanceOfQueryInfo.copyWith(...)` or like so:`instanceOfQueryInfo.copyWith.fieldName(...)`.
   _$QueryInfoCWProxy get copyWith => _$QueryInfoCWProxyImpl(this);
 
   /// Copies the object with the specific fields set to `null`. If you pass `false` as a parameter, nothing will be done and it will be ignored. Don't do it. Prefer `copyWith(field: null)` or `QueryInfo(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
