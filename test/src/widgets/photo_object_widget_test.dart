@@ -17,11 +17,11 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group(
-    'DataObjectWidget tests ->',
+    'PhotoObjectWidget tests ->',
     () {
       setUp(
         () async {
-          GetIt.I.pushNewScope(scopeName: 'DataObjectWidgetTestsScope');
+          GetIt.I.pushNewScope(scopeName: 'PhotoObjectWidgetTestsScope');
 
           registerFirebaseMocks();
 

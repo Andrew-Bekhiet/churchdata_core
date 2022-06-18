@@ -12,7 +12,7 @@ void main() {
     () {
       setUp(
         () async {
-          GetIt.I.pushNewScope(scopeName: 'CacheTestsScope');
+          GetIt.I.pushNewScope(scopeName: 'ThemingServiceTestsScope');
           GetIt.I.registerSingleton<CacheRepository>(
             FakeCacheRepo(),
             dispose: (r) => r.dispose(),

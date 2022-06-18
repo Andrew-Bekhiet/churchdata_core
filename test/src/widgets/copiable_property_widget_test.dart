@@ -124,7 +124,7 @@ void main() {
     () {
       setUp(
         () async {
-          GetIt.I.pushNewScope(scopeName: 'NotificationsTestsScope');
+          GetIt.I.pushNewScope(scopeName: 'CopiablePropTestsScope');
           registerFirebaseMocks();
         },
       );

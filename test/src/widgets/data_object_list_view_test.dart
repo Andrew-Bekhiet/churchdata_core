@@ -21,7 +21,7 @@ void main() {
     () {
       setUp(
         () async {
-          GetIt.I.pushNewScope(scopeName: 'DatabaseTestsScope');
+          GetIt.I.pushNewScope(scopeName: 'DataObjectListViewTestsScope');
 
           registerFirebaseMocks();
 
