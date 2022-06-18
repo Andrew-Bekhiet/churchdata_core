@@ -3,6 +3,7 @@ library churchdata_core;
 import 'dart:convert';
 
 import 'package:churchdata_core/churchdata_core.dart';
+import 'package:churchdata_core/src/services/updates_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -163,6 +164,12 @@ Future<void> initCore({
   if (themingService != null)
     GetIt.I.registerSingleton<ThemingService>(
       themingService,
+    );
+
+  final updatesService = overrides[UpdatesService]?.call();
+  if (updatesService != null)
+    GetIt.I.registerSingleton<UpdatesService>(
+      updatesService,
     );
 
   await Future.wait([
