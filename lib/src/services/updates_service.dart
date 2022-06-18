@@ -8,7 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:version/version.dart';
 
-class UpdateService {
+class UpdatesService {
   Future<Version> getLatestVersion() async {
     final versionData = await GetIt.I<FirebaseDatabase>()
         .ref()

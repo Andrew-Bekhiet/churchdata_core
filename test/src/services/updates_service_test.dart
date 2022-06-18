@@ -56,7 +56,7 @@ void main() {
               .child('latest_version')
               .set('1.0.0');
 
-          final unit = UpdateService();
+          final unit = UpdatesService();
 
           expect(await unit.getLatestVersion(), Version(1, 0, 0));
           expect(await unit.isUpToDate(), isFalse);
@@ -73,7 +73,7 @@ void main() {
               .child('deprecated_from')
               .set('1.0.0');
 
-          final unit = UpdateService();
+          final unit = UpdatesService();
 
           expect(await unit.getLatestDeprecatedVersion(), Version(1, 0, 0));
           expect(await unit.currentIsDeprecated(), isTrue);
@@ -90,7 +90,7 @@ void main() {
               .child('deprecated_from')
               .set('1.0.0');
 
-          final unit = UpdateService();
+          final unit = UpdatesService();
 
           expect(await unit.getCurrentVersion(), Version(0, 2, 0));
         },
@@ -120,7 +120,7 @@ void main() {
               wrapWithMaterialApp(const Scaffold(), navigatorKey: navigator));
           await tester.pumpAndSettle();
 
-          final unit = UpdateService();
+          final unit = UpdatesService();
 
           unawaited(unit.showUpdateDialog(navigator.currentContext!,
               content: const Text('Content')));
