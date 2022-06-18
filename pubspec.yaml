@@ -42,6 +42,8 @@ dependencies:
   group_list_view: ^1.1.1
   share_plus: ^4.0.3
   firebase_remote_config: ^2.0.2
+  version: ^3.0.2
+  package_info_plus: ^1.4.2
 
 dev_dependencies:
   flutter_test:
