@@ -70,14 +70,14 @@ class LoggingService {
 
             final currentUser = await GetIt.I<AuthRepository>().userStream.next;
             Sentry.configureScope(
-              (scope) => scope.user = currentUser != null
+              (scope) => scope.setUser(currentUser != null
                   ? SentryUser(
                       id: currentUser.uid,
                       email: currentUser is UserBase ? currentUser.email : null,
                       extras:
                           currentUser is UserBase ? currentUser.toJson() : null,
                     )
-                  : null,
+                  : null),
             );
           },
         ),
@@ -102,11 +102,11 @@ class LoggingService {
             ? GetIt.I<AuthRepository>().currentUser
             : null;
         scope
-          ..user = SentryUser(
+          ..setUser(SentryUser(
             extras: currentUser is UserBase? ? currentUser?.toJson() : null,
             email: currentUser is UserBase? ? currentUser?.email : null,
             id: currentUser?.uid,
-          )
+          ))
           ..setContexts('Data', data);
 
         if (extras != null)
@@ -128,11 +128,11 @@ class LoggingService {
             ? GetIt.I<AuthRepository>().currentUser
             : null;
         scope
-          ..user = SentryUser(
+          ..setUser(SentryUser(
             extras: currentUser is UserBase? ? currentUser?.toJson() : null,
             email: currentUser is UserBase? ? currentUser?.email : null,
             id: currentUser?.uid,
-          )
+          ))
           ..setContexts('Data', data);
 
         if (extras != null)
