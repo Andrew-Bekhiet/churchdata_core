@@ -1,3 +1,4 @@
+import 'package:churchdata_core/src/models/bases/id.dart';
 import 'package:churchdata_core/src/typedefs.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -5,9 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'serializable.dart';
 
 @immutable
-abstract class DocumentObject extends Serializable {
+abstract class DocumentObject extends Serializable with ID {
   final JsonRef ref;
 
+  @override
   String get id => ref.id;
 
   const DocumentObject(this.ref);

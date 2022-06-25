@@ -240,7 +240,7 @@ void main() async {
             },
           );
 
-          expect(GetIt.I<AuthRepository>().currentUserData?.ref, personRef);
+          expect(GetIt.I<AuthRepository>().currentUserData?.id, personRef.id);
           expect(GetIt.I<AuthRepository>().currentUserData?.name, 'Person');
 
           expect(GetIt.I<AuthRepository>().currentUser?.uid, mockUser.uid);

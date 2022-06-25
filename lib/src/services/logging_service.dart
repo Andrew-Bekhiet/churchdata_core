@@ -73,8 +73,9 @@ class LoggingService {
               (scope) => scope.user = currentUser != null
                   ? SentryUser(
                       id: currentUser.uid,
-                      email: currentUser.email,
-                      extras: currentUser.toJson(),
+                      email: currentUser is UserBase ? currentUser.email : null,
+                      extras:
+                          currentUser is UserBase ? currentUser.toJson() : null,
                     )
                   : null,
             );
@@ -102,8 +103,8 @@ class LoggingService {
             : null;
         scope
           ..user = SentryUser(
-            extras: currentUser?.toJson(),
-            email: currentUser?.email,
+            extras: currentUser is UserBase? ? currentUser?.toJson() : null,
+            email: currentUser is UserBase? ? currentUser?.email : null,
             id: currentUser?.uid,
           )
           ..setContexts('Data', data);
@@ -128,8 +129,8 @@ class LoggingService {
             : null;
         scope
           ..user = SentryUser(
-            extras: currentUser?.toJson(),
-            email: currentUser?.email,
+            extras: currentUser is UserBase? ? currentUser?.toJson() : null,
+            email: currentUser is UserBase? ? currentUser?.email : null,
             id: currentUser?.uid,
           )
           ..setContexts('Data', data);

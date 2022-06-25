@@ -8,7 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AuthRepository<U extends UserBase, P extends PersonBase> {
+class AuthRepository<U extends UID, P extends ViewableWithID> {
   AuthRepository() {
     initListeners();
   }
@@ -156,7 +156,7 @@ class AuthRepository<U extends UserBase, P extends PersonBase> {
       permissions: permissionsFromIdToken(idTokenClaims),
     ) as U;
 
-    if (idTokenClaims['personId'] != currentUserData?.ref.id) {
+    if (idTokenClaims['personId'] != currentUserData?.id) {
       await personListener?.cancel();
       personListener = GetIt.I<DatabaseRepository>()
           .collection('Persons')
