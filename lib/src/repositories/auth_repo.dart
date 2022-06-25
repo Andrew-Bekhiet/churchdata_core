@@ -181,7 +181,6 @@ class AuthRepository<U extends UID, P extends ViewableWithID> {
   }
 
   @protected
-  @mustCallSuper
   bool connectionChanged(DatabaseEvent snapshot) {
     if (snapshot.snapshot.value == true) {
       scheduleOnDisconnect();
