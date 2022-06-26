@@ -28,6 +28,8 @@ class LoggingService {
     return object;
   }
 
+  final NavigatorObserver navigatorObserver = SentryNavigatorObserver();
+
   LoggingService(String sentryDSN) {
     _init(sentryDSN);
   }
@@ -53,8 +55,10 @@ class LoggingService {
       return Material(
         child: Container(
           color: Colors.white,
-          child: Text(
-            'حدث خطأ:\n' + error.summary.toString(),
+          child: Center(
+            child: Text(
+              'حدث خطأ:\n' + error.summary.toString(),
+            ),
           ),
         ),
       );
