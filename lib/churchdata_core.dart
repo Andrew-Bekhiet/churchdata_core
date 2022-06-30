@@ -15,6 +15,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 export 'src/controllers.dart';
 export 'src/models.dart';
@@ -58,6 +59,7 @@ export 'src/widgets.dart';
 /// ```
 Future<void> initCore({
   required String sentryDSN,
+  HiveCipher? userBoxCipher,
   Map<Type, dynamic Function()> overrides = const {},
 }) async {
   final loggingService =
@@ -78,22 +80,25 @@ Future<void> initCore({
 
   await GetIt.I.isReady(instance: cacheRepository);
 
-  const secureStorage = FlutterSecureStorage();
-  final containsEncryptionKey = await secureStorage.containsKey(key: 'key');
-  if (!containsEncryptionKey)
-    await secureStorage.write(
-      key: 'key',
-      value: base64Url.encode(
-        GetIt.I<CacheRepository>().generateSecureKey(),
-      ),
+  if (userBoxCipher == null) {
+    const secureStorage = FlutterSecureStorage();
+    final containsEncryptionKey = await secureStorage.containsKey(key: 'key');
+    if (!containsEncryptionKey)
+      await secureStorage.write(
+        key: 'key',
+        value: base64Url.encode(
+          GetIt.I<CacheRepository>().generateSecureKey(),
+        ),
+      );
+    final encryptionKey = base64Url.decode(
+      (await secureStorage.read(key: 'key'))!,
     );
-  final encryptionKey = base64Url.decode(
-    (await secureStorage.read(key: 'key'))!,
-  );
+    userBoxCipher = HiveAesCipher(encryptionKey);
+  }
 
   await GetIt.I<CacheRepository>().openBox(
     'User',
-    encryptionCipher: HiveAesCipher(encryptionKey),
+    encryptionCipher: userBoxCipher,
   );
 
   final localNotificationsPlugin =
