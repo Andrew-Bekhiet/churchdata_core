@@ -27,7 +27,7 @@ Pseudo code for firestore pagination:
 
 class ListController<G, T extends DataObject> {
   @protected
-  final PaginatableStream<T> objectsPaginatableStream;
+  final PaginatableStreamBase<T> objectsPaginatableStream;
   @protected
   final BehaviorSubject<List<T>> objectsSubject;
   late final StreamSubscription<List<T>> _objectsSubscription;
@@ -253,7 +253,7 @@ class ListController<G, T extends DataObject> {
   }
 
   ListController<NewG, T> copyWithNewG<NewG>({
-    PaginatableStream<T>? objectsPaginatableStream,
+    PaginatableStreamBase<T>? objectsPaginatableStream,
     Stream<String>? searchStream,
     SearchFunction<T>? filter,
     required GroupingFunction<NewG, T> groupBy,
