@@ -2,6 +2,7 @@
 import 'dart:typed_data';
 
 import 'package:churchdata_core/churchdata_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -132,6 +133,13 @@ class CacheRepository implements HiveInterface {
 
   Future<void> dispose() {
     return close();
+  }
+
+  @override
+  @visibleForTesting
+  void resetAdapters() {
+    // ignore: invalid_use_of_visible_for_testing_member
+    Hive.resetAdapters();
   }
 }
 
