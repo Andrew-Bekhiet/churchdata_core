@@ -5,9 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
-abstract class PaginatableStreamBase<T extends ID> {
+abstract class PaginatableStreamBase<T extends ID, S> {
   final int limit;
-  final T Function(JsonQueryDoc) mapper;
+  final T Function(S) mapper;
 
   bool get canPaginateForward;
 
@@ -42,7 +42,8 @@ abstract class PaginatableStreamBase<T extends ID> {
   Future<void> dispose();
 }
 
-class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
+class PaginatableStream<T extends ID>
+    extends PaginatableStreamBase<T, JsonQueryDoc> {
   final Subject<QueryOfJson> query;
 
   JsonDoc? _middlePointer;
