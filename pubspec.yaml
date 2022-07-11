@@ -52,7 +52,7 @@ dev_dependencies:
   churchdata_core_mocks:
     git:
       url: https://github.com/Andrew-Bekhiet/churchdata_core_mocks
-      ref: 2d72bae16f82b6219c36922b7fa245f066aeaaed
+      ref: fa70ad09ca3f7c37df17d9a5fb07d6af9e47c530
   mockito: ^5.1.0
   build_runner: ^2.1.7
   copy_with_extension_gen: ^4.0.1
