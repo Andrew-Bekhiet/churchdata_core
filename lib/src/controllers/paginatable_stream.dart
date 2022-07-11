@@ -5,12 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
-abstract class PaginatableStreamBase<T extends ID, S> {
+abstract class PaginatableStreamBase<T> {
   final int limit;
-  final T Function(S) mapper;
+
+  bool get isLoading;
 
   bool get canPaginateForward;
-
   bool get canPaginateBackward;
 
   ValueStream<List<T>> get stream;
@@ -18,22 +18,17 @@ abstract class PaginatableStreamBase<T extends ID, S> {
   List<T>? get currentValueOrNull;
 
   PaginatableStreamBase({
-    required this.mapper,
     int pageLimit = 100,
   }) : limit = pageLimit * 2;
 
   @protected
   PaginatableStreamBase.private({
-    required this.mapper,
     required this.limit,
   });
 
   PaginatableStreamBase.loadAll({
     required Stream<List<T>> stream,
-  })  : limit = 0,
-        mapper = ((o) => throw UnsupportedError(
-              '"mapper" is not supported when initialized from "loadAll"',
-            ));
+  }) : limit = 0;
 
   Future<void> loadNextPage();
 
@@ -42,11 +37,15 @@ abstract class PaginatableStreamBase<T extends ID, S> {
   Future<void> dispose();
 }
 
-class PaginatableStream<T extends ID>
-    extends PaginatableStreamBase<T, JsonQueryDoc> {
+class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   final Subject<QueryOfJson> query;
+  final T Function(JsonQueryDoc) mapper;
 
   JsonDoc? _middlePointer;
+
+  @override
+  bool get isLoading => _isLoading;
+  bool _isLoading = true;
 
   @override
   bool get canPaginateForward => _canPaginateForward;
@@ -70,7 +69,7 @@ class PaginatableStream<T extends ID>
 
   PaginatableStream({
     required this.query,
-    required super.mapper,
+    required this.mapper,
     super.pageLimit,
   }) {
     bool queryChanged = true;
@@ -140,6 +139,11 @@ class PaginatableStream<T extends ID>
           },
         );
       },
+    ).map(
+      (event) {
+        _isLoading = false;
+        return event;
+      },
     ).listen(_subject.add, onError: _subject.addError);
   }
 
@@ -156,6 +160,9 @@ class PaginatableStream<T extends ID>
   PaginatableStream.loadAll({
     required Stream<List<T>> stream,
   })  : query = BehaviorSubject(),
+        mapper = ((o) => throw UnsupportedError(
+              '"mapper" is not supported when initialized from "loadAll"',
+            )),
         super.loadAll(stream: stream) {
     _streamSubscription =
         stream.listen(_subject.add, onError: _subject.addError);
@@ -164,8 +171,9 @@ class PaginatableStream<T extends ID>
   @override
   Future<void> loadNextPage() async {
     if (canPaginateForward) {
-      _controller.add(UpdateQueryEvent.forward);
       _canPaginateForward = false;
+      _isLoading = true;
+      _controller.add(UpdateQueryEvent.forward);
     } else {
       throw StateError('Cannot paginate forward');
     }
@@ -174,8 +182,9 @@ class PaginatableStream<T extends ID>
   @override
   Future<void> loadPreviousPage() async {
     if (canPaginateBackward) {
-      _controller.add(UpdateQueryEvent.backward);
       _canPaginateBackward = false;
+      _isLoading = true;
+      _controller.add(UpdateQueryEvent.backward);
     } else {
       throw StateError('Cannot paginate backward');
     }

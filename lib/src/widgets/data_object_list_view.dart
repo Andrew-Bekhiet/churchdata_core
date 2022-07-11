@@ -85,6 +85,24 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID, S>
   @override
   bool get wantKeepAlive => _builtOnce && ModalRoute.of(context)!.isCurrent;
 
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_controller.canPaginateForward &&
+          _scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent) {
+        _controller.loadNextPage();
+      } else if (_controller.canPaginateBackward &&
+          _scrollController.position.pixels <=
+              _scrollController.position.minScrollExtent) {
+        _controller.loadPreviousPage();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -127,6 +145,7 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID, S>
           return Center(child: Text(widget.emptyMsg ?? 'لا يوجد عناصر'));
 
         return GroupListView(
+          controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 6),
           sectionsCount: groupedData.data!.length + 1,
           countOfItemInSection: (i) {
@@ -137,7 +156,14 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID, S>
           cacheExtent: 500,
           groupHeaderBuilder: (context, i) {
             if (i == groupedData.data!.length)
-              return Container(height: MediaQuery.of(context).size.height / 15);
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_controller.isLoading)
+                    const Center(child: CircularProgressIndicator()),
+                  Container(height: MediaQuery.of(context).size.height / 15),
+                ],
+              );
 
             return Container(
               margin: const EdgeInsets.symmetric(vertical: 4),
@@ -196,14 +222,22 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID, S>
           return Center(child: Text(widget.emptyMsg ?? 'لا يوجد عناصر'));
 
         return ListView.builder(
+          controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 6),
           addAutomaticKeepAlives: _data.length < 500,
           cacheExtent: 200,
           itemCount: _data.length + 1,
           itemBuilder: (context, i) {
             if (i == _data.length)
-              return Container(
-                height: MediaQuery.of(context).size.height / 19,
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_controller.isLoading)
+                    const Center(child: CircularProgressIndicator()),
+                  Container(
+                    height: MediaQuery.of(context).size.height / 19,
+                  ),
+                ],
               );
 
             final T current = _data[i];
@@ -274,6 +308,7 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID, S>
   @override
   Future<void> dispose() async {
     super.dispose();
+    _scrollController.dispose();
     if (widget.autoDisposeController) await _controller.dispose();
   }
 }

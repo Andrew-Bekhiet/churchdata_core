@@ -27,7 +27,7 @@ Pseudo code for firestore pagination:
 
 class ListControllerBase<G, T extends ViewableWithID, S> {
   @protected
-  final PaginatableStreamBase<T, S> objectsPaginatableStream;
+  final PaginatableStreamBase<T> objectsPaginatableStream;
   @protected
   final BehaviorSubject<List<T>> objectsSubject;
   late final StreamSubscription<List<T>> _objectsSubscription;
@@ -165,6 +165,10 @@ class ListControllerBase<G, T extends ViewableWithID, S> {
     ).listen(objectsSubject.add, onError: objectsSubject.addError);
   }
 
+  bool get isLoading => objectsPaginatableStream.isLoading;
+  bool get canPaginateForward => objectsPaginatableStream.canPaginateForward;
+  bool get canPaginateBackward => objectsPaginatableStream.canPaginateBackward;
+
   FutureOr<void> loadNextPage() async {
     await objectsPaginatableStream.loadNextPage();
   }
@@ -253,7 +257,7 @@ class ListControllerBase<G, T extends ViewableWithID, S> {
   }
 
   ListControllerBase<NewG, T, S> copyWithNewG<NewG>({
-    PaginatableStreamBase<T, S>? objectsPaginatableStream,
+    PaginatableStreamBase<T>? objectsPaginatableStream,
     Stream<String>? searchStream,
     SearchFunction<T>? filter,
     required GroupingFunction<NewG, T> groupBy,
