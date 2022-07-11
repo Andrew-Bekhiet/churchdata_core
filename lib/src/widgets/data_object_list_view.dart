@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:group_list_view/group_list_view.dart';
 
-class DataObjectListView<G, T extends ViewableWithID> extends StatefulWidget {
-  final JsonListController<G, T> controller;
+typedef DataObjectListView<G, T extends ViewableWithID>
+    = DataObjectListViewBase<G, T, JsonQueryDoc>;
+
+class DataObjectListViewBase<G, T extends ViewableWithID, S>
+    extends StatefulWidget {
+  final ListControllerBase<G, T, S> controller;
 
   ///Optional: override the default build function for items
   ///
@@ -30,7 +34,7 @@ class DataObjectListView<G, T extends ViewableWithID> extends StatefulWidget {
   ///Optional string to show when there are no items
   final String? emptyMsg;
 
-  DataObjectListView({
+  DataObjectListViewBase({
     super.key,
     required this.controller,
     this.itemBuilder,
@@ -44,16 +48,16 @@ class DataObjectListView<G, T extends ViewableWithID> extends StatefulWidget {
             groupBuilder != null);
 
   @override
-  _DataObjectListViewState<G, T> createState() =>
-      _DataObjectListViewState<G, T>();
+  _DataObjectListViewBaseState<G, T, S> createState() =>
+      _DataObjectListViewBaseState<G, T, S>();
 }
 
-class _DataObjectListViewState<G, T extends ViewableWithID>
-    extends State<DataObjectListView<G, T>>
-    with AutomaticKeepAliveClientMixin<DataObjectListView<G, T>> {
+class _DataObjectListViewBaseState<G, T extends ViewableWithID, S>
+    extends State<DataObjectListViewBase<G, T, S>>
+    with AutomaticKeepAliveClientMixin<DataObjectListViewBase<G, T, S>> {
   bool _builtOnce = false;
 
-  JsonListController<G, T> get _controller => widget.controller;
+  ListControllerBase<G, T, S> get _controller => widget.controller;
 
   ItemBuilder<T> get _buildItem => widget.itemBuilder ?? defaultItemBuilder<T>;
   GroupBuilder<G> get _buildGroup =>
