@@ -25,7 +25,7 @@ Pseudo code for firestore pagination:
     middlePointer = oldFirstDocument 
 */
 
-class ListController<G, T extends DataObject> {
+class ListController<G, T extends ViewableWithID> {
   @protected
   final PaginatableStreamBase<T> objectsPaginatableStream;
   @protected
@@ -289,7 +289,7 @@ class ListController<G, T extends DataObject> {
 }
 
 ///Searches in [objects].[name]
-List<T> defaultSearch<T extends DataObject>(
+List<T> defaultSearch<T extends ViewableWithID>(
     List<T> objects, String searchTerms) {
   return objects.where((o) => o.name.contains(searchTerms)).toList();
 }

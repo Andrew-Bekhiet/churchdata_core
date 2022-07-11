@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:group_list_view/group_list_view.dart';
 
-class DataObjectListView<G, T extends DataObject> extends StatefulWidget {
+class DataObjectListView<G, T extends ViewableWithID> extends StatefulWidget {
   final ListController<G, T> controller;
 
   ///Optional: override the default build function for items
@@ -48,7 +48,7 @@ class DataObjectListView<G, T extends DataObject> extends StatefulWidget {
       _DataObjectListViewState<G, T>();
 }
 
-class _DataObjectListViewState<G, T extends DataObject>
+class _DataObjectListViewState<G, T extends ViewableWithID>
     extends State<DataObjectListView<G, T>>
     with AutomaticKeepAliveClientMixin<DataObjectListView<G, T>> {
   bool _builtOnce = false;
@@ -67,8 +67,8 @@ class _DataObjectListViewState<G, T extends DataObject>
         Widget? trailing,
         Widget? subtitle,
       }) =>
-          defaultGroupBuilder<DataObject>(
-            o as DataObject?,
+          defaultGroupBuilder<ViewableWithID>(
+            o as ViewableWithID?,
             onLongPress:
                 onLongPress != null ? (o) => onLongPress(o as G) : null,
             onTap: onTap != null ? (o) => onTap(o as G) : null,
@@ -292,7 +292,7 @@ typedef GroupBuilder<G> = Widget Function(
   Widget? subtitle,
 });
 
-Widget defaultItemBuilder<T extends DataObject>(
+Widget defaultItemBuilder<T extends ViewableWithID>(
   T object, {
   void Function(T)? onLongPress,
   void Function(T)? onTap,
@@ -307,7 +307,7 @@ Widget defaultItemBuilder<T extends DataObject>(
       trailing: trailing,
     );
 
-Widget defaultGroupBuilder<G extends DataObject>(
+Widget defaultGroupBuilder<G extends ViewableWithID>(
   G? object, {
   void Function(G)? onLongPress,
   void Function(G)? onTap,
