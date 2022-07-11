@@ -25,9 +25,9 @@ Pseudo code for firestore pagination:
     middlePointer = oldFirstDocument 
 */
 
-class ListController<G, T extends ViewableWithID> {
+class ListControllerBase<G, T extends ViewableWithID, S> {
   @protected
-  final PaginatableStreamBase<T, JsonDoc> objectsPaginatableStream;
+  final PaginatableStreamBase<T, S> objectsPaginatableStream;
   @protected
   final BehaviorSubject<List<T>> objectsSubject;
   late final StreamSubscription<List<T>> _objectsSubscription;
@@ -87,7 +87,7 @@ class ListController<G, T extends ViewableWithID> {
         )
       : old.toSet();
 
-  ListController({
+  ListControllerBase({
     required this.objectsPaginatableStream,
     Stream<String>? searchStream,
     Stream<bool>? groupingStream,
@@ -252,13 +252,13 @@ class ListController<G, T extends ViewableWithID> {
     }
   }
 
-  ListController<NewG, T> copyWithNewG<NewG>({
-    PaginatableStreamBase<T, JsonDoc>? objectsPaginatableStream,
+  ListControllerBase<NewG, T, S> copyWithNewG<NewG>({
+    PaginatableStreamBase<T, S>? objectsPaginatableStream,
     Stream<String>? searchStream,
     SearchFunction<T>? filter,
     required GroupingFunction<NewG, T> groupBy,
   }) {
-    return ListController<NewG, T>(
+    return ListControllerBase<NewG, T, S>(
       objectsPaginatableStream:
           objectsPaginatableStream ?? this.objectsPaginatableStream,
       filter: filter ?? this.filter,
@@ -287,6 +287,20 @@ class ListController<G, T extends ViewableWithID> {
     await groupedObjectsSubject.close();
   }
 }
+
+class JsonListController<G, T extends ViewableWithID>
+    extends ListControllerBase<G, T, JsonQueryDoc> {
+  JsonListController({
+    required super.objectsPaginatableStream,
+    super.searchStream,
+    super.groupingStream,
+    super.filter,
+    super.groupBy,
+    super.groupByStream,
+  });
+}
+
+typedef ListController<G, T extends ViewableWithID> = JsonListController<G, T>;
 
 ///Searches in [objects].[name]
 List<T> defaultSearch<T extends ViewableWithID>(

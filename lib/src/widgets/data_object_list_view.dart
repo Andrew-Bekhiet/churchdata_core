@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:group_list_view/group_list_view.dart';
 
 class DataObjectListView<G, T extends ViewableWithID> extends StatefulWidget {
-  final ListController<G, T> controller;
+  final JsonListController<G, T> controller;
 
   ///Optional: override the default build function for items
   ///
@@ -53,7 +53,7 @@ class _DataObjectListViewState<G, T extends ViewableWithID>
     with AutomaticKeepAliveClientMixin<DataObjectListView<G, T>> {
   bool _builtOnce = false;
 
-  ListController<G, T> get _controller => widget.controller;
+  JsonListController<G, T> get _controller => widget.controller;
 
   ItemBuilder<T> get _buildItem => widget.itemBuilder ?? defaultItemBuilder<T>;
   GroupBuilder<G> get _buildGroup =>

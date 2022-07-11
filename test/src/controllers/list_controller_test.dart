@@ -34,7 +34,7 @@ void main() {
           test(
             'Basic',
             () async {
-              final unit = ListController<void, BasicDataObject>(
+              final unit = JsonListController<void, BasicDataObject>(
                 objectsPaginatableStream: PaginatableStream.query(
                   query: GetIt.I<DatabaseRepository>()
                       .collection('Persons')
@@ -73,7 +73,7 @@ void main() {
           test(
             'With pagination',
             () async {
-              final unit = ListController<void, BasicDataObject>(
+              final unit = JsonListController<void, BasicDataObject>(
                 objectsPaginatableStream: PaginatableStream.query(
                   query: GetIt.I<DatabaseRepository>()
                       .collection('Persons')
@@ -132,7 +132,7 @@ void main() {
               );
               await person.set();
 
-              final unit = ListController<void, BasicDataObject>(
+              final unit = JsonListController<void, BasicDataObject>(
                 objectsPaginatableStream: PaginatableStream.query(
                   query: GetIt.I<DatabaseRepository>()
                       .collection('Persons')
@@ -176,7 +176,7 @@ void main() {
           ))
               .sortedBy((o) => o.name);
 
-          final unit = ListController<void, BasicDataObject>(
+          final unit = JsonListController<void, BasicDataObject>(
             objectsPaginatableStream: PaginatableStream.query(
               query: GetIt.I<DatabaseRepository>()
                   .collection('Persons')
@@ -258,7 +258,7 @@ void main() {
 
           await Future.wait(persons.map((e) => e.set()));
 
-          final unit = ListController<Color?, BasicDataObject>(
+          final unit = JsonListController<Color?, BasicDataObject>(
             objectsPaginatableStream: PaginatableStream.query(
               query: GetIt.I<DatabaseRepository>()
                   .collection('Persons')
@@ -345,7 +345,7 @@ void main() {
 
           await Future.wait(persons.map((e) => e.set()));
 
-          final unit = ListController<Color?, BasicDataObject>(
+          final unit = JsonListController<Color?, BasicDataObject>(
             objectsPaginatableStream: PaginatableStream.query(
               query: GetIt.I<DatabaseRepository>()
                   .collection('Persons')

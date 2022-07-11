@@ -44,7 +44,7 @@ void main() {
           ))
               .sortedBy((o) => o.name);
 
-          final listController = ListController(
+          final listController = JsonListController(
             objectsPaginatableStream: PaginatableStream.query(
               query: GetIt.I<DatabaseRepository>()
                   .collection('Persons')
@@ -154,7 +154,7 @@ void main() {
 
           await Future.wait(objects.map((e) => e.set()));
 
-          final listController = ListController<Color?, BasicDataObject>(
+          final listController = JsonListController<Color?, BasicDataObject>(
             objectsPaginatableStream: PaginatableStream.query(
               query: GetIt.I<DatabaseRepository>()
                   .collection('Persons')
@@ -256,7 +256,7 @@ void main() {
                   .shareText(objects[0].name + ': test:url'))
               .thenAnswer((_) async => Never);
 
-          final listController = ListController(
+          final listController = JsonListController(
             objectsPaginatableStream: PaginatableStream.query(
               query: GetIt.I<DatabaseRepository>()
                   .collection('Persons')
