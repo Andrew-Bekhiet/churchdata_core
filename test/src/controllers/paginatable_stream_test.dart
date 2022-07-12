@@ -61,32 +61,38 @@ void main() {
 
           expect(unit.canPaginateBackward, isFalse);
           expect(unit.canPaginateForward, isFalse);
+          expect(unit.isLoading, isTrue);
 
           await unit.stream.next;
 
           expect(unit.canPaginateBackward, isTrue);
           expect(unit.canPaginateForward, isTrue);
+          expect(unit.isLoading, isFalse);
 
           await unit.loadNextPage();
 
           expect(unit.canPaginateBackward, isTrue);
           expect(unit.canPaginateForward, isFalse);
+          expect(unit.isLoading, isTrue);
 
           await unit.stream.next;
 
           expect(unit.canPaginateBackward, isTrue);
           expect(unit.canPaginateForward, isTrue);
+          expect(unit.isLoading, isFalse);
 
           await unit.loadNextPage();
           await unit.stream.next;
 
           expect(unit.canPaginateBackward, isTrue);
           expect(unit.canPaginateForward, isTrue);
+          expect(unit.isLoading, isFalse);
 
           await unit.loadPreviousPage();
 
           expect(unit.canPaginateBackward, isFalse);
           expect(unit.canPaginateForward, isTrue);
+          expect(unit.isLoading, isTrue);
 
           await unit.stream.next;
 
@@ -98,6 +104,7 @@ void main() {
 
           expect(unit.canPaginateBackward, isFalse);
           expect(unit.canPaginateForward, isTrue);
+          expect(unit.isLoading, isFalse);
         },
         timeout: const Timeout(Duration(seconds: 15)),
       );
