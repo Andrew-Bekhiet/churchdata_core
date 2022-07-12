@@ -164,8 +164,12 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
               '"mapper" is not supported when initialized from "loadAll"',
             )),
         super.loadAll(stream: stream) {
-    _streamSubscription =
-        stream.listen(_subject.add, onError: _subject.addError);
+    _streamSubscription = stream.map(
+      (event) {
+        _isLoading = false;
+        return event;
+      },
+    ).listen(_subject.add, onError: _subject.addError);
   }
 
   @override
