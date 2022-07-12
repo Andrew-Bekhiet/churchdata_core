@@ -16,6 +16,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 export 'src/controllers.dart';
 export 'src/models.dart';
@@ -181,6 +182,21 @@ Future<void> initCore({
     GetIt.I.isReady(instance: authRepository),
     GetIt.I.isReady(instance: notificationsService),
   ]);
+
+  if ((authRepository as AuthRepository).isSignedIn) {
+    final currentUser = authRepository.currentUser;
+    (loggingService as LoggingService).configureScope(
+      (scope) => scope.setUser(
+        currentUser != null
+            ? SentryUser(
+                id: currentUser.uid,
+                email: currentUser is UserBase ? currentUser.email : null,
+                extras: currentUser is UserBase ? currentUser.toJson() : null,
+              )
+            : null,
+      ),
+    );
+  }
 }
 
 void registerFirebaseDependencies({

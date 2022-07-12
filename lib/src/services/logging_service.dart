@@ -65,28 +65,10 @@ class LoggingService {
     };
 
     GetIt.I.signalReady(this);
-
-    if (GetIt.I.isRegistered<AuthRepository>())
-      unawaited(
-        GetIt.I.allReady().then(
-          (_) async {
-            if (!GetIt.I.isRegistered<AuthRepository>()) return;
-
-            final currentUser = await GetIt.I<AuthRepository>().userStream.next;
-            Sentry.configureScope(
-              (scope) => scope.setUser(currentUser != null
-                  ? SentryUser(
-                      id: currentUser.uid,
-                      email: currentUser is UserBase ? currentUser.email : null,
-                      extras:
-                          currentUser is UserBase ? currentUser.toJson() : null,
-                    )
-                  : null),
-            );
-          },
-        ),
-      );
   }
+
+  FutureOr<void> Function(FutureOr<void> Function(Scope)) get configureScope =>
+      Sentry.configureScope;
 
   Future<void> log(String msg) async {
     await Sentry.captureMessage(msg);
