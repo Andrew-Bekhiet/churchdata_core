@@ -157,7 +157,7 @@ class NotificationsService {
 
   Future<bool> registerFCMToken({String? cachedToken}) async {
     if (GetIt.I<AuthRepository>().currentUser != null &&
-        GetIt.I<FirebaseMessaging>().isSupported()) {
+        await GetIt.I<FirebaseMessaging>().isSupported()) {
       final permission = await GetIt.I<FirebaseMessaging>().requestPermission();
 
       if (permission.authorizationStatus == AuthorizationStatus.authorized ||
