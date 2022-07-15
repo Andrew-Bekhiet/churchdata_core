@@ -150,7 +150,6 @@ void main() {
       testWidgets(
         'Grouped list',
         (tester) async {
-          const int limit = 30;
           const double scrollDelta = 90;
 
           final colors = Colors.primaries.map((c) => c.shade500).toList();
@@ -414,6 +413,8 @@ void main() {
             find.byType(Checkbox),
             findsNothing,
           );
+
+          await selectionSubject.close();
         },
       );
     },
