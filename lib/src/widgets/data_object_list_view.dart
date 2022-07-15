@@ -2,13 +2,14 @@ import 'package:churchdata_core/churchdata_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:group_list_view/group_list_view.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 typedef DataObjectListView<G, T extends ViewableWithID>
-    = DataObjectListViewBase<G, T, JsonQueryDoc>;
+    = DataObjectListViewBase<G, T>;
 
-class DataObjectListViewBase<G, T extends ViewableWithID, S>
+class DataObjectListViewBase<G, T extends ViewableWithID>
     extends StatefulWidget {
-  final ListControllerBase<G, T, S> controller;
+  final ListControllerBase<G, T> controller;
 
   ///Optional: override the default build function for items
   ///
@@ -36,6 +37,7 @@ class DataObjectListViewBase<G, T extends ViewableWithID, S>
 
   DataObjectListViewBase({
     super.key,
+    bool changeVisibilityUpdateInterval = true,
     required this.controller,
     this.itemBuilder,
     this.groupBuilder,
@@ -45,19 +47,23 @@ class DataObjectListViewBase<G, T extends ViewableWithID, S>
     required this.autoDisposeController,
   }) : assert(isSubtype<void, G>() ||
             isSubtype<DataObject?, G>() ||
-            groupBuilder != null);
+            groupBuilder != null) {
+    if (changeVisibilityUpdateInterval)
+      VisibilityDetectorController.instance.updateInterval =
+          const Duration(seconds: 1, milliseconds: 500);
+  }
 
   @override
-  _DataObjectListViewBaseState<G, T, S> createState() =>
-      _DataObjectListViewBaseState<G, T, S>();
+  _DataObjectListViewBaseState<G, T> createState() =>
+      _DataObjectListViewBaseState<G, T>();
 }
 
-class _DataObjectListViewBaseState<G, T extends ViewableWithID, S>
-    extends State<DataObjectListViewBase<G, T, S>>
-    with AutomaticKeepAliveClientMixin<DataObjectListViewBase<G, T, S>> {
+class _DataObjectListViewBaseState<G, T extends ViewableWithID>
+    extends State<DataObjectListViewBase<G, T>>
+    with AutomaticKeepAliveClientMixin<DataObjectListViewBase<G, T>> {
   bool _builtOnce = false;
 
-  ListControllerBase<G, T, S> get _controller => widget.controller;
+  ListControllerBase<G, T> get _controller => widget.controller;
 
   ItemBuilder<T> get _buildItem => widget.itemBuilder ?? defaultItemBuilder<T>;
   GroupBuilder<G> get _buildGroup =>
@@ -145,6 +151,7 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID, S>
           return Center(child: Text(widget.emptyMsg ?? 'لا يوجد عناصر'));
 
         return GroupListView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 6),
           sectionsCount: groupedData.data!.length + 1,
@@ -201,7 +208,7 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID, S>
 
             return Padding(
               padding: const EdgeInsets.fromLTRB(3, 0, 9, 0),
-              child: buildItemWrapper(current),
+              child: buildItemWrapper(current, i.index, i.section),
             );
           },
         );
@@ -222,6 +229,7 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID, S>
           return Center(child: Text(widget.emptyMsg ?? 'لا يوجد عناصر'));
 
         return ListView.builder(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 6),
           addAutomaticKeepAlives: _data.length < 500,
@@ -241,44 +249,54 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID, S>
               );
 
             final T current = _data[i];
-            return buildItemWrapper(current);
+            return buildItemWrapper(current, i);
           },
         );
       },
     );
   }
 
-  Widget buildItemWrapper(T current) {
+  Widget buildItemWrapper(T current, int index, [int? section]) {
     return StreamBuilder<Set<T>?>(
       stream: _controller.selectionStream,
       builder: (context, snapshot) {
-        return _buildItem(
-          current,
-          onLongPress: widget.onLongPress ?? _defaultLongPress,
-          onTap: (T current) async {
-            if (_controller.currentSelection == null) {
-              widget.onTap == null
-                  ? GetIt.I<DefaultViewableObjectTapHandler>().onTap(current)
-                  : widget.onTap!(current);
-            } else {
-              _controller.toggleSelected(current);
-            }
-          },
-          trailing: snapshot.hasData
-              ? Checkbox(
-                  value: snapshot.data!.contains(current),
-                  onChanged: (v) {
-                    if (v!) {
-                      _controller.select(current);
-                    } else {
-                      _controller.deselect(current);
-                    }
-                  },
-                )
-              : null,
+        return VisibilityDetector(
+          key: ValueKey(current),
+          onVisibilityChanged: (v) =>
+              _onItemVisibilityChanged(v, index, section),
+          child: _buildItem(
+            current,
+            onLongPress: widget.onLongPress ?? _defaultLongPress,
+            onTap: (T current) async {
+              if (_controller.currentSelection == null) {
+                widget.onTap == null
+                    ? GetIt.I<DefaultViewableObjectTapHandler>().onTap(current)
+                    : widget.onTap!(current);
+              } else {
+                _controller.toggleSelected(current);
+              }
+            },
+            trailing: snapshot.hasData
+                ? Checkbox(
+                    value: snapshot.data!.contains(current),
+                    onChanged: (v) {
+                      if (v!) {
+                        _controller.select(current);
+                      } else {
+                        _controller.deselect(current);
+                      }
+                    },
+                  )
+                : null,
+          ),
         );
       },
     );
+  }
+
+  void _onItemVisibilityChanged(VisibilityInfo v, int index, [int? section]) {
+    if (v.visibleFraction >= 0.9)
+      _controller.ensureItemPageLoaded(index, section);
   }
 
   void _defaultLongPress(T current) async {

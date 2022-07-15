@@ -13,14 +13,20 @@ import 'package:group_list_view/group_list_view.dart';
 import 'package:mock_data/mock_data.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
-@GenerateMocks([ShareService])
+import 'data_object_list_view_test.mocks.dart';
+
+@GenerateMocks([ListController])
 void main() {
   group(
     'DataObjectListView widget tests ->',
     () {
       setUp(
         () async {
+          VisibilityDetectorController.instance.updateInterval = Duration.zero;
+
           GetIt.I.pushNewScope(scopeName: 'DataObjectListViewTestsScope');
 
           registerFirebaseMocks();
@@ -36,7 +42,7 @@ void main() {
       testWidgets(
         'Basic data',
         (tester) async {
-          const int pageLimit = 30;
+          const int limit = 30;
           const double scrollDelta = 90;
 
           final objects = (await populateWithRandomPersons(
@@ -44,17 +50,23 @@ void main() {
           ))
               .sortedBy((o) => o.name);
 
-          final listController = JsonListController(
-            objectsPaginatableStream: PaginatableStream.query(
-              query: GetIt.I<DatabaseRepository>()
-                  .collection('Persons')
-                  .orderBy('Name'),
-              mapper: BasicDataObject.fromJsonDoc,
-              pageLimit: pageLimit,
-            ),
-          );
+          final listController =
+              MockListControllerBase<void, BasicDataObject>();
 
-          addTearDown(listController.dispose);
+          when(listController.objectsStream)
+              .thenAnswer((_) => BehaviorSubject.seeded(objects));
+          when(listController.groupingSubject)
+              .thenAnswer((_) => BehaviorSubject.seeded(false));
+          when(listController.selectionStream)
+              .thenAnswer((_) => BehaviorSubject.seeded(null));
+          when(listController.ensureItemPageLoaded(any)).thenAnswer((_) {});
+          when(listController.canPaginateForward).thenReturn(false);
+          when(listController.canPaginateBackward).thenReturn(false);
+          when(listController.isLoading).thenReturn(false);
+
+          when(listController.loadNextPage()).thenAnswer((_) {});
+          when(listController.loadPreviousPage()).thenAnswer((_) {});
+          when(listController.loadPage(any)).thenAnswer((_) {});
 
           await tester.pumpWidget(
             wrapWithMaterialApp(
@@ -62,6 +74,7 @@ void main() {
                 body: DataObjectListView<void, BasicDataObject>(
                   autoDisposeController: false,
                   controller: listController,
+                  changeVisibilityUpdateInterval: false,
                 ),
               ),
             ),
@@ -87,14 +100,14 @@ void main() {
           await tester.scrollUntilVisible(
             find.widgetWithText(
               ViewableObjectWidget<BasicDataObject>,
-              objects[pageLimit - 1].name,
+              objects[limit - 1].name,
             ),
             scrollDelta,
           );
           await tester.scrollUntilVisible(
             find.widgetWithText(
               ViewableObjectWidget<BasicDataObject>,
-              objects[pageLimit].name,
+              objects[limit].name,
             ),
             scrollDelta,
           );
@@ -112,14 +125,14 @@ void main() {
           expect(
             find.widgetWithText(
               ViewableObjectWidget<BasicDataObject>,
-              objects[pageLimit - 1].name,
+              objects[limit - 1].name,
             ),
             findsNothing,
           );
           await tester.scrollUntilVisible(
             find.widgetWithText(
               ViewableObjectWidget<BasicDataObject>,
-              objects[pageLimit * 2].name,
+              objects[limit * 2].name,
             ),
             scrollDelta,
           );
@@ -127,7 +140,7 @@ void main() {
             find.byType(Scrollable),
             find.widgetWithText(
               ViewableObjectWidget<BasicDataObject>,
-              objects[pageLimit].name,
+              objects[limit].name,
             ),
             //Scrolling up to check kthe first widget
             const Offset(0, scrollDelta),
@@ -137,7 +150,7 @@ void main() {
       testWidgets(
         'Grouped list',
         (tester) async {
-          const int pageLimit = 30;
+          const int limit = 30;
           const double scrollDelta = 90;
 
           final colors = Colors.primaries.map((c) => c.shade500).toList();
@@ -154,23 +167,43 @@ void main() {
 
           await Future.wait(objects.map((e) => e.set()));
 
-          final listController = JsonListController<Color?, BasicDataObject>(
-            objectsPaginatableStream: PaginatableStream.query(
-              query: GetIt.I<DatabaseRepository>()
-                  .collection('Persons')
-                  .orderBy('Name'),
-              mapper: BasicDataObject.fromJsonDoc,
-              pageLimit: pageLimit,
-            ),
-            groupBy: (o) => o.groupListsBy(
-              (e) => e.color,
-            ),
-          )..groupingSubject.add(true);
+          final listController =
+              MockListControllerBase<Color?, BasicDataObject>();
+
+          when(listController.objectsStream)
+              .thenAnswer((_) => BehaviorSubject.seeded(objects));
+          when(listController.groupingSubject)
+              .thenAnswer((_) => BehaviorSubject.seeded(true));
+          when(listController.selectionStream)
+              .thenAnswer((_) => BehaviorSubject.seeded(null));
+
+          final groupedObjectsSubject = BehaviorSubject.seeded(objects
+              .groupListsBy(
+                (e) => e.color,
+              )
+              .map((key, value) => MapEntry(key, <BasicDataObject>[])));
+
+          when(listController.currentOpenedGroups).thenReturn({});
+          when(listController.groupedObjectsStream).thenAnswer(
+            (_) => groupedObjectsSubject,
+          );
+
+          when(listController.ensureItemPageLoaded(any, any))
+              .thenAnswer((_) {});
+
+          when(listController.canPaginateForward).thenReturn(false);
+          when(listController.canPaginateBackward).thenReturn(false);
+          when(listController.isLoading).thenReturn(false);
+
+          when(listController.loadNextPage()).thenAnswer((_) {});
+          when(listController.loadPreviousPage()).thenAnswer((_) {});
+          when(listController.loadPage(any)).thenAnswer((_) {});
 
           await tester.pumpWidget(
             wrapWithMaterialApp(
               Scaffold(
                 body: DataObjectListView<Color?, BasicDataObject>(
+                  changeVisibilityUpdateInterval: false,
                   autoDisposeController: false,
                   controller: listController,
                   groupBuilder: (
@@ -212,7 +245,15 @@ void main() {
             findsOneWidget,
           );
 
-          listController.openGroup(objects.first.color);
+          groupedObjectsSubject.add(
+            objects.groupListsBy(
+              (e) => e.color,
+            ),
+          );
+          when(listController.currentOpenedGroups)
+              .thenReturn({objects.first.color});
+
+          await tester.pumpAndSettle();
 
           await tester.scrollUntilVisible(
             find.widgetWithText(
@@ -236,17 +277,19 @@ void main() {
             ),
             scrollDelta,
           );
+
+          await groupedObjectsSubject.close();
         },
       );
 
       testWidgets(
         'Selecting objects',
         (tester) async {
-          const int pageLimit = 30;
+          const int limit = 30;
 
           final objects = (await populateWithRandomPersons(
             GetIt.I<DatabaseRepository>().collection('Persons'),
-            pageLimit,
+            limit,
           ))
               .sortedBy((o) => o.name);
 
@@ -256,15 +299,44 @@ void main() {
                   .shareText(objects[0].name + ': test:url'))
               .thenAnswer((_) async => Never);
 
-          final listController = JsonListController(
-            objectsPaginatableStream: PaginatableStream.query(
-              query: GetIt.I<DatabaseRepository>()
-                  .collection('Persons')
-                  .orderBy('Name'),
-              mapper: BasicDataObject.fromJsonDoc,
-              pageLimit: pageLimit,
-            ),
+          final listController =
+              MockListControllerBase<Color?, BasicDataObject>();
+
+          final selectionSubject =
+              BehaviorSubject<Set<BasicDataObject>?>.seeded(null);
+
+          when(listController.objectsStream)
+              .thenAnswer((_) => BehaviorSubject.seeded(objects));
+          when(listController.groupingSubject)
+              .thenAnswer((_) => BehaviorSubject.seeded(false));
+          when(listController.selectionSubject)
+              .thenAnswer((_) => selectionSubject);
+          when(listController.selectionStream)
+              .thenAnswer((_) => selectionSubject.shareValue());
+          when(listController.currentSelection)
+              .thenAnswer((_) => selectionSubject.value);
+          when(listController.select(objects.first))
+              .thenAnswer((_) => selectionSubject.add({objects.first}));
+          when(listController.toggleSelected(objects.first)).thenAnswer(
+            (_) => selectionSubject.value!.contains(objects.first)
+                ? selectionSubject.add({})
+                : selectionSubject.add({objects.first}),
           );
+          when(listController.deselect(objects.first))
+              .thenAnswer((_) => selectionSubject.add({}));
+          when(listController.exitSelectionMode())
+              .thenAnswer((_) => selectionSubject.add(null));
+
+          when(listController.ensureItemPageLoaded(any, any))
+              .thenAnswer((_) {});
+
+          when(listController.canPaginateForward).thenReturn(false);
+          when(listController.canPaginateBackward).thenReturn(false);
+          when(listController.isLoading).thenReturn(false);
+
+          when(listController.loadNextPage()).thenAnswer((_) {});
+          when(listController.loadPreviousPage()).thenAnswer((_) {});
+          when(listController.loadPage(any)).thenAnswer((_) {});
 
           await tester.pumpWidget(
             wrapWithMaterialApp(
@@ -272,6 +344,7 @@ void main() {
                 body: DataObjectListView<void, BasicDataObject>(
                   autoDisposeController: false,
                   controller: listController,
+                  changeVisibilityUpdateInterval: false,
                 ),
               ),
             ),

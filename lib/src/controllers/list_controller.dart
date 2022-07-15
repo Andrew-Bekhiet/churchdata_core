@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:collection/collection.dart';
@@ -25,7 +26,20 @@ Pseudo code for firestore pagination:
     middlePointer = oldFirstDocument 
 */
 
-class ListControllerBase<G, T extends ViewableWithID, S> {
+class ListControllerBase<G, T extends ViewableWithID> {
+  static Set<S> getEmptySet<S>() => isSubtype<DataObject?, S>()
+      ? EqualitySet<S>(
+          EqualityBy<S, String?>((o) => (o as DataObject?)?.id),
+        )
+      : <S>{};
+
+  static Set<S> setWrapper<S>(Iterable<S> old) => isSubtype<DataObject?, S>()
+      ? EqualitySet<S>.from(
+          EqualityBy<S, String?>((o) => (o as DataObject?)?.id),
+          old,
+        )
+      : old.toSet();
+
   @protected
   final PaginatableStreamBase<T> objectsPaginatableStream;
   @protected
@@ -74,27 +88,22 @@ class ListControllerBase<G, T extends ViewableWithID, S> {
     return openedGroupsSubject!.valueOrNull;
   }
 
-  static Set<S> getEmptySet<S>() => isSubtype<DataObject?, S>()
-      ? EqualitySet<S>(
-          EqualityBy<S, String?>((o) => (o as DataObject?)?.id),
-        )
-      : <S>{};
+  OffsetFunction offsetFromIndex;
 
-  static Set<S> setWrapper<S>(Iterable<S> old) => isSubtype<DataObject?, S>()
-      ? EqualitySet<S>.from(
-          EqualityBy<S, String?>((o) => (o as DataObject?)?.id),
-          old,
-        )
-      : old.toSet();
+  final BehaviorSubject<int> _pageLoaderThrottler = BehaviorSubject();
+
+  late final StreamSubscription<int> _pageLoaderThrottlerListener;
 
   ListControllerBase({
     required this.objectsPaginatableStream,
     Stream<String>? searchStream,
     Stream<bool>? groupingStream,
     SearchFunction<T>? filter,
+    OffsetFunction? offsetFromIndex,
     this.groupBy,
     this.groupByStream,
   })  : assert(groupByStream == null || groupBy == null),
+        offsetFromIndex = offsetFromIndex ?? defaultOffsetFromIndex,
         filter = filter ?? defaultSearch<T>,
         objectsSubject = BehaviorSubject<List<T>>(),
         groupedObjectsSubject = BehaviorSubject<Map<G, List<T>>>(),
@@ -116,6 +125,22 @@ class ListControllerBase<G, T extends ViewableWithID, S> {
     _groupedObjectsSubscription = groupBy != null || groupByStream != null
         ? getGroupedObjectsSubscription()
         : null;
+
+    _pageLoaderThrottlerListener = _pageLoaderThrottler
+        .bufferTime(const Duration(seconds: 1, milliseconds: 450))
+        .map(
+          (b) => b
+              .sublist(b.length - min(b.length, 51), b.length)
+              .groupListsBy((element) => element)
+              .maxOrNull,
+        )
+        .whereType<int>()
+        .where(
+          (o) =>
+              objectsPaginatableStream.currentOffset != o &&
+              !objectsPaginatableStream.isLoading,
+        )
+        .listen(objectsPaginatableStream.loadPage);
   }
 
   @protected
@@ -168,6 +193,19 @@ class ListControllerBase<G, T extends ViewableWithID, S> {
   bool get isLoading => objectsPaginatableStream.isLoading;
   bool get canPaginateForward => objectsPaginatableStream.canPaginateForward;
   bool get canPaginateBackward => objectsPaginatableStream.canPaginateBackward;
+
+  int get currentOffset => objectsPaginatableStream.currentOffset;
+  int get limit => objectsPaginatableStream.limit;
+
+  FutureOr<void> ensureItemPageLoaded(int itemIndex, [int? itemSection]) async {
+    _pageLoaderThrottler.add(
+      offsetFromIndex(objectsPaginatableStream.limit, itemIndex, itemSection),
+    );
+  }
+
+  FutureOr<void> loadPage(int offset) async {
+    await objectsPaginatableStream.loadPage(offset);
+  }
 
   FutureOr<void> loadNextPage() async {
     await objectsPaginatableStream.loadNextPage();
@@ -256,13 +294,13 @@ class ListControllerBase<G, T extends ViewableWithID, S> {
     }
   }
 
-  ListControllerBase<NewG, T, S> copyWithNewG<NewG>({
+  ListControllerBase<NewG, T> copyWithNewG<NewG>({
     PaginatableStreamBase<T>? objectsPaginatableStream,
     Stream<String>? searchStream,
     SearchFunction<T>? filter,
     required GroupingFunction<NewG, T> groupBy,
   }) {
-    return ListControllerBase<NewG, T, S>(
+    return ListControllerBase<NewG, T>(
       objectsPaginatableStream:
           objectsPaginatableStream ?? this.objectsPaginatableStream,
       filter: filter ?? this.filter,
@@ -274,6 +312,9 @@ class ListControllerBase<G, T extends ViewableWithID, S> {
   @mustCallSuper
   Future<void> dispose() async {
     await objectsPaginatableStream.dispose();
+
+    await _pageLoaderThrottlerListener.cancel();
+    await _pageLoaderThrottler.close();
 
     await _searchSubscription?.cancel();
     await searchSubject.close();
@@ -292,19 +333,24 @@ class ListControllerBase<G, T extends ViewableWithID, S> {
   }
 }
 
-class JsonListController<G, T extends ViewableWithID>
-    extends ListControllerBase<G, T, JsonQueryDoc> {
-  JsonListController({
-    required super.objectsPaginatableStream,
-    super.searchStream,
-    super.groupingStream,
-    super.filter,
-    super.groupBy,
-    super.groupByStream,
-  });
+extension MaxValueLength<T> on Map<T, List> {
+  T? get maxOrNull {
+    if (isEmpty) return null;
+    var value = entries.first;
+    for (final element in entries) {
+      final newValue = element;
+      if (newValue.value.length > value.value.length) {
+        value = newValue;
+      }
+    }
+    return value.key;
+  }
 }
 
-typedef ListController<G, T extends ViewableWithID> = JsonListController<G, T>;
+typedef ListController<G, T extends ViewableWithID> = ListControllerBase<G, T>;
+
+int defaultOffsetFromIndex(int limit, int index, [int? section]) =>
+    (index / limit).floor();
 
 ///Searches in [objects].[name]
 List<T> defaultSearch<T extends ViewableWithID>(
@@ -323,6 +369,7 @@ List<T> noopSearch<T extends DataObject>(List<T> objects, String searchTerms) {
   return objects;
 }
 
+typedef OffsetFunction = int Function(int limit, int index, [int? section]);
 typedef SearchFunction<T> = List<T> Function(
     List<T> objects, String searchTerms);
 typedef GroupingFunction<G, T> = Map<G, List<T>> Function(List<T> objects);

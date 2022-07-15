@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,13 +14,15 @@ abstract class PaginatableStreamBase<T> {
   bool get canPaginateForward;
   bool get canPaginateBackward;
 
+  int get currentOffset;
+
   ValueStream<List<T>> get stream;
   List<T> get currentValue;
   List<T>? get currentValueOrNull;
 
   PaginatableStreamBase({
-    int pageLimit = 100,
-  }) : limit = pageLimit * 2;
+    this.limit = 100,
+  });
 
   @protected
   PaginatableStreamBase.private({
@@ -29,6 +32,8 @@ abstract class PaginatableStreamBase<T> {
   PaginatableStreamBase.loadAll({
     required Stream<List<T>> stream,
   }) : limit = 0;
+
+  Future<void> loadPage(int offset);
 
   Future<void> loadNextPage();
 
@@ -40,8 +45,6 @@ abstract class PaginatableStreamBase<T> {
 class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   final Subject<QueryOfJson> query;
   final T Function(JsonQueryDoc) mapper;
-
-  JsonDoc? _middlePointer;
 
   @override
   bool get isLoading => _isLoading;
@@ -55,10 +58,14 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   bool get canPaginateBackward => _canPaginateBackward;
   bool _canPaginateBackward = false;
 
-  final BehaviorSubject<UpdateQueryEvent> _controller =
-      BehaviorSubject.seeded(UpdateQueryEvent.newQuery);
   final BehaviorSubject<List<T>> _subject = BehaviorSubject<List<T>>();
   late final StreamSubscription<List<T>> _streamSubscription;
+
+  final BehaviorSubject<int> _offset = BehaviorSubject.seeded(0);
+  final BehaviorSubject<List<JsonQueryDoc>> _docs = BehaviorSubject.seeded([]);
+
+  @override
+  int get currentOffset => _offset.value;
 
   @override
   ValueStream<List<T>> get stream => _subject.stream;
@@ -67,82 +74,85 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   @override
   List<T>? get currentValueOrNull => _subject.valueOrNull;
 
+  List<JsonQueryDoc> get currentDocs => _docs.value;
+
   PaginatableStream({
     required this.query,
     required this.mapper,
-    super.pageLimit,
+    super.limit,
   }) {
     bool queryChanged = true;
 
-    _streamSubscription = Rx.combineLatest2<QueryOfJson, UpdateQueryEvent,
-        Tuple2<QueryOfJson, UpdateQueryEvent>>(
+    _streamSubscription =
+        Rx.combineLatest2<QueryOfJson, int, Tuple2<QueryOfJson, int>>(
       query.map(
         (v) {
           queryChanged = true;
           return v;
         },
       ),
-      _controller,
-      Tuple2<QueryOfJson, UpdateQueryEvent>.new,
-    ).switchMap<List<T>>(
+      _offset,
+      Tuple2<QueryOfJson, int>.new,
+    ).switchMap<List<JsonQueryDoc>>(
       (v) {
         final query = v.item1;
-        final event = v.item2;
+        final offset = v.item2;
 
-        if (queryChanged || event == UpdateQueryEvent.newQuery) {
+        final start = currentOffset * limit;
+        final end = start + limit;
+
+        if (queryChanged && offset != 0) {
+          _offset.add(0);
+          return Stream.value([]);
+        }
+
+        if (queryChanged || offset == 0) {
           queryChanged = false;
 
           return query.limit(limit).snapshots().map(
             (snapshot) {
-              if (snapshot.docs.isEmpty) return [];
+              _canPaginateBackward = false;
+              _canPaginateForward = snapshot.size >= limit;
 
-              _canPaginateBackward =
-                  _canPaginateForward = snapshot.size >= limit;
-              _middlePointer = snapshot.docs[(snapshot.size / 2).floor()];
-              return snapshot.docs.map(mapper).toList();
+              final List<JsonQueryDoc> sublist = snapshot.docs
+                  .toList()
+                  .sublist(0, min(limit, snapshot.docs.length));
+
+              return currentDocs.length >= end
+                  ? (currentDocs..replaceRange(start, end, sublist))
+                  : sublist;
             },
           );
-        } else if (event == UpdateQueryEvent.forward) {
+        } else {
           return query
-              .startAtDocument(_middlePointer!)
+              .startAfterDocument(
+                currentDocs[(offset - 1) * limit + limit - 1],
+              )
               .limit(limit)
               .snapshots()
               .map(
             (snapshot) {
+              _canPaginateBackward = true;
               _canPaginateForward = snapshot.size >= limit;
-              if (_canPaginateForward)
-                _middlePointer = snapshot.docs[(snapshot.size / 2).floor()];
 
-              return snapshot.docs.map(mapper).toList();
+              final List<JsonQueryDoc> sublist = snapshot.docs
+                  .toList()
+                  .sublist(0, min(limit, snapshot.docs.length));
+
+              return currentDocs.length >= end
+                  ? (currentDocs..replaceRange(start, end, sublist))
+                  : (currentDocs..addAll(sublist));
             },
           );
-        } else if (event == UpdateQueryEvent.backward) {
-          return query
-              .endBeforeDocument(_middlePointer!)
-              .limitToLast(limit)
-              .snapshots()
-              .map((snapshot) {
-            _canPaginateBackward = snapshot.size >= limit;
-
-            if (_canPaginateBackward)
-              _middlePointer = snapshot.docs[(snapshot.size / 2).floor()];
-
-            return snapshot.docs.map(mapper).toList();
-          });
         }
-
-        return query.limit(limit).snapshots().map(
-          (snapshot) {
-            _canPaginateBackward = _canPaginateForward = snapshot.size >= limit;
-            _middlePointer = snapshot.docs[(snapshot.size / 2).floor()];
-            return snapshot.docs.map(mapper).toList();
-          },
-        );
       },
     ).map(
       (event) {
         _isLoading = false;
-        return event;
+
+        _docs.add(event);
+
+        return event.map(mapper).toList();
       },
     ).listen(_subject.add, onError: _subject.addError);
   }
@@ -150,10 +160,10 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   PaginatableStream.query({
     required QueryOfJson query,
     required T Function(JsonQueryDoc) mapper,
-    int pageLimit = 100,
+    int limit = 100,
   }) : this(
           mapper: mapper,
-          pageLimit: pageLimit,
+          limit: limit,
           query: BehaviorSubject.seeded(query),
         );
 
@@ -173,11 +183,20 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   }
 
   @override
+  Future<void> loadPage(int offset) async {
+    _canPaginateForward = false;
+    _canPaginateBackward = false;
+    _isLoading = true;
+
+    _offset.add(offset);
+  }
+
+  @override
   Future<void> loadNextPage() async {
     if (canPaginateForward) {
       _canPaginateForward = false;
       _isLoading = true;
-      _controller.add(UpdateQueryEvent.forward);
+      _offset.add((currentValue.length / limit).ceil());
     } else {
       throw StateError('Cannot paginate forward');
     }
@@ -188,7 +207,7 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
     if (canPaginateBackward) {
       _canPaginateBackward = false;
       _isLoading = true;
-      _controller.add(UpdateQueryEvent.backward);
+      _offset.add(_offset.value - 1);
     } else {
       throw StateError('Cannot paginate backward');
     }
@@ -196,9 +215,9 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
 
   @override
   Future<void> dispose() async {
+    await _offset.close();
     await _subject.close();
     await _streamSubscription.cancel();
-    await _controller.close();
   }
 }
 

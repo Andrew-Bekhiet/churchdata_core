@@ -41,7 +41,7 @@ void main() {
                 .collection('Persons')
                 .orderBy('Name'),
             mapper: BasicDataObject.fromJsonDoc,
-            pageLimit: 5,
+            limit: 5,
           );
 
           addTearDown(unit.dispose);
@@ -50,11 +50,11 @@ void main() {
             unit.stream,
             emitsInOrder(
               [
+                randomPersons.take(5).toList(),
                 randomPersons.take(10).toList(),
-                randomPersons.skip(5).take(10).toList(),
-                randomPersons.skip(10).take(10).toList(),
-                randomPersons.skip(5).take(10).toList(),
-                randomPersons.take(10).toList(),
+                randomPersons.take(15).toList(),
+                randomPersons.take(15).toList(),
+                randomPersons.take(15).toList(),
               ],
             ),
           );
@@ -65,13 +65,13 @@ void main() {
 
           await unit.stream.next;
 
-          expect(unit.canPaginateBackward, isTrue);
+          expect(unit.canPaginateBackward, isFalse);
           expect(unit.canPaginateForward, isTrue);
           expect(unit.isLoading, isFalse);
 
           await unit.loadNextPage();
 
-          expect(unit.canPaginateBackward, isTrue);
+          expect(unit.canPaginateBackward, isFalse);
           expect(unit.canPaginateForward, isFalse);
           expect(unit.isLoading, isTrue);
 
@@ -98,8 +98,6 @@ void main() {
 
           await unit.loadPreviousPage();
 
-          await unit.stream.next;
-          await unit.loadPreviousPage();
           await unit.stream.next;
 
           expect(unit.canPaginateBackward, isFalse);
@@ -133,7 +131,7 @@ void main() {
           final unit = PaginatableStream<BasicDataObject>(
             query: queryController,
             mapper: BasicDataObject.fromJsonDoc,
-            pageLimit: 5,
+            limit: 10,
           );
 
           addTearDown(unit.dispose);
