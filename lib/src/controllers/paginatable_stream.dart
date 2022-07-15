@@ -99,7 +99,6 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
         final offset = v.item2;
 
         final start = currentOffset * limit;
-        final end = start + limit;
 
         if (queryChanged && offset != 0) {
           _offset.add(0);
@@ -111,6 +110,8 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
 
           return query.limit(limit).snapshots().map(
             (snapshot) {
+              final int end = start + min(limit, snapshot.size);
+
               _canPaginateBackward = false;
               _canPaginateForward = snapshot.size >= limit;
 
@@ -132,6 +133,8 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
               .snapshots()
               .map(
             (snapshot) {
+              final int end = start + min(limit, snapshot.size);
+
               _canPaginateBackward = true;
               _canPaginateForward = snapshot.size >= limit;
 
