@@ -413,7 +413,7 @@ void main() {
 
                   when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
                           .isSupported())
-                      .thenReturn(true);
+                      .thenAnswer((_) async => true);
                   when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
                           .requestPermission())
                       .thenAnswer(
@@ -557,7 +557,7 @@ void main() {
                 () async {
                   when((GetIt.I<FirebaseMessaging>() as MockFirebaseMessaging)
                           .isSupported())
-                      .thenReturn(false);
+                      .thenAnswer((_) async => false);
 
                   expect(
                     await GetIt.I<NotificationsService>().registerFCMToken(),
