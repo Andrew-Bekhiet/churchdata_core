@@ -1,5 +1,5 @@
+import 'package:churchdata_core/churchdata_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
-import 'package:firebase_storage/firebase_storage.dart' as storage;
 
 typedef Json = Map<String, dynamic>;
 
@@ -12,6 +12,6 @@ typedef JsonCollectionRef = firestore.CollectionReference<Json>;
 typedef Timestamp = firestore.Timestamp;
 typedef GeoPoint = firestore.GeoPoint;
 
-typedef Reference = storage.Reference;
+typedef Reference = StorageReference;
 typedef QueryCompleter = firestore.Query<Json> Function(
     firestore.Query<Json>, String, bool);
