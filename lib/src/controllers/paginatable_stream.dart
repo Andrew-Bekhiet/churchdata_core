@@ -31,7 +31,7 @@ abstract class PaginatableStreamBase<T> {
 
   PaginatableStreamBase.loadAll({
     required Stream<List<T>> stream,
-  }) : limit = 0;
+  }) : limit = 1;
 
   Future<void> loadPage(int offset);
 
@@ -98,7 +98,7 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
         final query = v.item1;
         final offset = v.item2;
 
-        final start = currentOffset * limit;
+        final start = offset * limit;
 
         if (queryChanged && offset != 0) {
           _offset.add(0);
@@ -108,18 +108,17 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
         if (queryChanged || offset == 0) {
           queryChanged = false;
 
-          return query.limit(limit).snapshots().map(
+          return query.limit(limit + 1).snapshots().map(
             (snapshot) {
-              final int end = start + min(limit, snapshot.size);
-
               _canPaginateBackward = false;
               _canPaginateForward = snapshot.size >= limit;
 
               final List<JsonQueryDoc> sublist = snapshot.docs
                   .toList()
                   .sublist(0, min(limit, snapshot.docs.length));
+              final int end = start + min(limit, currentDocs.length);
 
-              return currentDocs.length >= end
+              return start < currentDocs.length
                   ? (currentDocs..replaceRange(start, end, sublist))
                   : sublist;
             },
@@ -129,20 +128,19 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
               .startAfterDocument(
                 currentDocs[(offset - 1) * limit + limit - 1],
               )
-              .limit(limit)
+              .limit(limit + 1)
               .snapshots()
               .map(
             (snapshot) {
-              final int end = start + min(limit, snapshot.size);
-
               _canPaginateBackward = true;
               _canPaginateForward = snapshot.size >= limit;
 
               final List<JsonQueryDoc> sublist = snapshot.docs
                   .toList()
                   .sublist(0, min(limit, snapshot.docs.length));
+              final int end = start + min(limit, currentDocs.length);
 
-              return currentDocs.length >= end
+              return start < currentDocs.length
                   ? (currentDocs..replaceRange(start, end, sublist))
                   : (currentDocs..addAll(sublist));
             },
