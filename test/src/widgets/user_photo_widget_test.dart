@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mockito/mockito.dart';
 
 import 'photo_object_widget_test.dart';
 
@@ -46,17 +45,11 @@ void main() {
             name: 'user',
           );
 
-          final fakeRef = user.photoRef;
-          when(fakeRef!.getDownloadURL())
-              .thenAnswer((_) async => 'https://example.com/image.png');
-
-          final fakeUser = FakeUser.fromUser(user, fakeRef);
-
           await tester.pumpWidget(
             wrapWithMaterialApp(
               Scaffold(
                 body: UserPhotoWidget(
-                  fakeUser,
+                  user,
                   constraints: const BoxConstraints(
                     maxHeight: 200,
                     maxWidth: 200,
@@ -72,7 +65,7 @@ void main() {
             find.descendant(
               of: find.byType(Stack),
               matching: find.byWidgetPredicate(
-                (p) => p is PhotoObjectWidget && p.object == fakeUser,
+                (p) => p is PhotoObjectWidget && p.object == user,
               ),
             ),
             findsOneWidget,
@@ -91,7 +84,7 @@ void main() {
             findsNothing,
           );
 
-          fakeUser.photoUrlCache.invalidate();
+          user.photoUrlCache.invalidate();
         },
       );
       testWidgets(
@@ -99,16 +92,10 @@ void main() {
         (tester) async {
           await GetIt.I<CacheRepository>().openBox<String?>('PhotosURLsCache');
 
-          final user = UserBase(
+          final fakeUser = UserBase(
             uid: 'uid',
             name: 'user',
           );
-
-          final fakeRef = user.photoRef;
-          when(fakeRef!.getDownloadURL())
-              .thenAnswer((_) async => 'https://example.com/image.png');
-
-          final fakeUser = FakeUser.fromUser(user, fakeRef);
 
           await GetIt.I<FirebaseDatabase>()
               .ref()

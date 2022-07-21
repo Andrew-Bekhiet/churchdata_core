@@ -257,13 +257,14 @@ void main() {
 
           await Future.wait(persons.map((e) => e.set()));
 
+          final paginatableStream = PaginatableStream.query(
+            query: GetIt.I<DatabaseRepository>()
+                .collection('Persons')
+                .orderBy('Name'),
+            mapper: BasicDataObject.fromJsonDoc,
+          );
           final unit = ListController<Color?, BasicDataObject>(
-            objectsPaginatableStream: PaginatableStream.query(
-              query: GetIt.I<DatabaseRepository>()
-                  .collection('Persons')
-                  .orderBy('Name'),
-              mapper: BasicDataObject.fromJsonDoc,
-            ),
+            objectsPaginatableStream: paginatableStream,
             groupingStream: Stream.value(true),
             groupBy: (o) {
               return o.groupListsBy<Color?>((element) => element.color);
@@ -311,6 +312,8 @@ void main() {
             ..openGroup(Colors.black);
 
           await persons.last.ref.delete();
+
+          await unit.groupedObjectsStream.next;
         },
         timeout: const Timeout(Duration(seconds: 15)),
       );

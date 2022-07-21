@@ -2,16 +2,23 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:churchdata_core/churchdata_core.dart';
+import 'package:churchdata_core/churchdata_core.dart'
+    show
+        CacheRepository,
+        DatabaseRepository,
+        PersonBase,
+        PhotoObjectWidget,
+        StorageReference,
+        StorageRepository;
 import 'package:churchdata_core_mocks/churchdata_core.dart';
 import 'package:churchdata_core_mocks/fakes/fake_cache_repo.dart';
 import 'package:churchdata_core_mocks/utils.dart';
 import 'package:file/file.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mockito/mockito.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -49,16 +56,10 @@ void main() {
             hasPhoto: true,
           );
 
-          final fakeRef = person.photoRef;
-          when(fakeRef!.getDownloadURL())
-              .thenAnswer((_) async => 'https://example.com/image.png');
-
-          final fakePerson = FakePerson.fromPerson(person, fakeRef);
-
           await tester.pumpWidget(
             wrapWithMaterialApp(
               Scaffold(
-                body: PhotoObjectWidget(fakePerson),
+                body: PhotoObjectWidget(person),
               ),
             ),
           );
@@ -67,7 +68,7 @@ void main() {
 
           expect(find.byType(CachedNetworkImage), findsOneWidget);
 
-          fakePerson.photoUrlCache.invalidate();
+          person.photoUrlCache.invalidate();
         },
       );
 
@@ -84,16 +85,10 @@ void main() {
             hasPhoto: true,
           );
 
-          final fakeRef = person.photoRef;
-          when(fakeRef!.getDownloadURL())
-              .thenAnswer((_) async => 'https://example.com/image.png');
-
-          final fakePerson = FakePerson.fromPerson(person, fakeRef);
-
           await tester.pumpWidget(
             wrapWithMaterialApp(
               Scaffold(
-                body: PhotoObjectWidget(fakePerson),
+                body: PhotoObjectWidget(person),
               ),
               navigatorKey: navigator,
             ),
@@ -115,7 +110,7 @@ void main() {
             findsOneWidget,
           );
 
-          fakePerson.photoUrlCache.invalidate();
+          person.photoUrlCache.invalidate();
         },
       );
     },
@@ -154,7 +149,9 @@ class FakePerson extends PersonBase {
         );
 
   @override
-  Reference? get photoRef => mockPhotoRef;
+  StorageReference? get photoRef => mockPhotoRef != null
+      ? StorageReference.fromFirebaseRef(mockPhotoRef!)
+      : null;
 }
 
 class MockCacheManager extends CacheManager with ImageCacheManager {
