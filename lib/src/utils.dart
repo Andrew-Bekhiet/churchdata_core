@@ -4,6 +4,7 @@ import 'package:churchdata_core/churchdata_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:timeago/timeago.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
 String formatPhone(String phone, [bool forWhatsapp = true]) {
   if (phone.startsWith('+')) return phone.replaceFirst('+', '').trim();
@@ -169,6 +170,27 @@ extension LatLngToGeoPoint on LatLng {
 extension GeoPointLatLng on GeoPoint {
   LatLng toLatLng() {
     return LatLng(latitude, longitude);
+  }
+}
+
+extension ContrastingColor on Color? {
+  Color? getContrastingColor(Color other) {
+    if (this == null || this == Colors.transparent) {
+      return null;
+    }
+
+    if (other.brightness > 170 && this!.brightness > 170) {
+      return other.mix(
+        Colors.black,
+        ((256 - other.brightness) / 256 * 100).toInt(),
+      );
+    } else if (other.brightness < 85 && this!.brightness < 85) {
+      return other.mix(
+        Colors.white,
+        ((256 - other.brightness) / 265 * 100).toInt(),
+      );
+    }
+    return null;
   }
 }
 // coverage:ignore-end
