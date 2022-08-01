@@ -182,12 +182,12 @@ extension ContrastingColor on Color? {
     if (other.brightness > 170 && this!.brightness > 170) {
       return other.mix(
         Colors.black,
-        ((256 - other.brightness) / 256 * 100).toInt(),
+        ((255 - other.brightness) / 255 * 100).toInt().clamp(0, 100),
       );
     } else if (other.brightness < 85 && this!.brightness < 85) {
       return other.mix(
         Colors.white,
-        ((256 - other.brightness) / 265 * 100).toInt(),
+        ((255 - other.brightness) / 255 * 100).toInt().clamp(0, 100),
       );
     }
     return null;
