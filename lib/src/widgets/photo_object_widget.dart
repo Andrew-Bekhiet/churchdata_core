@@ -38,6 +38,8 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
   bool error = false;
   String? cachedUrl;
 
+  int _retries = 0;
+
   @override
   void dispose() {
     disposed = true;
@@ -75,19 +77,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
 
                     if (mounted && !disposed) setState(() {});
                   },
-                  onError: (exception, cache) async {
-                    if (cache != null)
-                      await (GetIt.I.isRegistered<BaseCacheManager>()
-                              ? GetIt.I<BaseCacheManager>()
-                              : DefaultCacheManager())
-                          .removeFile(cache);
-
-                    widget.object.photoUrlCache.invalidate();
-
-                    error = true;
-
-                    if (mounted && !disposed) setState(() {});
-                  },
+                  onError: _onUrlError,
                 ),
               ),
               builder: (context, data) {
@@ -110,24 +100,29 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                 final photo = Material(
                   type: MaterialType.transparency,
                   child: InkWell(
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (context) => Dialog(
-                        child: Hero(
-                          tag: widget.heroTag ??
-                              widget.object.photoRef!.fullPath,
-                          child: InteractiveViewer(
-                            child: CachedNetworkImage(
-                              cacheManager:
-                                  GetIt.I.isRegistered<BaseCacheManager>()
-                                      ? GetIt.I<BaseCacheManager>()
-                                      : null,
-                              useOldImageOnUrlChange: true,
-                              imageUrl: data.data!,
-                              progressIndicatorBuilder:
-                                  (context, url, progress) => Center(
-                                child: CircularProgressIndicator(
-                                  value: progress.progress,
+                    onTap: () => Navigator.of(context).push(
+                      PageRouteBuilder(
+                        opaque: false,
+                        barrierDismissible: true,
+                        barrierColor: Colors.black45,
+                        pageBuilder: (context, _, __) => Dialog(
+                          backgroundColor: Colors.transparent,
+                          child: Hero(
+                            tag: widget.heroTag ??
+                                widget.object.photoRef!.fullPath,
+                            child: InteractiveViewer(
+                              child: CachedNetworkImage(
+                                cacheManager:
+                                    GetIt.I.isRegistered<BaseCacheManager>()
+                                        ? GetIt.I<BaseCacheManager>()
+                                        : null,
+                                useOldImageOnUrlChange: true,
+                                imageUrl: data.data!,
+                                progressIndicatorBuilder:
+                                    (context, url, progress) => Center(
+                                  child: CircularProgressIndicator(
+                                    value: progress.progress,
+                                  ),
                                 ),
                               ),
                             ),
@@ -146,6 +141,16 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                               MediaQuery.of(context).devicePixelRatio)
                           .toInt(),
                       imageUrl: data.data!,
+                      errorWidget: (context, url, error) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) async {
+                          _onUrlError(error, url);
+                        });
+
+                        return Icon(
+                          widget.object.defaultIcon,
+                          size: constraints.maxHeight,
+                        );
+                      },
                       progressIndicatorBuilder: (context, url, progress) =>
                           Center(
                         child: CircularProgressIndicator(
@@ -170,5 +175,23 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
         );
       },
     );
+  }
+
+  void _onUrlError(exception, cache) async {
+    if (cache != null)
+      await (GetIt.I.isRegistered<BaseCacheManager>()
+              ? GetIt.I<BaseCacheManager>()
+              : DefaultCacheManager())
+          .removeFile(cache);
+
+    error = true;
+
+    if (_retries <= 5) {
+      _retries += 1;
+
+      widget.object.photoUrlCache.invalidate();
+
+      if (mounted && !disposed) setState(() {});
+    }
   }
 }
