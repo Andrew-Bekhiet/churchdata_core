@@ -68,10 +68,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
               future: widget.object.photoUrlCache.runOnce(
                 () => widget.object.photoRef!.getCachedDownloadUrl(
                   onCacheChanged: (cache, newUrl) async {
-                    await (GetIt.I.isRegistered<BaseCacheManager>()
-                            ? GetIt.I<BaseCacheManager>()
-                            : DefaultCacheManager())
-                        .removeFile(cache);
+                    await widget.object.photoRef!.deleteCache();
 
                     widget.object.photoUrlCache.invalidate();
 
@@ -178,11 +175,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
   }
 
   void _onUrlError(exception, cache) async {
-    if (cache != null)
-      await (GetIt.I.isRegistered<BaseCacheManager>()
-              ? GetIt.I<BaseCacheManager>()
-              : DefaultCacheManager())
-          .removeFile(cache);
+    if (cache != null) await widget.object.photoRef!.deleteCache();
 
     error = true;
 

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:firebase_storage/firebase_storage.dart' as f_storage;
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as path;
 
@@ -63,6 +64,23 @@ class StorageReference {
         onError(e, cache);
       return cache ?? '';
     }
+  }
+
+  Future<void> deleteCache() async {
+    final String? cache = GetIt.I<CacheRepository>()
+        .box<String?>('PhotosURLsCache')
+        .get(fullPath);
+
+    if (cache == null) return;
+
+    await (GetIt.I.isRegistered<BaseCacheManager>()
+            ? GetIt.I<BaseCacheManager>()
+            : DefaultCacheManager())
+        .removeFile(cache);
+
+    await GetIt.I<CacheRepository>()
+        .box<String?>('PhotosURLsCache')
+        .delete(fullPath);
   }
 
   void _updateCache(
