@@ -27,15 +27,15 @@ Pseudo code for firestore pagination:
 */
 
 class ListControllerBase<G, T extends ViewableWithID> {
-  static Set<S> getEmptySet<S>() => isSubtype<DataObject?, S>()
+  static Set<S> getEmptySet<S>() => isSubtype<ID?, S>()
       ? EqualitySet<S>(
-          EqualityBy<S, String?>((o) => (o as DataObject?)?.id),
+          EqualityBy<S, String?>((o) => (o as ID?)?.id),
         )
       : <S>{};
 
-  static Set<S> setWrapper<S>(Iterable<S> old) => isSubtype<DataObject?, S>()
+  static Set<S> setWrapper<S>(Iterable<S> old) => isSubtype<ID?, S>()
       ? EqualitySet<S>.from(
-          EqualityBy<S, String?>((o) => (o as DataObject?)?.id),
+          EqualityBy<S, String?>((o) => (o as ID?)?.id),
           old,
         )
       : old.toSet();
@@ -365,7 +365,7 @@ List<T> startsWithSearch<T extends DataObject>(
 }
 
 ///Ignores the [searchTerms] and just returns [objects]
-List<T> noopSearch<T extends DataObject>(List<T> objects, String searchTerms) {
+List<T> noopSearch<T>(List<T> objects, String searchTerms) {
   return objects;
 }
 
