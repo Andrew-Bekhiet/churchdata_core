@@ -35,7 +35,7 @@ void main() {
           GetIt.I.registerSingleton(DatabaseRepository());
           GetIt.I.registerSingleton<CacheRepository>(FakeCacheRepo());
           GetIt.I.registerSingleton(StorageRepository());
-          GetIt.I.registerSingleton<BaseCacheManager>(MockCacheManager());
+          GetIt.I.registerSingleton<BaseCacheManager>(MockCacheManager(true));
         },
       );
 
@@ -88,23 +88,26 @@ void main() {
           await tester.pumpWidget(
             wrapWithMaterialApp(
               Scaffold(
-                body: PhotoObjectWidget(person),
+                body: PhotoObjectWidget(person, heroTag: Object()),
               ),
               navigatorKey: navigator,
             ),
           );
 
-          await tester.pumpAndSettle();
+          await tester.idle();
+          await tester.pump(const Duration(milliseconds: 120));
 
           await tester.tap(find.byType(CachedNetworkImage));
-          await tester.pumpAndSettle();
+
+          await tester.idle();
+          await tester.pump(const Duration(milliseconds: 120));
 
           expect(
             find.descendant(
-              of: find.byType(Dialog),
+              of: find.byType(Dialog, skipOffstage: false),
               matching: find.descendant(
-                of: find.byType(InteractiveViewer),
-                matching: find.byType(CachedNetworkImage),
+                of: find.byType(InteractiveViewer, skipOffstage: false),
+                matching: find.byType(CachedNetworkImage, skipOffstage: false),
               ),
             ),
             findsOneWidget,
@@ -155,7 +158,9 @@ class FakePerson extends PersonBase {
 }
 
 class MockCacheManager extends CacheManager with ImageCacheManager {
-  MockCacheManager() : super(Config(DefaultCacheManager.key));
+  final bool onlyProgress;
+  MockCacheManager([this.onlyProgress = false])
+      : super(Config(DefaultCacheManager.key));
 
   Future<String?> getFilePath() async {
     return 'somewhere/file.png';
@@ -170,12 +175,13 @@ class MockCacheManager extends CacheManager with ImageCacheManager {
 
     yield DownloadProgress(url, length, length);
 
-    yield FileInfo(
-      MockFile(),
-      FileSource.Cache,
-      DateTime(2050),
-      url,
-    );
+    if (!onlyProgress)
+      yield FileInfo(
+        MockFile(),
+        FileSource.Cache,
+        DateTime(2050),
+        url,
+      );
   }
 
   @override
