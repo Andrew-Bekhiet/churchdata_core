@@ -270,7 +270,7 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID>
             onTap: (T current) async {
               if (_controller.currentSelection == null) {
                 widget.onTap == null
-                    ? GetIt.I<DefaultViewableObjectTapHandler>().onTap(current)
+                    ? GetIt.I<DefaultViewableObjectService>().onTap(current)
                     : widget.onTap!(current);
               } else {
                 _controller.toggleSelected(current);
@@ -398,7 +398,7 @@ Widget defaultGroupBuilder<G extends ViewableWithID>(
         if (trailing != null) trailing,
         IconButton(
           onPressed: () {
-            GetIt.I<DefaultViewableObjectTapHandler>().onTap(object);
+            GetIt.I<DefaultViewableObjectService>().onTap(object);
           },
           icon: const Icon(Icons.info_outlined),
         ),

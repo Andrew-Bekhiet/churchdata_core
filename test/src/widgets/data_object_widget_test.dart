@@ -54,7 +54,7 @@ void main() {
               );
 
               GetIt.I.registerSingleton(
-                DefaultViewableObjectTapHandler(navigator),
+                DefaultViewableObjectService(navigator),
               );
 
               unawaited(
@@ -117,7 +117,7 @@ void main() {
               );
 
               GetIt.I.registerSingleton(
-                DefaultViewableObjectTapHandler(navigator),
+                DefaultViewableObjectService(navigator),
               );
 
               unawaited(
@@ -218,7 +218,7 @@ void main() {
           );
 
           GetIt.I.registerSingleton(
-            DefaultViewableObjectTapHandler(navigator),
+            DefaultViewableObjectService(navigator),
           );
 
           unawaited(

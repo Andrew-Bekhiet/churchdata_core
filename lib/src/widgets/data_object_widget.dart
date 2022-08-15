@@ -54,7 +54,7 @@ class _ViewableObjectWidgetState<T extends Viewable>
       dense: widget.isDense,
       onLongPress: widget.onLongPress,
       onTap: widget.onTap ??
-          () => GetIt.I<DefaultViewableObjectTapHandler>().onTap(widget.object),
+          () => GetIt.I<DefaultViewableObjectService>().onTap(widget.object),
       trailing: widget.trailing,
       title: widget.title ?? Text(widget.object.name),
       subtitle: widget.showSubtitle

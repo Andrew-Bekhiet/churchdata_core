@@ -131,7 +131,7 @@ void main() {
             ),
           );
 
-          final unit = DefaultViewableObjectTapHandler(key)
+          final unit = DefaultViewableObjectService(key)
             ..onTap(
               PersonBase(
                   ref: GetIt.I<DatabaseRepository>().doc('Persons/person'),
