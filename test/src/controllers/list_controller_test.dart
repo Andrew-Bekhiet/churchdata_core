@@ -552,8 +552,8 @@ void main() {
               mapper: BasicDataObject.fromJsonDoc,
             ),
             groupingStream: Stream.value(true),
-            groupBy: (o) {
-              return o.groupListsBy<Color?>((element) => element.color);
+            groupByStream: (o) async* {
+              yield o.groupListsBy<Color?>((element) => element.color);
             },
           );
 
