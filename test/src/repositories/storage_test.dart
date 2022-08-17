@@ -3,9 +3,7 @@ import 'package:churchdata_core_mocks/churchdata_core.dart';
 import 'package:churchdata_core_mocks/fakes/fake_cache_repo.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mockito/annotations.dart';
 
-@GenerateMocks([StorageReference])
 void main() {
   group(
     'Storage extension tests ->',
