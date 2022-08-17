@@ -60,8 +60,10 @@ class _ViewableObjectWidgetState<T extends Viewable>
       subtitle: widget.showSubtitle
           ? widget.subtitle ??
               FutureBuilder<String?>(
-                future:
-                    _secondLineMemoizer.runOnce(widget.object.getSecondLine),
+                future: _secondLineMemoizer.runOnce(
+                  () => GetIt.I<DefaultViewableObjectService>()
+                      .getSecondLine(widget.object),
+                ),
                 builder: (cont, subtitleData) {
                   if (subtitleData.hasData) {
                     return Text(
