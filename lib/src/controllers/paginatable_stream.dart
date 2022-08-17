@@ -46,16 +46,18 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   final Subject<QueryOfJson> query;
   final T Function(JsonQueryDoc) mapper;
 
+  final bool _canPaginate;
+
   @override
   bool get isLoading => _isLoading;
   bool _isLoading = true;
 
   @override
-  bool get canPaginateForward => _canPaginateForward;
+  bool get canPaginateForward => _canPaginate && _canPaginateForward;
   bool _canPaginateForward = false;
 
   @override
-  bool get canPaginateBackward => _canPaginateBackward;
+  bool get canPaginateBackward => _canPaginate && _canPaginateBackward;
   bool _canPaginateBackward = false;
 
   final BehaviorSubject<List<T>> _subject = BehaviorSubject<List<T>>();
@@ -80,7 +82,7 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
     required this.query,
     required this.mapper,
     super.limit,
-  }) {
+  }) : _canPaginate = true {
     bool queryChanged = true;
 
     _streamSubscription =
@@ -170,7 +172,8 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
 
   PaginatableStream.loadAll({
     required Stream<List<T>> stream,
-  })  : query = BehaviorSubject(),
+  })  : _canPaginate = false,
+        query = BehaviorSubject(),
         mapper = ((o) => throw UnsupportedError(
               '"mapper" is not supported when initialized from "loadAll"',
             )),
@@ -185,11 +188,15 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
 
   @override
   Future<void> loadPage(int offset) async {
-    _canPaginateForward = false;
-    _canPaginateBackward = false;
-    _isLoading = true;
+    if (_canPaginate) {
+      _canPaginateForward = false;
+      _canPaginateBackward = false;
+      _isLoading = true;
 
-    _offset.add(offset);
+      _offset.add(offset);
+    } else {
+      throw StateError('Cannot paginate');
+    }
   }
 
   @override

@@ -88,7 +88,7 @@ class ListControllerBase<G, T extends ViewableWithID> {
     return openedGroupsSubject!.valueOrNull;
   }
 
-  OffsetFunction offsetFromIndex;
+  final OffsetFunction offsetFromIndex;
 
   final BehaviorSubject<int> _pageLoaderThrottler = BehaviorSubject();
 

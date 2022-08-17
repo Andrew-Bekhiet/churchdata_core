@@ -3,11 +3,20 @@ import 'package:churchdata_core_mocks/churchdata_core.dart';
 import 'package:churchdata_core_mocks/models/basic_data_object.dart';
 import 'package:churchdata_core_mocks/utils.dart';
 import 'package:collection/collection.dart';
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mock_data/mock_data.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 
+import 'list_controller_test.mocks.dart';
+
+@GenerateMocks([], customMocks: [
+  MockSpec<PaginatableStream>(unsupportedMembers: {#mapper})
+])
 void main() {
   group(
     'ListController<T> tests ->',
@@ -70,50 +79,238 @@ void main() {
             timeout: const Timeout(Duration(seconds: 15)),
           );
 
-          test(
+          group(
             'With pagination',
-            () async {
-              final unit = ListController<void, BasicDataObject>(
-                objectsPaginatableStream: PaginatableStream.query(
-                  query: GetIt.I<DatabaseRepository>()
-                      .collection('Persons')
-                      .orderBy('Name'),
-                  mapper: BasicDataObject.fromJsonDoc,
-                  limit: 8,
-                ),
+            () {
+              test(
+                'Basic pagination',
+                () async {
+                  final unit = ListController<void, BasicDataObject>(
+                    objectsPaginatableStream: PaginatableStream.query(
+                      query: GetIt.I<DatabaseRepository>()
+                          .collection('Persons')
+                          .orderBy('Name'),
+                      mapper: BasicDataObject.fromJsonDoc,
+                      limit: 8,
+                    ),
+                  );
+
+                  addTearDown(unit.dispose);
+
+                  final persons = (await populateWithRandomPersons(
+                    GetIt.I<DatabaseRepository>().collection('Persons'),
+                    11,
+                  ))
+                      .sortedBy((o) => o.name);
+
+                  final person = BasicDataObject(
+                    name: 'zz last guy!',
+                    ref: GetIt.I<DatabaseRepository>()
+                        .collection('Persons')
+                        .doc(),
+                  );
+                  await person.set();
+
+                  expect(
+                    unit.objectsStream,
+                    emitsInOrder(
+                      [
+                        persons.take(8),
+                        [...persons.take(16), person].sortedBy((o) => o.name),
+                        [...persons.take(16), person].sortedBy((o) => o.name),
+                      ],
+                    ),
+                  );
+
+                  await unit.objectsStream.next;
+                  await unit.loadNextPage();
+                  await unit.objectsStream.next;
+                  await unit.loadPreviousPage();
+                },
+                timeout: const Timeout(Duration(seconds: 15)),
               );
 
-              addTearDown(unit.dispose);
+              group(
+                'Advanced pagination',
+                () {
+                  MockPaginatableStream<BasicDataObject> _getMockStream({
+                    int limit = 20,
+                    int currentOffset = 1,
+                    bool isLoading = false,
+                    bool canPaginateForward = true,
+                    bool canPaginateBackward = true,
+                  }) {
+                    final objectsPaginatableStream =
+                        MockPaginatableStream<BasicDataObject>();
 
-              final persons = (await populateWithRandomPersons(
-                GetIt.I<DatabaseRepository>().collection('Persons'),
-                11,
-              ))
-                  .sortedBy((o) => o.name);
+                    when(objectsPaginatableStream.stream)
+                        .thenAnswer((_) => BehaviorSubject());
+                    when(objectsPaginatableStream.canPaginateBackward)
+                        .thenReturn(canPaginateBackward);
+                    when(objectsPaginatableStream.canPaginateForward)
+                        .thenReturn(canPaginateForward);
+                    when(objectsPaginatableStream.currentOffset)
+                        .thenReturn(currentOffset);
+                    when(objectsPaginatableStream.limit).thenReturn(limit);
+                    when(objectsPaginatableStream.isLoading)
+                        .thenReturn(isLoading);
+                    when(objectsPaginatableStream.loadPage(captureAny))
+                        .thenAnswer((_) async {});
+                    return objectsPaginatableStream;
+                  }
 
-              final person = BasicDataObject(
-                name: 'zz last guy!',
-                ref: GetIt.I<DatabaseRepository>().collection('Persons').doc(),
+                  test(
+                    'Throttling',
+                    () async {
+                      // ignore: unawaited_futures
+                      fakeAsync(
+                        (fakeTime) async {
+                          final MockPaginatableStream<BasicDataObject>
+                              objectsPaginatableStream =
+                              // ignore: avoid_redundant_argument_values
+                              _getMockStream(currentOffset: 1, limit: 20);
+
+                          final unit = ListController<void, BasicDataObject>(
+                            objectsPaginatableStream: objectsPaginatableStream,
+                          );
+
+                          addTearDown(unit.dispose);
+
+                          //Adds 10 of every number from 0 to 9 ...
+                          for (var i = 0; i < 100; i++) {
+                            unit.ensureItemPageLoaded((i / 10).floor());
+                          }
+
+                          fakeTime.elapse(const Duration(seconds: 2));
+
+                          when(objectsPaginatableStream.currentOffset)
+                              .thenReturn(0);
+
+                          //... then 2 of 20, so that it loads next offset
+                          unit
+                            ..ensureItemPageLoaded(20)
+                            ..ensureItemPageLoaded(20);
+
+                          fakeTime.elapse(const Duration(seconds: 2));
+
+                          //Change to different offset so that we make sure
+                          //it is never loading an already loaded page
+                          when(objectsPaginatableStream.currentOffset)
+                              .thenReturn(2);
+
+                          unit
+                            ..ensureItemPageLoaded(40)
+                            ..ensureItemPageLoaded(40);
+
+                          fakeTime.elapse(const Duration(seconds: 2));
+
+                          verify(objectsPaginatableStream.loadPage(0))
+                              .called(1);
+                          verify(objectsPaginatableStream.loadPage(1))
+                              .called(1);
+                          verifyNever(objectsPaginatableStream.loadPage(2));
+                        },
+                      );
+                    },
+                  );
+
+                  test(
+                    'Respects isLoading & currentOffset',
+                    () async {
+                      // ignore: unawaited_futures
+                      fakeAsync(
+                        (fakeTime) async {
+                          final MockPaginatableStream<BasicDataObject>
+                              objectsPaginatableStream =
+                              // ignore: avoid_redundant_argument_values
+                              _getMockStream(currentOffset: 0, limit: 20);
+
+                          final unit = ListController<void, BasicDataObject>(
+                            objectsPaginatableStream: objectsPaginatableStream,
+                          );
+
+                          addTearDown(unit.dispose);
+
+                          unit
+                            ..ensureItemPageLoaded(0)
+                            ..ensureItemPageLoaded(0)
+                            ..ensureItemPageLoaded(0);
+                          fakeTime.elapse(const Duration(seconds: 2));
+                          verifyNever(objectsPaginatableStream.loadPage(0));
+
+                          when(objectsPaginatableStream.currentOffset)
+                              .thenReturn(1);
+                          when(objectsPaginatableStream.isLoading)
+                              .thenReturn(true);
+
+                          unit
+                            ..ensureItemPageLoaded(0)
+                            ..ensureItemPageLoaded(0)
+                            ..ensureItemPageLoaded(0);
+                          fakeTime.elapse(const Duration(seconds: 2));
+                          verifyNever(objectsPaginatableStream.loadPage(0));
+
+                          when(objectsPaginatableStream.isLoading)
+                              .thenReturn(false);
+
+                          unit
+                            ..ensureItemPageLoaded(0)
+                            ..ensureItemPageLoaded(0)
+                            ..ensureItemPageLoaded(0);
+                          fakeTime.elapse(const Duration(seconds: 2));
+                          verify(objectsPaginatableStream.loadPage(0))
+                              .called(1);
+                        },
+                      );
+                    },
+                  );
+
+                  test(
+                    'loadPage forces loading page',
+                    () async {
+                      // ignore: unawaited_futures
+                      fakeAsync(
+                        (fakeTime) async {
+                          final MockPaginatableStream<BasicDataObject>
+                              objectsPaginatableStream =
+                              // ignore: avoid_redundant_argument_values
+                              _getMockStream(currentOffset: 0, limit: 20);
+
+                          final unit = ListController<void, BasicDataObject>(
+                            objectsPaginatableStream: objectsPaginatableStream,
+                          );
+
+                          addTearDown(unit.dispose);
+
+                          unit.loadPage(0);
+                          fakeTime.elapse(const Duration(seconds: 2));
+                          verify(objectsPaginatableStream.loadPage(0))
+                              .called(1);
+
+                          when(objectsPaginatableStream.currentOffset)
+                              .thenReturn(1);
+                          when(objectsPaginatableStream.isLoading)
+                              .thenReturn(true);
+
+                          unit.loadPage(0);
+                          fakeTime.elapse(const Duration(seconds: 2));
+                          verify(objectsPaginatableStream.loadPage(0))
+                              .called(2);
+
+                          when(objectsPaginatableStream.isLoading)
+                              .thenReturn(false);
+
+                          unit.loadPage(0);
+                          fakeTime.elapse(const Duration(seconds: 2));
+                          verify(objectsPaginatableStream.loadPage(0))
+                              .called(3);
+                        },
+                      );
+                    },
+                  );
+                },
               );
-              await person.set();
-
-              expect(
-                unit.objectsStream,
-                emitsInOrder(
-                  [
-                    persons.take(8),
-                    [...persons.take(16), person].sortedBy((o) => o.name),
-                    [...persons.take(16), person].sortedBy((o) => o.name),
-                  ],
-                ),
-              );
-
-              await unit.objectsStream.next;
-              await unit.loadNextPage();
-              await unit.objectsStream.next;
-              await unit.loadPreviousPage();
             },
-            timeout: const Timeout(Duration(seconds: 15)),
           );
 
           test(

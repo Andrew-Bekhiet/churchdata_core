@@ -28,6 +28,47 @@ void main() {
       );
 
       test(
+        'loadAll constructor',
+        () async {
+          final stream = BehaviorSubject<List<BasicDataObject>>();
+          final unit = PaginatableStream<BasicDataObject>.loadAll(
+            stream: stream,
+          );
+
+          addTearDown(unit.dispose);
+          addTearDown(stream.close);
+
+          expect(unit.isLoading, true);
+          expect(unit.canPaginateBackward, false);
+          expect(unit.canPaginateForward, false);
+          expect(unit.loadNextPage(), throwsStateError);
+          expect(unit.loadPreviousPage(), throwsStateError);
+
+          stream.add(
+            [
+              BasicDataObject(
+                name: '',
+                ref: GetIt.I<DatabaseRepository>()
+                    .collection('Persons')
+                    .doc('asd'),
+              ),
+            ],
+          );
+
+          await Future(() {});
+
+          expect(unit.isLoading, false);
+          expect(unit.canPaginateBackward, false);
+          expect(unit.canPaginateForward, false);
+
+          expect(unit.loadNextPage(), throwsStateError);
+          expect(unit.loadPreviousPage(), throwsStateError);
+
+          expect(unit.loadPage(0), throwsStateError);
+        },
+      );
+
+      test(
         'Basic pagination',
         () async {
           final randomPersons = (await populateWithRandomPersons(
@@ -55,6 +96,7 @@ void main() {
                 randomPersons.take(15).toList(),
                 randomPersons.take(15).toList(),
                 randomPersons.take(15).toList(),
+                randomPersons.take(20).toList(),
               ],
             ),
           );
@@ -101,6 +143,14 @@ void main() {
           await unit.stream.next;
 
           expect(unit.canPaginateBackward, isFalse);
+          expect(unit.canPaginateForward, isTrue);
+          expect(unit.isLoading, isFalse);
+
+          await unit.loadPage(3);
+
+          await unit.stream.next;
+
+          expect(unit.canPaginateBackward, isTrue);
           expect(unit.canPaginateForward, isTrue);
           expect(unit.isLoading, isFalse);
         },
