@@ -314,6 +314,7 @@ class _$PersonBaseCWProxyImpl implements _$PersonBaseCWProxy {
 
 extension $PersonBaseCopyWith on PersonBase {
   /// Returns a callable class that can be used as follows: `instanceOfPersonBase.copyWith(...)` or like so:`instanceOfPersonBase.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
   _$PersonBaseCWProxy get copyWith => _$PersonBaseCWProxyImpl(this);
 
   /// Copies the object with the specific fields set to `null`. If you pass `false` as a parameter, nothing will be done and it will be ignored. Don't do it. Prefer `copyWith(field: null)` or `PersonBase(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.

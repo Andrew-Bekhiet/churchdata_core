@@ -97,6 +97,7 @@ class _$UserBaseCWProxyImpl implements _$UserBaseCWProxy {
 
 extension $UserBaseCopyWith on UserBase {
   /// Returns a callable class that can be used as follows: `instanceOfUserBase.copyWith(...)` or like so:`instanceOfUserBase.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
   _$UserBaseCWProxy get copyWith => _$UserBaseCWProxyImpl(this);
 
   /// Copies the object with the specific fields set to `null`. If you pass `false` as a parameter, nothing will be done and it will be ignored. Don't do it. Prefer `copyWith(field: null)` or `UserBase(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
