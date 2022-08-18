@@ -1,9 +1,15 @@
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:churchdata_core_mocks/churchdata_core.dart';
 import 'package:churchdata_core_mocks/fakes/fake_cache_repo.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
+import './storage_test.mocks.dart';
+
+@GenerateNiceMocks([MockSpec<BaseCacheManager>()])
 void main() {
   group(
     'Storage extension tests ->',
@@ -21,6 +27,37 @@ void main() {
       tearDown(
         () async {
           await GetIt.I.reset();
+        },
+      );
+
+      test(
+        'Delete Cached Download Url and Data',
+        () async {
+          const url = 'https://google.com/image.jpg';
+          await (await GetIt.I<CacheRepository>()
+                  .openBox<String?>('PhotosURLsCache'))
+              .put('fullPath', url);
+
+          final mockCache = MockBaseCacheManager();
+          when(mockCache.removeFile(url)).thenAnswer((_) async {});
+
+          GetIt.I.registerSingleton<BaseCacheManager>(mockCache);
+
+          final ref = StorageReference(
+            fullPath: 'fullPath',
+            downloadUrl: () async => 'sss',
+          );
+
+          await ref.deleteCache();
+
+          verify(mockCache.removeFile(url));
+
+          expect(
+            GetIt.I<CacheRepository>()
+                .box<String?>('PhotosURLsCache')
+                .get('fullPath'),
+            isNull,
+          );
         },
       );
 
