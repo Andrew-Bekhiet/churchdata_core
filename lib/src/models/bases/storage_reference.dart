@@ -100,6 +100,7 @@ class StorageReference {
     }
   }
 
+  // coverage:ignore-start
   f_storage.Reference _checkRef(f_storage.Reference? ref) {
     if (ref == null)
       throw UnsupportedError('not initialized with fromFirebaseRef');
@@ -167,4 +168,5 @@ class StorageReference {
   f_storage.DownloadTask writeToFile(File file) {
     return _checkRef(_ref).writeToFile(file);
   }
+  // coverage:ignore-end
 }
