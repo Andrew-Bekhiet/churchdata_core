@@ -31,8 +31,10 @@ class TappableFormField<T> extends StatefulWidget {
 }
 
 class _TappableFormFieldState<T> extends State<TappableFormField<T>> {
-  late final FocusNode _focusNode = widget.focusNode ??
-      Focus.maybeOf(context) ??
+  late final FocusNode _effectiveFocusNode =
+      widget.focusNode ?? Focus.maybeOf(context) ?? _createdFocusNode;
+
+  late final FocusNode _createdFocusNode =
       FocusNode(debugLabel: 'TappableFormField<$T>:${widget.labelText}');
 
   @override
@@ -43,21 +45,21 @@ class _TappableFormFieldState<T> extends State<TappableFormField<T>> {
         autovalidateMode: widget.autovalidateMode,
         initialValue: widget.initialValue,
         builder: (state) => InkWell(
-          focusNode: _focusNode,
+          focusNode: _effectiveFocusNode,
           onTap: () async {
-            _focusNode.requestFocus();
+            _effectiveFocusNode.requestFocus();
 
             final previousValue = state.value;
 
             await widget.onTap(state);
 
-            if (state.value != previousValue) _focusNode.nextFocus();
+            if (state.value != previousValue) _effectiveFocusNode.nextFocus();
           },
           child: AnimatedBuilder(
-            animation: _focusNode,
+            animation: _effectiveFocusNode,
             child: widget.builder(context, state),
             builder: (context, child) => InputDecorator(
-              isFocused: _focusNode.hasFocus,
+              isFocused: _effectiveFocusNode.hasFocus,
               decoration: widget.decoration != null
                   ? widget.decoration!(context, state)
                   : InputDecoration(
@@ -79,7 +81,6 @@ class _TappableFormFieldState<T> extends State<TappableFormField<T>> {
   @override
   void dispose() {
     super.dispose();
-    if ((widget.focusNode ?? Focus.maybeOf(context)) == null)
-      _focusNode.dispose();
+    if (_createdFocusNode == _effectiveFocusNode) _effectiveFocusNode.dispose();
   }
 }
