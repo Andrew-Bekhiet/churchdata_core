@@ -9,44 +9,114 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:version/version.dart';
 
 class UpdatesService {
+  bool _disposed = false;
+
+  UpdatesService() {
+    init();
+  }
+
+  Future<void> init() async {
+    await GetIt.I<CacheRepository>().openBox('Updates');
+
+    if (!_disposed && !GetIt.I.isReadySync(instance: this))
+      GetIt.I.signalReady(this);
+  }
+
+  Future<void> dispose() async {
+    if (_disposed) throw Exception('Already disposed');
+
+    _disposed = true;
+
+    await GetIt.I<CacheRepository>().box('Updates').close();
+  }
+
+  @visibleForTesting
+  String? getCachedValue(String key) {
+    return GetIt.I<CacheRepository>().box('Updates').get(key);
+  }
+
+  @visibleForTesting
+  Future setCachedValue(String key, String? value) async {
+    return GetIt.I<CacheRepository>().box('Updates').put(key, value);
+  }
+
+  @visibleForTesting
+  Future<DatabaseEvent> Function(DatabaseEvent) saveCachedValueFromDB(
+      String key) {
+    return (DatabaseEvent value) async {
+      if (getCachedValue(key) != value.snapshot.value)
+        await setCachedValue(key, value.snapshot.value?.toString());
+
+      return value;
+    };
+  }
+
   Future<Version> getLatestVersion() async {
-    final versionData = await GetIt.I<FirebaseDatabase>()
-        .ref()
-        .child('config')
-        .child('updates')
-        .child('latest_version')
-        .once();
-    return Version.parse(versionData.snapshot.value?.toString() ?? '0.0.0.0');
+    try {
+      final versionData = await GetIt.I<FirebaseDatabase>()
+          .ref()
+          .child('config')
+          .child('updates')
+          .child('latest_version')
+          .once()
+          .then(saveCachedValueFromDB('latest_version'));
+      return Version.parse(versionData.snapshot.value?.toString() ?? '0.0.0.0');
+    } on Exception {
+      return Version.parse(
+        getCachedValue('latest_version') ?? '0.0.0.0',
+      );
+    }
   }
 
   Future<Version> getLatestDeprecatedVersion() async {
-    final versionData = await GetIt.I<FirebaseDatabase>()
-        .ref()
-        .child('config')
-        .child('updates')
-        .child('deprecated_from')
-        .once();
-    return Version.parse(versionData.snapshot.value?.toString() ?? '0.0.0.0');
+    try {
+      final versionData = await GetIt.I<FirebaseDatabase>()
+          .ref()
+          .child('config')
+          .child('updates')
+          .child('deprecated_from')
+          .once()
+          .then(saveCachedValueFromDB('deprecated_from'));
+      return Version.parse(versionData.snapshot.value?.toString() ?? '0.0.0.0');
+    } on Exception {
+      return Version.parse(
+        getCachedValue('deprecated_from') ?? '0.0.0.0',
+      );
+    }
   }
 
   Future<Uri> getDownloadLink() async {
-    final linkData = await GetIt.I<FirebaseDatabase>()
-        .ref()
-        .child('config')
-        .child('updates')
-        .child('download_link')
-        .once();
-    return Uri.parse(linkData.snapshot.value.toString());
+    try {
+      final linkData = await GetIt.I<FirebaseDatabase>()
+          .ref()
+          .child('config')
+          .child('updates')
+          .child('download_link')
+          .once()
+          .then(saveCachedValueFromDB('download_link'));
+      return Uri.parse(linkData.snapshot.value.toString());
+    } on Exception {
+      return Uri.parse(
+        getCachedValue('download_link') ?? '0.0.0.0',
+      );
+    }
   }
 
   Future<Uri> getReleaseNotesLink() async {
-    final linkData = await GetIt.I<FirebaseDatabase>()
-        .ref()
-        .child('config')
-        .child('updates')
-        .child('release_notes')
-        .once();
-    return Uri.parse(linkData.snapshot.value.toString());
+    try {
+      final linkData = await GetIt.I<FirebaseDatabase>()
+          .ref()
+          .child('config')
+          .child('updates')
+          .child('release_notes')
+          .once()
+          .then(saveCachedValueFromDB('release_notes'));
+      return Uri.parse(linkData.snapshot.value.toString());
+    } on Exception {
+      return Uri.parse(
+        getCachedValue('release_notes') ?? '0.0.0.0',
+      );
+    }
   }
 
   Future<Version> getCurrentVersion() async {

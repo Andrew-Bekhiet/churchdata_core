@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:churchdata_core_mocks/churchdata_core.dart';
+import 'package:churchdata_core_mocks/fakes/fake_cache_repo.dart';
 import 'package:churchdata_core_mocks/services/updates_service_test.mocks.dart';
 import 'package:churchdata_core_mocks/utils.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -34,6 +35,7 @@ void main() {
           when(mockLauncherService.launchUrl(captureAny))
               .thenAnswer((_) async => true);
           GetIt.I.registerSingleton<LauncherService>(mockLauncherService);
+          GetIt.I.registerSingleton<CacheRepository>(FakeCacheRepo());
         },
       );
 
@@ -54,9 +56,20 @@ void main() {
               .set('1.0.0');
 
           final unit = UpdatesService();
+          GetIt.I.registerSingleton<UpdatesService>(
+            unit,
+            dispose: (u) => u.dispose(),
+            signalsReady: true,
+          );
+
+          await GetIt.I.isReady<UpdatesService>();
+
+          expect(unit.getCachedValue('latest_version'), isNull);
 
           expect(await unit.getLatestVersion(), Version(1, 0, 0));
           expect(await unit.isUpToDate(), isFalse);
+
+          expect(unit.getCachedValue('latest_version'), '1.0.0');
         },
       );
 
@@ -71,9 +84,20 @@ void main() {
               .set('1.0.0');
 
           final unit = UpdatesService();
+          GetIt.I.registerSingleton<UpdatesService>(
+            unit,
+            dispose: (u) => u.dispose(),
+            signalsReady: true,
+          );
+
+          await GetIt.I.isReady<UpdatesService>();
+
+          expect(unit.getCachedValue('deprecated_from'), isNull);
 
           expect(await unit.getLatestDeprecatedVersion(), Version(1, 0, 0));
           expect(await unit.currentIsDeprecated(), isTrue);
+
+          expect(unit.getCachedValue('deprecated_from'), '1.0.0');
         },
       );
 
@@ -88,6 +112,13 @@ void main() {
               .set('1.0.0');
 
           final unit = UpdatesService();
+          GetIt.I.registerSingleton<UpdatesService>(
+            unit,
+            dispose: (u) => u.dispose(),
+            signalsReady: true,
+          );
+
+          await GetIt.I.isReady<UpdatesService>();
 
           expect(await unit.getCurrentVersion(), Version(0, 2, 0));
         },
@@ -118,6 +149,13 @@ void main() {
           await tester.pumpAndSettle();
 
           final unit = UpdatesService();
+          GetIt.I.registerSingleton<UpdatesService>(
+            unit,
+            dispose: (u) => u.dispose(),
+            signalsReady: true,
+          );
+
+          await GetIt.I.isReady<UpdatesService>();
 
           unawaited(unit.showUpdateDialog(navigator.currentContext!,
               content: const Text('Content')));
