@@ -24,6 +24,7 @@ void main() {
           registerFirebaseMocks();
 
           PackageInfo.setMockInitialValues(
+            installerStore: '',
             appName: 'churchdata_core',
             packageName: 'churchdata_core',
             version: '0.2.0',
