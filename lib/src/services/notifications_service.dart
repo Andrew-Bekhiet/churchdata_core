@@ -226,12 +226,15 @@ class NotificationsService {
     if (!registered) GetIt.I.unregister<CacheRepository>();
   }
 
+  ///Make sure to add ```@pragma('vm:entry-point')```
+  @pragma('vm:entry-point')
   static Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
     await storeNotification(message);
   }
 
   ///Must be overriden in another class when UI is available to
   ///make something with the notification
+  ///
   static Future<void> onForegroundMessage(RemoteMessage message) async {
     await storeNotification(message);
 
