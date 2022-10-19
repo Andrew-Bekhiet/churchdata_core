@@ -81,7 +81,7 @@ class ThemingService {
       brightness: isDark ? Brightness.dark : Brightness.light,
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          primary: secondary,
+          foregroundColor: secondary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
@@ -89,7 +89,7 @@ class ThemingService {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          primary: secondary,
+          foregroundColor: secondary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
@@ -97,7 +97,7 @@ class ThemingService {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          primary: secondary,
+          foregroundColor: secondary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),

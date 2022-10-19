@@ -1,5 +1,4 @@
 // coverage:ignore-file
-import 'dart:typed_data';
 
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:flutter/foundation.dart';

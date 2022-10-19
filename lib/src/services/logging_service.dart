@@ -89,7 +89,14 @@ class LoggingService {
             : null;
         scope
           ..setUser(SentryUser(
-            extras: currentUser is UserBase? ? currentUser?.toJson() : null,
+            data: currentUser is UserBase
+                ? currentUser.toJson().map(
+                      (key, value) => MapEntry(
+                        key,
+                        value is Set ? value.toList() : value,
+                      ),
+                    )
+                : null,
             email: currentUser is UserBase? ? currentUser?.email : null,
             id: currentUser?.uid,
           ))
@@ -115,7 +122,14 @@ class LoggingService {
             : null;
         scope
           ..setUser(SentryUser(
-            extras: currentUser is UserBase? ? currentUser?.toJson() : null,
+            data: currentUser is UserBase
+                ? currentUser.toJson().map(
+                      (key, value) => MapEntry(
+                        key,
+                        value is Set ? value.toList() : value,
+                      ),
+                    )
+                : null,
             email: currentUser is UserBase? ? currentUser?.email : null,
             id: currentUser?.uid,
           ))

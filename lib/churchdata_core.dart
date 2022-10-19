@@ -191,7 +191,7 @@ Future<void> initCore({
             ? SentryUser(
                 id: currentUser.uid,
                 email: currentUser is UserBase ? currentUser.email : null,
-                extras: currentUser is UserBase
+                data: currentUser is UserBase
                     ? currentUser.toJson().map(
                           (key, value) => MapEntry(
                             key,
