@@ -31,10 +31,7 @@ class TappableFormField<T> extends StatefulWidget {
 }
 
 class _TappableFormFieldState<T> extends State<TappableFormField<T>> {
-  late final FocusNode _effectiveFocusNode =
-      widget.focusNode ?? Focus.maybeOf(context) ?? _createdFocusNode;
-
-  late final FocusNode _createdFocusNode =
+  late final FocusNode _effectiveFocusNode = widget.focusNode ??
       FocusNode(debugLabel: 'TappableFormField<$T>:${widget.labelText}');
 
   @override
@@ -81,6 +78,6 @@ class _TappableFormFieldState<T> extends State<TappableFormField<T>> {
   @override
   void dispose() {
     super.dispose();
-    if (_createdFocusNode == _effectiveFocusNode) _effectiveFocusNode.dispose();
+    if (widget.focusNode == null) _effectiveFocusNode.dispose();
   }
 }

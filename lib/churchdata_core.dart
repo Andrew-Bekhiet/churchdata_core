@@ -175,6 +175,8 @@ Future<void> initCore({
   if (updatesService != null)
     GetIt.I.registerSingleton<UpdatesService>(
       updatesService,
+      dispose: (u) => u.dispose(),
+      signalsReady: true,
     );
 
   await Future.wait([
