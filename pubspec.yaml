@@ -10,11 +10,11 @@ environment:
   flutter: ">=3.0.1"
 
 dependency_overrides:
-  cloud_firestore: ^4.0.1
-  firebase_auth: ^4.0.1
-  firebase_core: ^2.0.0
-  firebase_database: ^10.0.1
-  firebase_storage: ^11.0.1
+  cloud_firestore: ^4.0.2
+  firebase_auth: ^4.0.2
+  firebase_core: ^2.1.0
+  firebase_database: ^10.0.2
+  firebase_storage: ^11.0.2
 
 dependencies:
   flutter:
@@ -48,7 +48,7 @@ dependencies:
   tuple: ^2.0.0
   url_launcher: ^6.1.5
   share_plus: ^6.0.0
-  firebase_remote_config: ^2.0.12
+  firebase_remote_config: ^3.0.2
   version: ^3.0.2
   package_info_plus: ^3.0.0
   group_list_view:
@@ -64,7 +64,7 @@ dev_dependencies:
   churchdata_core_mocks:
     git:
       url: https://github.com/Andrew-Bekhiet/churchdata_core_mocks
-      ref: 0057b555919d6d2c9da2df52db81658405741e96
+      ref: 5f4af0eaea4977952b3a1dac7cb21b9f9d266c16
   mockito: ^5.2.0
   build_runner: ^2.2.0
   copy_with_extension_gen: ^4.0.2
