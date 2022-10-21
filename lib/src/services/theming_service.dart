@@ -33,11 +33,8 @@ class ThemingService {
     bool? greatFeastThemeOverride,
   }) {
     bool isDark = darkTheme ??
-        GetIt.I<CacheRepository>().box('Settings').get(
-              'DarkTheme',
-              defaultValue: WidgetsBinding.instance.window.platformBrightness ==
-                  Brightness.dark,
-            );
+        GetIt.I<CacheRepository>().box('Settings').get('DarkTheme') ??
+        WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
 
     final bool greatFeastTheme = GetIt.I<CacheRepository>()
         .box('Settings')
@@ -81,7 +78,6 @@ class ThemingService {
       brightness: isDark ? Brightness.dark : Brightness.light,
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: secondary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
@@ -89,7 +85,6 @@ class ThemingService {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: secondary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
@@ -97,7 +92,6 @@ class ThemingService {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          foregroundColor: secondary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
