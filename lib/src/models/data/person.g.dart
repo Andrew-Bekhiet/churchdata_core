@@ -17,7 +17,7 @@ abstract class _$PersonBaseCWProxy {
 
   PersonBase college(DocumentReference<Map<String, dynamic>>? college);
 
-  PersonBase color(Color? color);
+  PersonBase color(dynamic color);
 
   PersonBase gender(bool gender);
 
@@ -67,7 +67,7 @@ abstract class _$PersonBaseCWProxy {
     DocumentReference<Map<String, dynamic>>? cFather,
     DocumentReference<Map<String, dynamic>>? church,
     DocumentReference<Map<String, dynamic>>? college,
-    Color? color,
+    dynamic? color,
     bool? gender,
     bool? hasPhoto,
     bool? isShammas,
@@ -114,7 +114,7 @@ class _$PersonBaseCWProxyImpl implements _$PersonBaseCWProxy {
       this(college: college);
 
   @override
-  PersonBase color(Color? color) => this(color: color);
+  PersonBase color(dynamic color) => this(color: color);
 
   @override
   PersonBase gender(bool gender) => this(gender: gender);
@@ -231,10 +231,10 @@ class _$PersonBaseCWProxyImpl implements _$PersonBaseCWProxy {
           ? _value.college
           // ignore: cast_nullable_to_non_nullable
           : college as DocumentReference<Map<String, dynamic>>?,
-      color: color == const $CopyWithPlaceholder()
+      color: color == const $CopyWithPlaceholder() || color == null
           ? _value.color
           // ignore: cast_nullable_to_non_nullable
-          : color as Color?,
+          : color as dynamic,
       gender: gender == const $CopyWithPlaceholder() || gender == null
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
@@ -329,7 +329,6 @@ extension $PersonBaseCopyWith on PersonBase {
     bool cFather = false,
     bool church = false,
     bool college = false,
-    bool color = false,
     bool lastCall = false,
     bool lastConfession = false,
     bool lastEdit = false,
@@ -349,7 +348,7 @@ extension $PersonBaseCopyWith on PersonBase {
       cFather: cFather == true ? null : this.cFather,
       church: church == true ? null : this.church,
       college: college == true ? null : this.college,
-      color: color == true ? null : this.color,
+      color: color,
       gender: gender,
       hasPhoto: hasPhoto,
       isShammas: isShammas,

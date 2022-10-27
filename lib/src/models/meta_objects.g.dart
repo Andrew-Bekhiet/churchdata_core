@@ -94,7 +94,7 @@ extension $ChurchCopyWith on Church {
 }
 
 abstract class _$PersonStateCWProxy {
-  PersonState color(Color? color);
+  PersonState color(dynamic color);
 
   PersonState name(String name);
 
@@ -107,7 +107,7 @@ abstract class _$PersonStateCWProxy {
   /// PersonState(...).copyWith(id: 12, name: "My name")
   /// ````
   PersonState call({
-    Color? color,
+    dynamic? color,
     String? name,
     DocumentReference<Map<String, dynamic>>? ref,
   });
@@ -120,7 +120,7 @@ class _$PersonStateCWProxyImpl implements _$PersonStateCWProxy {
   const _$PersonStateCWProxyImpl(this._value);
 
   @override
-  PersonState color(Color? color) => this(color: color);
+  PersonState color(dynamic color) => this(color: color);
 
   @override
   PersonState name(String name) => this(name: name);
@@ -143,10 +143,10 @@ class _$PersonStateCWProxyImpl implements _$PersonStateCWProxy {
     Object? ref = const $CopyWithPlaceholder(),
   }) {
     return PersonState(
-      color: color == const $CopyWithPlaceholder()
+      color: color == const $CopyWithPlaceholder() || color == null
           ? _value.color
           // ignore: cast_nullable_to_non_nullable
-          : color as Color?,
+          : color as dynamic,
       name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
@@ -163,22 +163,6 @@ extension $PersonStateCopyWith on PersonState {
   /// Returns a callable class that can be used as follows: `instanceOfPersonState.copyWith(...)` or like so:`instanceOfPersonState.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$PersonStateCWProxy get copyWith => _$PersonStateCWProxyImpl(this);
-
-  /// Copies the object with the specific fields set to `null`. If you pass `false` as a parameter, nothing will be done and it will be ignored. Don't do it. Prefer `copyWith(field: null)` or `PersonState(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
-  ///
-  /// Usage
-  /// ```dart
-  /// PersonState(...).copyWithNull(firstField: true, secondField: true)
-  /// ````
-  PersonState copyWithNull({
-    bool color = false,
-  }) {
-    return PersonState(
-      color: color == true ? null : this.color,
-      name: name,
-      ref: ref,
-    );
-  }
 }
 
 abstract class _$CollegeCWProxy {
