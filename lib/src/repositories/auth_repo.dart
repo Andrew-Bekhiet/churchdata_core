@@ -38,11 +38,16 @@ class AuthRepository<U extends UID, P extends ViewableWithID> {
   @mustCallSuper
   void initListeners() async {
     unawaited(
-      userSubject.next.then(signalReady),
+      userSubject.next().then(signalReady),
     );
     unawaited(
-      userSubject.nextNonNull
-          .then((_) => GetIt.I<NotificationsService>().registerFCMToken()),
+      userSubject.nextNonNull.then(
+        (o) {
+          if (o != null) {
+            GetIt.I<NotificationsService>().registerFCMToken();
+          }
+        },
+      ),
     );
 
     if (GetIt.I<CacheRepository>().box('User').toMap().isNotEmpty) {

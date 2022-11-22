@@ -122,9 +122,9 @@ void main() {
                     ),
                   );
 
-                  await unit.objectsStream.next;
+                  await unit.objectsStream.next();
                   await unit.loadNextPage();
-                  await unit.objectsStream.next;
+                  await unit.objectsStream.next();
                   await unit.loadPreviousPage();
                 },
                 timeout: const Timeout(Duration(seconds: 15)),
@@ -351,8 +351,8 @@ void main() {
                 ),
               );
 
-              await unit.searchSubject.next;
-              await unit.searchSubject.next;
+              await unit.searchSubject.next();
+              await unit.searchSubject.next();
 
               unit.searchSubject.add('someguy');
               unit.searchSubject.add('some');
@@ -399,7 +399,7 @@ void main() {
             ),
           );
 
-          await unit.objectsStream.next;
+          await unit.objectsStream.next();
 
           unit.selectAll();
           expect(unit.currentSelection, persons.toSet());
@@ -500,7 +500,7 @@ void main() {
             ]),
           );
 
-          await unit.groupedObjectsStream.next;
+          await unit.groupedObjectsStream.next();
 
           unit
             ..openGroup(Colors.red.shade500)
@@ -510,7 +510,7 @@ void main() {
 
           await persons.last.ref.delete();
 
-          await unit.groupedObjectsStream.next;
+          await unit.groupedObjectsStream.next();
         },
         timeout: const Timeout(Duration(seconds: 15)),
       );
@@ -559,8 +559,8 @@ void main() {
 
           addTearDown(unit.dispose);
 
-          await unit.openedGroupsStream.next;
-          await unit.objectsStream.next;
+          await unit.openedGroupsStream.next();
+          await unit.objectsStream.next();
 
           final grouped =
               persons.groupListsBy<Color?>((element) => element.color);

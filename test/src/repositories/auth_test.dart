@@ -63,7 +63,7 @@ void main() async {
                   .userChangedStreamController
                   .add(null);
 
-              await GetIt.I<AuthRepository>().userStream.next;
+              await GetIt.I<AuthRepository>().userStream.next();
 
               expect(GetIt.I.isReadySync<AuthRepository>(), isTrue);
             },
@@ -99,7 +99,7 @@ void main() async {
                 },
               );
 
-              await GetIt.I<AuthRepository>().userStream.next;
+              await GetIt.I<AuthRepository>().userStream.next();
 
               expect(GetIt.I.isReadySync<AuthRepository>(), isTrue);
             },

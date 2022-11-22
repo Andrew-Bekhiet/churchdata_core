@@ -76,21 +76,47 @@ void main() {
         'Stream.next',
         () async {
           final stream = BehaviorSubject.seeded('')..add('Value');
-
-          String? captured = await stream.next;
+          addTearDown(stream.close);
 
           expect(stream.value, 'Value');
-          expect(captured, 'Value');
+          expect(stream.next(), completion('Value'));
+        },
+      );
 
-          try {
-            stream.addError(Exception('message'));
-            captured = await stream.next;
+      test(
+        'Stream.next: forwards errors',
+        () async {
+          final stream = BehaviorSubject.seeded('')..add('Value');
+          addTearDown(stream.close);
 
-            fail('`next` did not thow an error');
-          } on Exception catch (e) {
-            expect(stream.error, e);
-            expect((e as dynamic).message, 'message');
-          }
+          expect(stream.value, 'Value');
+
+          final exception = Exception('message');
+
+          stream.addError(exception);
+
+          expect(stream.error, exception);
+          expect(stream.next(), throwsA(exception));
+        },
+      );
+
+      test(
+        'Stream.next throws if the stream didnt emit',
+        () async {
+          final stream = BehaviorSubject();
+
+          expect(stream.next(), throwsA(isStateError));
+
+          await stream.close();
+        },
+      );
+
+      test(
+        'Stream.next doesnt throws if ignoreStreamDone',
+        () async {
+          final stream = BehaviorSubject();
+
+          expect(stream.next(ignoreStreamDone: true), completes);
 
           await stream.close();
         },

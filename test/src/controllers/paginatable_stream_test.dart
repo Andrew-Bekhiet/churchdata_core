@@ -105,7 +105,7 @@ void main() {
           expect(unit.canPaginateForward, isFalse);
           expect(unit.isLoading, isTrue);
 
-          await unit.stream.next;
+          await unit.stream.next();
 
           expect(unit.canPaginateBackward, isFalse);
           expect(unit.canPaginateForward, isTrue);
@@ -117,14 +117,14 @@ void main() {
           expect(unit.canPaginateForward, isFalse);
           expect(unit.isLoading, isTrue);
 
-          await unit.stream.next;
+          await unit.stream.next();
 
           expect(unit.canPaginateBackward, isTrue);
           expect(unit.canPaginateForward, isTrue);
           expect(unit.isLoading, isFalse);
 
           await unit.loadNextPage();
-          await unit.stream.next;
+          await unit.stream.next();
 
           expect(unit.canPaginateBackward, isTrue);
           expect(unit.canPaginateForward, isTrue);
@@ -136,11 +136,11 @@ void main() {
           expect(unit.canPaginateForward, isTrue);
           expect(unit.isLoading, isTrue);
 
-          await unit.stream.next;
+          await unit.stream.next();
 
           await unit.loadPreviousPage();
 
-          await unit.stream.next;
+          await unit.stream.next();
 
           expect(unit.canPaginateBackward, isFalse);
           expect(unit.canPaginateForward, isTrue);
@@ -148,7 +148,7 @@ void main() {
 
           await unit.loadPage(3);
 
-          await unit.stream.next;
+          await unit.stream.next();
 
           expect(unit.canPaginateBackward, isTrue);
           expect(unit.canPaginateForward, isTrue);
@@ -196,7 +196,7 @@ void main() {
             ),
           );
 
-          await unit.stream.next;
+          await unit.stream.next();
 
           queryController.add(GetIt.I<DatabaseRepository>()
               .collection('OtherPersons')

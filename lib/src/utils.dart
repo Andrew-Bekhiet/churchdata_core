@@ -89,51 +89,59 @@ extension DateTimeX on DateTime {
 extension NextItem<T> on Stream<T> {
   ///Awaits until another next element is emitted
   ///and returns it
-  Future<T> get next {
-    final completer = Completer<T>();
-    final subscription = listen((_) {}, onError: (_) {});
-
-    subscription
-      ..onData((data) async {
-        if (!completer.isCompleted) {
-          completer.complete(data);
-          await subscription.cancel();
-        }
-      })
-      ..onError((data) async {
-        if (!completer.isCompleted) {
-          completer.completeError(data);
-          await subscription.cancel();
-        }
-      });
-
-    return completer.future;
+  Future<T?> next({
+    bool ignoreStreamDone = false,
+  }) {
+    return nextWhere(
+      (_) => true,
+      ignoreStreamDone: ignoreStreamDone,
+    );
   }
 
   ///Awaits until element that statify condition is emitted
   ///and returns it
-  Future<T> nextWhere(bool Function(T) test) {
+  Future<T?> nextWhere(
+    bool Function(T) test, {
+    bool ignoreStreamDone = false,
+  }) {
     final completer = Completer<T>();
-    final subscription = listen((_) {}, onError: (_) {});
-
-    subscription
-      ..onData((data) async {
-        if (!completer.isCompleted && test(data)) {
-          completer.complete(data);
-          await subscription.cancel();
-        }
-      })
-      ..onError((data) async {
-        if (!completer.isCompleted) {
-          completer.completeError(data);
-          await subscription.cancel();
-        }
-      });
+    late final StreamSubscription<T> subscription;
+    subscription = listen((data) async {
+      if (!completer.isCompleted && test(data)) {
+        completer.complete(data);
+        await subscription.cancel();
+      }
+    }, onError: (data) async {
+      if (!completer.isCompleted) {
+        completer.completeError(data);
+        await subscription.cancel();
+      }
+    }, onDone: () async {
+      if (!completer.isCompleted && !ignoreStreamDone) {
+        completer
+            .completeError(StateError('Stream finished with no more items'));
+      } else {
+        completer.complete();
+      }
+      await subscription.cancel();
+    });
 
     return completer.future;
   }
 
-  Future<T> get nextNonNull => nextWhere((o) => o != null);
+  Future<T> get nextNonNullStrict => nextWhere(
+        (o) => o != null,
+      ).then(
+        (value) {
+          if (value == null)
+            throw StateError('Stream finished with no more items');
+
+          return value;
+        },
+      );
+
+  Future<T?> get nextNonNull =>
+      nextWhere((o) => o != null, ignoreStreamDone: true);
 }
 
 extension SplitList<T> on List<T> {

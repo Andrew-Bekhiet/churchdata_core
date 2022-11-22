@@ -505,8 +505,8 @@ void main() {
                   );
 
                   stream.add('FCM-Token-Changed!');
-                  await stream.next;
-                  await stream.next;
+                  await stream.next();
+                  await stream.next();
 
                   expect(
                       GetIt.I<CacheRepository>()
@@ -575,7 +575,10 @@ void main() {
   );
 }
 
-class FakeAuthRepo extends AuthRepository {
+class FakeAuthRepo extends Fake implements AuthRepository {
   @override
   UserBase? get currentUser => UserBase(uid: 'uid', name: 'name');
+
+  @override
+  Future<void> dispose() async {}
 }
