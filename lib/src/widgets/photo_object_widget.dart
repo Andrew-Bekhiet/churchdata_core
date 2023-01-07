@@ -36,7 +36,6 @@ class PhotoObjectWidget extends StatefulWidget {
 class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
   bool disposed = false;
   bool error = false;
-  String? cachedUrl;
 
   int _retries = 0;
 
@@ -64,7 +63,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
           child: ConstrainedBox(
             constraints: constraints,
             child: FutureBuilder<String>(
-              initialData: cachedUrl,
+              initialData: widget.object.photoUrlCache.cachedResult,
               future: widget.object.photoUrlCache.runOnce(
                 () => widget.object.photoRef!.getCachedDownloadUrl(
                   onCacheChanged: (cache, newUrl) async {
@@ -81,18 +80,19 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                 if (data.hasError)
                   return Center(child: ErrorWidget(data.error!));
 
-                if (!data.hasData)
+                final imageUrl =
+                    data.data ?? widget.object.photoUrlCache.cachedResult;
+
+                if (imageUrl == null)
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
 
-                if (data.data == '')
+                if (imageUrl == '')
                   return Icon(
                     widget.object.defaultIcon,
                     size: constraints.maxHeight,
                   );
-
-                cachedUrl = data.data;
 
                 final photo = Material(
                   type: MaterialType.transparency,
@@ -114,7 +114,18 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                                         ? GetIt.I<BaseCacheManager>()
                                         : null,
                                 useOldImageOnUrlChange: true,
-                                imageUrl: data.data!,
+                                imageUrl: imageUrl!,
+                                errorWidget: (context, url, error) {
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) async {
+                                    _onUrlError(error, url);
+                                  });
+
+                                  return Icon(
+                                    widget.object.defaultIcon,
+                                    size: constraints.maxHeight,
+                                  );
+                                },
                                 progressIndicatorBuilder:
                                     (context, url, progress) => Center(
                                   child: CircularProgressIndicator(
@@ -137,7 +148,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                       memCacheHeight: (constraints.maxHeight *
                               MediaQuery.of(context).devicePixelRatio)
                           .toInt(),
-                      imageUrl: data.data!,
+                      imageUrl: imageUrl!,
                       errorWidget: (context, url, error) {
                         WidgetsBinding.instance.addPostFrameCallback((_) async {
                           _onUrlError(error, url);

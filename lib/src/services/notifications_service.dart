@@ -41,7 +41,7 @@ class NotificationsService {
       const InitializationSettings(
         android: AndroidInitializationSettings('warning'),
       ),
-      onSelectNotification: onNotificationClick,
+      onDidReceiveBackgroundNotificationResponse: onNotificationClick,
     );
 
     GetIt.I.signalReady(this);
@@ -131,6 +131,7 @@ class NotificationsService {
     else {
       final payload = (await GetIt.I<FlutterLocalNotificationsPlugin>()
               .getNotificationAppLaunchDetails())
+          ?.notificationResponse
           ?.payload;
 
       if (payload != null) {
@@ -193,7 +194,8 @@ class NotificationsService {
   //Static callbacks
   //
 
-  static Future<void> onNotificationClick(String? payload) async {
+  static Future<void> onNotificationClick(
+      NotificationResponse? response) async {
     throw UnimplementedError('onNotificationClick is not implemented');
   }
 
