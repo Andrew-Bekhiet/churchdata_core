@@ -16,6 +16,8 @@ abstract class PaginatableStreamBase<T> {
 
   int get currentOffset;
 
+  ValueStream<bool> get onLoadingChanged;
+
   ValueStream<List<T>> get stream;
   List<T> get currentValue;
   List<T>? get currentValueOrNull;
@@ -49,8 +51,7 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   final bool _canPaginate;
 
   @override
-  bool get isLoading => _isLoading;
-  bool _isLoading = true;
+  bool get isLoading => _onLoadingChanged.value;
 
   @override
   bool get canPaginateForward => _canPaginate && _canPaginateForward;
@@ -60,6 +61,9 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   bool get canPaginateBackward => _canPaginate && _canPaginateBackward;
   bool _canPaginateBackward = false;
 
+  final BehaviorSubject<bool> _onLoadingChanged =
+      BehaviorSubject<bool>.seeded(true);
+
   final BehaviorSubject<List<T>> _subject = BehaviorSubject<List<T>>();
   late final StreamSubscription<List<T>> _streamSubscription;
 
@@ -68,6 +72,9 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
 
   @override
   int get currentOffset => _offset.value;
+
+  @override
+  ValueStream<bool> get onLoadingChanged => _onLoadingChanged.stream;
 
   @override
   ValueStream<List<T>> get stream => _subject.stream;
@@ -151,7 +158,7 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
       },
     ).map(
       (event) {
-        _isLoading = false;
+        _onLoadingChanged.add(false);
 
         _docs.add(event);
 
@@ -180,7 +187,7 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
         super.loadAll(stream: stream) {
     _streamSubscription = stream.map(
       (event) {
-        _isLoading = false;
+        _onLoadingChanged.add(false);
         return event;
       },
     ).listen(_subject.add, onError: _subject.addError);
@@ -191,7 +198,7 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
     if (_canPaginate) {
       _canPaginateForward = false;
       _canPaginateBackward = false;
-      _isLoading = true;
+      _onLoadingChanged.add(true);
 
       _offset.add(offset);
     } else {
@@ -203,7 +210,7 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   Future<void> loadNextPage() async {
     if (canPaginateForward) {
       _canPaginateForward = false;
-      _isLoading = true;
+      _onLoadingChanged.add(true);
       _offset.add((currentValue.length / limit).ceil());
     } else {
       throw StateError('Cannot paginate forward');
@@ -214,7 +221,7 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   Future<void> loadPreviousPage() async {
     if (canPaginateBackward) {
       _canPaginateBackward = false;
-      _isLoading = true;
+      _onLoadingChanged.add(true);
       _offset.add(_offset.value - 1);
     } else {
       throw StateError('Cannot paginate backward');
