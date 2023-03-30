@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:churchdata_core/churchdata_core.dart';
+import 'package:churchdata_core/churchdata_core.dart' hide LoggingService;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -43,14 +43,20 @@ class LoggingService {
     );
 
     FlutterError.onError = (flutterError) {
-      Sentry.captureException(flutterError.exception,
-          stackTrace: flutterError.stack, hint: flutterError);
+      Sentry.captureException(
+        flutterError.exception,
+        stackTrace: flutterError.stack,
+        hint: Hint.withMap({'flutterError': flutterError}),
+      );
     };
 
     ErrorWidget.builder = (error) {
       if (kReleaseMode) {
-        Sentry.captureException(error.exception,
-            stackTrace: error.stack, hint: error);
+        Sentry.captureException(
+          error.exception,
+          stackTrace: error.stack,
+          hint: Hint.withMap({'error': error}),
+        );
       }
       return Material(
         child: Container(
@@ -115,7 +121,7 @@ class LoggingService {
     await Sentry.captureException(
       flutterError,
       stackTrace: flutterError.stack,
-      hint: flutterError.toString(),
+      hint: Hint.withMap({'flutterError': flutterError}),
       withScope: (scope) {
         final currentUser = GetIt.I.isRegistered<AuthRepository>()
             ? GetIt.I<AuthRepository>().currentUser

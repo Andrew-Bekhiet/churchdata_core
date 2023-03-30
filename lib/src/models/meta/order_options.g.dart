@@ -7,9 +7,9 @@ part of 'order_options.dart';
 // **************************************************************************
 
 abstract class _$OrderOptionsCWProxy {
-  OrderOptions asc(bool asc);
-
   OrderOptions orderBy(String orderBy);
+
+  OrderOptions asc(bool asc);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderOptions(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -18,22 +18,22 @@ abstract class _$OrderOptionsCWProxy {
   /// OrderOptions(...).copyWith(id: 12, name: "My name")
   /// ````
   OrderOptions call({
-    bool? asc,
     String? orderBy,
+    bool? asc,
   });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderOptions.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderOptions.copyWith.fieldName(...)`
 class _$OrderOptionsCWProxyImpl implements _$OrderOptionsCWProxy {
-  final OrderOptions _value;
-
   const _$OrderOptionsCWProxyImpl(this._value);
 
-  @override
-  OrderOptions asc(bool asc) => this(asc: asc);
+  final OrderOptions _value;
 
   @override
   OrderOptions orderBy(String orderBy) => this(orderBy: orderBy);
+
+  @override
+  OrderOptions asc(bool asc) => this(asc: asc);
 
   @override
 
@@ -44,18 +44,18 @@ class _$OrderOptionsCWProxyImpl implements _$OrderOptionsCWProxy {
   /// OrderOptions(...).copyWith(id: 12, name: "My name")
   /// ````
   OrderOptions call({
-    Object? asc = const $CopyWithPlaceholder(),
     Object? orderBy = const $CopyWithPlaceholder(),
+    Object? asc = const $CopyWithPlaceholder(),
   }) {
     return OrderOptions(
-      asc: asc == const $CopyWithPlaceholder() || asc == null
-          ? _value.asc
-          // ignore: cast_nullable_to_non_nullable
-          : asc as bool,
       orderBy: orderBy == const $CopyWithPlaceholder() || orderBy == null
           ? _value.orderBy
           // ignore: cast_nullable_to_non_nullable
           : orderBy as String,
+      asc: asc == const $CopyWithPlaceholder() || asc == null
+          ? _value.asc
+          // ignore: cast_nullable_to_non_nullable
+          : asc as bool,
     );
   }
 }

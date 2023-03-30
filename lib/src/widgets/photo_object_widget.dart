@@ -114,7 +114,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                                         ? GetIt.I<BaseCacheManager>()
                                         : null,
                                 useOldImageOnUrlChange: true,
-                                imageUrl: imageUrl!,
+                                imageUrl: imageUrl,
                                 errorWidget: (context, url, error) {
                                   WidgetsBinding.instance
                                       .addPostFrameCallback((_) async {
@@ -148,7 +148,7 @@ class _PhotoObjectWidgetState extends State<PhotoObjectWidget> {
                       memCacheHeight: (constraints.maxHeight *
                               MediaQuery.of(context).devicePixelRatio)
                           .toInt(),
-                      imageUrl: imageUrl!,
+                      imageUrl: imageUrl,
                       errorWidget: (context, url, error) {
                         WidgetsBinding.instance.addPostFrameCallback((_) async {
                           _onUrlError(error, url);

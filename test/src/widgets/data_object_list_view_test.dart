@@ -50,8 +50,7 @@ void main() {
           ))
               .sortedBy((o) => o.name);
 
-          final listController =
-              MockListControllerBase<void, BasicDataObject>();
+          final listController = MockListController<void, BasicDataObject>();
 
           when(listController.objectsStream)
               .thenAnswer((_) => BehaviorSubject.seeded(objects));
@@ -166,8 +165,7 @@ void main() {
 
           await Future.wait(objects.map((e) => e.set()));
 
-          final listController =
-              MockListControllerBase<Color?, BasicDataObject>();
+          final listController = MockListController<Color?, BasicDataObject>();
 
           when(listController.objectsStream)
               .thenAnswer((_) => BehaviorSubject.seeded(objects));
@@ -298,8 +296,7 @@ void main() {
                   .shareText(objects[0].name + ': test:url'))
               .thenAnswer((_) async => Never);
 
-          final listController =
-              MockListControllerBase<Color?, BasicDataObject>();
+          final listController = MockListController<Color?, BasicDataObject>();
 
           final selectionSubject =
               BehaviorSubject<Set<BasicDataObject>?>.seeded(null);

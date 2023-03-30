@@ -7,15 +7,15 @@ part of 'user.dart';
 // **************************************************************************
 
 abstract class _$UserBaseCWProxy {
-  UserBase email(String? email);
+  UserBase uid(String uid);
 
   UserBase name(String name);
 
-  UserBase permissions(PermissionsSet permissions);
+  UserBase email(String? email);
 
   UserBase phone(String? phone);
 
-  UserBase uid(String uid);
+  UserBase permissions(PermissionsSet permissions);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserBase(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -24,37 +24,37 @@ abstract class _$UserBaseCWProxy {
   /// UserBase(...).copyWith(id: 12, name: "My name")
   /// ````
   UserBase call({
-    String? email,
-    String? name,
-    PermissionsSet? permissions,
-    String? phone,
     String? uid,
+    String? name,
+    String? email,
+    String? phone,
+    PermissionsSet? permissions,
   });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUserBase.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUserBase.copyWith.fieldName(...)`
 class _$UserBaseCWProxyImpl implements _$UserBaseCWProxy {
+  const _$UserBaseCWProxyImpl(this._value);
+
   final UserBase _value;
 
-  const _$UserBaseCWProxyImpl(this._value);
+  @override
+  UserBase uid(String uid) => this(uid: uid);
+
+  @override
+  UserBase name(String name) => this(name: name);
 
   @override
   UserBase email(String? email) => this(email: email);
 
   @override
-  UserBase name(String name) => this(name: name);
+  UserBase phone(String? phone) => this(phone: phone);
 
   @override
   UserBase permissions(PermissionsSet permissions) =>
       this(permissions: permissions);
 
   @override
-  UserBase phone(String? phone) => this(phone: phone);
-
-  @override
-  UserBase uid(String uid) => this(uid: uid);
-
-  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserBase(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -63,34 +63,34 @@ class _$UserBaseCWProxyImpl implements _$UserBaseCWProxy {
   /// UserBase(...).copyWith(id: 12, name: "My name")
   /// ````
   UserBase call({
-    Object? email = const $CopyWithPlaceholder(),
-    Object? name = const $CopyWithPlaceholder(),
-    Object? permissions = const $CopyWithPlaceholder(),
-    Object? phone = const $CopyWithPlaceholder(),
     Object? uid = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
+    Object? email = const $CopyWithPlaceholder(),
+    Object? phone = const $CopyWithPlaceholder(),
+    Object? permissions = const $CopyWithPlaceholder(),
   }) {
     return UserBase(
-      email: email == const $CopyWithPlaceholder()
-          ? _value.email
+      uid: uid == const $CopyWithPlaceholder() || uid == null
+          ? _value.uid
           // ignore: cast_nullable_to_non_nullable
-          : email as String?,
+          : uid as String,
       name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
+      email: email == const $CopyWithPlaceholder()
+          ? _value.email
+          // ignore: cast_nullable_to_non_nullable
+          : email as String?,
+      phone: phone == const $CopyWithPlaceholder()
+          ? _value.phone
+          // ignore: cast_nullable_to_non_nullable
+          : phone as String?,
       permissions:
           permissions == const $CopyWithPlaceholder() || permissions == null
               ? _value.permissions
               // ignore: cast_nullable_to_non_nullable
               : permissions as PermissionsSet,
-      phone: phone == const $CopyWithPlaceholder()
-          ? _value.phone
-          // ignore: cast_nullable_to_non_nullable
-          : phone as String?,
-      uid: uid == const $CopyWithPlaceholder() || uid == null
-          ? _value.uid
-          // ignore: cast_nullable_to_non_nullable
-          : uid as String,
     );
   }
 }
@@ -111,11 +111,11 @@ extension $UserBaseCopyWith on UserBase {
     bool phone = false,
   }) {
     return UserBase(
-      email: email == true ? null : this.email,
-      name: name,
-      permissions: permissions,
-      phone: phone == true ? null : this.phone,
       uid: uid,
+      name: name,
+      email: email == true ? null : this.email,
+      phone: phone == true ? null : this.phone,
+      permissions: permissions,
     );
   }
 }

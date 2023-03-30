@@ -85,12 +85,11 @@ class PhoneNumberProperty extends StatelessWidget {
             onPressed: () => contactAdd(value),
           ),
           IconButton(
-            icon: Image.asset(
-              'assets/whatsapp.png',
-              package: 'churchdata_core',
-              width: IconTheme.of(context).size,
-              height: IconTheme.of(context).size,
-              color: Theme.of(context).iconTheme.color,
+            icon: const ImageIcon(
+              AssetImage(
+                'assets/whatsapp.png',
+                package: 'churchdata_core',
+              ),
             ),
             tooltip: 'ارسال رسالة (واتساب)',
             onPressed: () => GetIt.I<LauncherService>()

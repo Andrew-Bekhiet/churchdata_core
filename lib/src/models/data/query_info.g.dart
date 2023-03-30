@@ -9,17 +9,17 @@ part of 'query_info.dart';
 abstract class _$QueryInfoCWProxy {
   QueryInfo collection(CollectionReference<Map<String, dynamic>> collection);
 
-  QueryInfo descending(bool? descending);
-
   QueryInfo fieldPath(String fieldPath);
 
   QueryInfo operator(String operator);
+
+  QueryInfo queryValue(Object? queryValue);
 
   QueryInfo order(bool order);
 
   QueryInfo orderBy(String? orderBy);
 
-  QueryInfo queryValue(Object? queryValue);
+  QueryInfo descending(bool? descending);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `QueryInfo(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -29,27 +29,24 @@ abstract class _$QueryInfoCWProxy {
   /// ````
   QueryInfo call({
     CollectionReference<Map<String, dynamic>>? collection,
-    bool? descending,
     String? fieldPath,
     String? operator,
+    Object? queryValue,
     bool? order,
     String? orderBy,
-    Object? queryValue,
+    bool? descending,
   });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfQueryInfo.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfQueryInfo.copyWith.fieldName(...)`
 class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
-  final QueryInfo _value;
-
   const _$QueryInfoCWProxyImpl(this._value);
+
+  final QueryInfo _value;
 
   @override
   QueryInfo collection(CollectionReference<Map<String, dynamic>> collection) =>
       this(collection: collection);
-
-  @override
-  QueryInfo descending(bool? descending) => this(descending: descending);
 
   @override
   QueryInfo fieldPath(String fieldPath) => this(fieldPath: fieldPath);
@@ -58,13 +55,16 @@ class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
   QueryInfo operator(String operator) => this(operator: operator);
 
   @override
+  QueryInfo queryValue(Object? queryValue) => this(queryValue: queryValue);
+
+  @override
   QueryInfo order(bool order) => this(order: order);
 
   @override
   QueryInfo orderBy(String? orderBy) => this(orderBy: orderBy);
 
   @override
-  QueryInfo queryValue(Object? queryValue) => this(queryValue: queryValue);
+  QueryInfo descending(bool? descending) => this(descending: descending);
 
   @override
 
@@ -76,12 +76,12 @@ class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
   /// ````
   QueryInfo call({
     Object? collection = const $CopyWithPlaceholder(),
-    Object? descending = const $CopyWithPlaceholder(),
     Object? fieldPath = const $CopyWithPlaceholder(),
     Object? operator = const $CopyWithPlaceholder(),
+    Object? queryValue = const $CopyWithPlaceholder(),
     Object? order = const $CopyWithPlaceholder(),
     Object? orderBy = const $CopyWithPlaceholder(),
-    Object? queryValue = const $CopyWithPlaceholder(),
+    Object? descending = const $CopyWithPlaceholder(),
   }) {
     return QueryInfo(
       collection:
@@ -89,10 +89,6 @@ class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
               ? _value.collection
               // ignore: cast_nullable_to_non_nullable
               : collection as CollectionReference<Map<String, dynamic>>,
-      descending: descending == const $CopyWithPlaceholder()
-          ? _value.descending
-          // ignore: cast_nullable_to_non_nullable
-          : descending as bool?,
       fieldPath: fieldPath == const $CopyWithPlaceholder() || fieldPath == null
           ? _value.fieldPath
           // ignore: cast_nullable_to_non_nullable
@@ -101,6 +97,10 @@ class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
           ? _value.operator
           // ignore: cast_nullable_to_non_nullable
           : operator as String,
+      queryValue: queryValue == const $CopyWithPlaceholder()
+          ? _value.queryValue
+          // ignore: cast_nullable_to_non_nullable
+          : queryValue as Object?,
       order: order == const $CopyWithPlaceholder() || order == null
           ? _value.order
           // ignore: cast_nullable_to_non_nullable
@@ -109,10 +109,10 @@ class _$QueryInfoCWProxyImpl implements _$QueryInfoCWProxy {
           ? _value.orderBy
           // ignore: cast_nullable_to_non_nullable
           : orderBy as String?,
-      queryValue: queryValue == const $CopyWithPlaceholder()
-          ? _value.queryValue
+      descending: descending == const $CopyWithPlaceholder()
+          ? _value.descending
           // ignore: cast_nullable_to_non_nullable
-          : queryValue as Object?,
+          : descending as bool?,
     );
   }
 }
@@ -129,18 +129,18 @@ extension $QueryInfoCopyWith on QueryInfo {
   /// QueryInfo(...).copyWithNull(firstField: true, secondField: true)
   /// ````
   QueryInfo copyWithNull({
-    bool descending = false,
-    bool orderBy = false,
     bool queryValue = false,
+    bool orderBy = false,
+    bool descending = false,
   }) {
     return QueryInfo(
       collection: collection,
-      descending: descending == true ? null : this.descending,
       fieldPath: fieldPath,
       operator: operator,
+      queryValue: queryValue == true ? null : this.queryValue,
       order: order,
       orderBy: orderBy == true ? null : this.orderBy,
-      queryValue: queryValue == true ? null : this.queryValue,
+      descending: descending == true ? null : this.descending,
     );
   }
 }

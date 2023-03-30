@@ -66,7 +66,7 @@ void main() {
                       AppBarTheme(
                         backgroundColor: primary,
                         foregroundColor:
-                            Typography.material2018().black.headline6?.color,
+                            Typography.material2018().black.titleLarge?.color,
                         systemOverlayStyle: SystemUiOverlayStyle.dark,
                       ) &&
                   t.bottomAppBarTheme ==
@@ -117,7 +117,7 @@ void main() {
                       AppBarTheme(
                         backgroundColor: primary,
                         foregroundColor:
-                            Typography.material2018().white.headline6?.color,
+                            Typography.material2018().white.titleLarge?.color,
                         systemOverlayStyle: SystemUiOverlayStyle.light,
                       ) &&
                   t.bottomAppBarTheme ==

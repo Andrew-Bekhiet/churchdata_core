@@ -28,6 +28,7 @@
       "titleBar.inactiveForeground": "#e7e7e799",
       "commandCenter.border": "#e7e7e799"
     },
-    "peacock.color": "#505959"
+    "peacock.color": "#505959",
+    "autoHide.autoHidePanel": false
   }
 }

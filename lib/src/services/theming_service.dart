@@ -102,7 +102,7 @@ class ThemingService {
         foregroundColor: (isDark
                 ? Typography.material2018().white
                 : Typography.material2018().black)
-            .headline6
+            .titleLarge
             ?.color,
         systemOverlayStyle:
             isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,

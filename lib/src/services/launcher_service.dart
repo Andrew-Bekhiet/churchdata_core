@@ -2,6 +2,8 @@
 import 'package:url_launcher/url_launcher.dart' as l;
 
 class LauncherService {
+  static LauncherService get I => LauncherService();
+
   Future<bool> launch(String url) async {
     return launchUrl(Uri.parse(url));
   }

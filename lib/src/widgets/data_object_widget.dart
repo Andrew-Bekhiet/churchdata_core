@@ -44,7 +44,7 @@ class _ViewableObjectWidgetState<T extends Viewable>
     final themeData = Theme.of(context);
     final textColor = ListTileTheme.of(context).textColor ??
         themeData.listTileTheme.textColor ??
-        themeData.textTheme.subtitle1!.color!;
+        themeData.textTheme.titleMedium!.color!;
     final foregroundColor = widget.object.color.getContrastingColor(textColor);
 
     final Widget tile = ListTile(
