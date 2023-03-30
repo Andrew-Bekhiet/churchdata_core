@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:churchdata_core/churchdata_core.dart';
+import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:timeago/timeago.dart';
@@ -32,9 +33,11 @@ bool isSubtype<Generic, Subtype>() => <Subtype>[] is List<Generic>;
 extension DateTimeX on DateTime {
   Timestamp toTimestamp() => Timestamp.fromDate(this);
 
-  String toDurationString({bool appendSince = true}) {
-    if (appendSince) return format(this, locale: 'ar');
-    return format(this, locale: 'ar').replaceAll('منذ ', '');
+  String toDurationString({bool appendSince = true, DateTime? now}) {
+    if (appendSince)
+      return format(this, locale: 'ar', clock: now ?? clock.now());
+    return format(this, locale: 'ar', clock: now ?? clock.now())
+        .replaceAll('منذ ', '');
   }
 
   DateTime truncateToDay() {

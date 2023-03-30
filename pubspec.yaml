@@ -10,8 +10,8 @@ environment:
   flutter: ">=3.0.1"
 
 dependency_overrides:
-  # churchdata_core_mocks:
-  #   path: ../churchdata_core_mocks
+  churchdata_core_mocks:
+    path: ../churchdata_core_mocks
 
 dependencies:
   flutter:
@@ -53,6 +53,7 @@ dependencies:
       url: https://github.com/Andrew-Bekhiet/flutter_group_list_view
       ref: 0ebdffaebc8ccdd8d92072edfe2f1db567a7db9e
   visibility_detector: ^0.4.0+2
+  clock: ^1.1.1
 
 dev_dependencies:
   flutter_test:
