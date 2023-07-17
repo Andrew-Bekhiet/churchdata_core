@@ -1,4 +1,5 @@
 import 'package:churchdata_core/churchdata_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
@@ -34,7 +35,7 @@ class ThemingService {
   }) {
     bool isDark = darkTheme ??
         GetIt.I<CacheRepository>().box('Settings').get('DarkTheme') ??
-        WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
+        PlatformDispatcher.instance.platformBrightness == Brightness.dark;
 
     final bool greatFeastTheme = GetIt.I<CacheRepository>()
         .box('Settings')

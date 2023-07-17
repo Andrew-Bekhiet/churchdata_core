@@ -29,6 +29,7 @@
       "commandCenter.border": "#e7e7e799"
     },
     "peacock.color": "#505959",
-    "autoHide.autoHidePanel": false
+    "autoHide.autoHidePanel": false,
+    "autoHide.autoHideSideBar": false
   }
 }

@@ -5,6 +5,7 @@ import 'package:churchdata_core_mocks/fakes/fake_firebase_auth.dart';
 import 'package:churchdata_core_mocks/fakes/fake_notifications_repo.dart';
 import 'package:churchdata_core_mocks/fakes/mock_user.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -79,9 +80,9 @@ void main() async {
 
               when(mockUser.getIdTokenResult()).thenAnswer(
                 (_) async => IdTokenResult(
-                  {
-                    'claims': {'personId': null},
-                  },
+                  PigeonIdTokenResult(
+                    claims: {'personId': null},
+                  ),
                 ),
               );
 
@@ -115,9 +116,9 @@ void main() async {
 
               when(mockUser.getIdTokenResult()).thenAnswer(
                 (_) async => IdTokenResult(
-                  {
-                    'claims': {'personId': null},
-                  },
+                  PigeonIdTokenResult(
+                    claims: {'personId': null},
+                  ),
                 ),
               );
 
@@ -174,9 +175,9 @@ void main() async {
                   refreshToken: 'rrr');
               when(mockUser.getIdTokenResult()).thenAnswer(
                 (_) async => IdTokenResult(
-                  {
-                    'claims': {'personId': null},
-                  },
+                  PigeonIdTokenResult(
+                    claims: {'personId': null},
+                  ),
                 ),
               );
 
@@ -211,9 +212,9 @@ void main() async {
 
           when(mockUser.getIdTokenResult()).thenAnswer(
             (_) async => IdTokenResult(
-              {
-                'claims': {'personId': personRef.id},
-              },
+              PigeonIdTokenResult(
+                claims: {'personId': personRef.id},
+              ),
             ),
           );
 
@@ -279,9 +280,9 @@ void main() async {
 
           when(mockUser.getIdTokenResult()).thenAnswer(
             (_) async => IdTokenResult(
-              {
-                'claims': {'personId': null},
-              },
+              PigeonIdTokenResult(
+                claims: {'personId': null},
+              ),
             ),
           );
 
@@ -345,9 +346,9 @@ void main() async {
 
               when(mockUser.getIdTokenResult()).thenAnswer(
                 (_) async => IdTokenResult(
-                  {
-                    'claims': {'personId': null},
-                  },
+                  PigeonIdTokenResult(
+                    claims: {'personId': null},
+                  ),
                 ),
               );
 
@@ -393,9 +394,9 @@ void main() async {
 
               when(mockUser.getIdTokenResult()).thenAnswer(
                 (_) async => IdTokenResult(
-                  {
-                    'claims': {'personId': null},
-                  },
+                  PigeonIdTokenResult(
+                    claims: {'personId': null},
+                  ),
                 ),
               );
 

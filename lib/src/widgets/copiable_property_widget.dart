@@ -24,7 +24,7 @@ class CopiablePropertyWidget extends StatelessWidget {
       copyOrError = IconButton(
         icon: const Icon(Icons.copy),
         tooltip: 'نسخ',
-        onPressed: () => Clipboard.setData(ClipboardData(text: value)),
+        onPressed: () => Clipboard.setData(ClipboardData(text: value!)),
       );
     } else if (showErrorIfEmpty) {
       copyOrError = const Tooltip(
@@ -111,7 +111,7 @@ class PhoneNumberProperty extends StatelessWidget {
                 GetIt.I<LauncherService>()
                     .launchSMSChat(formatPhone(value!, false));
               } else if (v == 'Copy') {
-                Clipboard.setData(ClipboardData(text: value));
+                Clipboard.setData(ClipboardData(text: value!));
               }
             },
           ),

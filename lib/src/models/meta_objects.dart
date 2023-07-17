@@ -61,10 +61,10 @@ class Church extends MetaObject {
 
   Stream<List<Father>> getChildren(
       [String orderBy = 'Name', bool tranucate = false]) {
-    return (GetIt.I<DatabaseRepository>()
-            .collection('Fathers')
-            .where('ChurchId', isEqualTo: ref)
-            .snapshots())
+    return GetIt.I<DatabaseRepository>()
+        .collection('Fathers')
+        .where('ChurchId', isEqualTo: ref)
+        .snapshots()
         .map((s) => s.docs.map(Father.fromDoc).toList());
   }
 

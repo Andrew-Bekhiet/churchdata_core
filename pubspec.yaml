@@ -10,14 +10,14 @@ environment:
   flutter: ">=3.0.1"
 
 dependency_overrides:
-  churchdata_core_mocks:
-    path: ../churchdata_core_mocks
+  # churchdata_core_mocks:
+  #   path: ../churchdata_core_mocks
 
 dependencies:
   flutter:
     sdk: flutter
 
-  android_alarm_manager_plus: ^2.1.0
+  android_alarm_manager_plus: ^3.0.1
   async: ^2.9.0
   cached_network_image: ^3.2.2
   cloud_firestore: ^4.0.2
@@ -30,24 +30,24 @@ dependencies:
   firebase_messaging: ^14.0.1
   firebase_storage: ^11.0.2
   flutter_cache_manager: ^3.3.0
-  flutter_local_notifications: ^13.0.0
+  flutter_local_notifications: ^15.1.0+1
   flutter_secure_storage: ^8.0.0
   get_it: ^7.2.0
   google_maps_flutter: ^2.1.8
-  google_maps_flutter_web: ^0.4.0+1
+  google_maps_flutter_web: ^0.5.1
   google_sign_in: ^6.0.2
   hive_flutter: ^1.1.0
-  intl: ^0.17.0
+  intl: ^0.18.1
   rxdart: ^0.27.4
   sentry_flutter: ^7.4.0
   timeago: ^3.2.2
   tinycolor2: ^3.0.1
   tuple: ^2.0.0
   url_launcher: ^6.1.5
-  share_plus: ^6.1.0
-  firebase_remote_config: ^3.0.2
+  share_plus: ^7.0.2
+  firebase_remote_config: ^4.2.4
   version: ^3.0.2
-  package_info_plus: ^3.0.0
+  package_info_plus: ^4.0.2
   group_list_view:
     git:
       url: https://github.com/Andrew-Bekhiet/flutter_group_list_view
@@ -62,7 +62,7 @@ dev_dependencies:
   churchdata_core_mocks:
     git:
       url: https://github.com/Andrew-Bekhiet/churchdata_core_mocks
-      ref: bbe570540caac2075e2486b7adc25da50a713a1a
+      ref: master
   mockito: ^5.2.0
   build_runner: ^2.3.2
   copy_with_extension_gen: ^5.0.2
