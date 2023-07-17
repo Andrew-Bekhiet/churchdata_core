@@ -37,7 +37,7 @@ dependencies:
   google_maps_flutter_web: ^0.5.1
   google_sign_in: ^6.0.2
   hive_flutter: ^1.1.0
-  intl: ^0.18.1
+  intl: ^0.18.0
   rxdart: ^0.27.4
   sentry_flutter: ^7.4.0
   timeago: ^3.2.2
