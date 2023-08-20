@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'serializable.dart';
 
 @immutable
-abstract class DocumentObject extends Serializable with ID {
+abstract class DocumentObject extends Serializable implements ID {
   final JsonRef ref;
 
   @override

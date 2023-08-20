@@ -1,3 +1,3 @@
-abstract class UID {
+abstract mixin class UID {
   String get uid;
 }
