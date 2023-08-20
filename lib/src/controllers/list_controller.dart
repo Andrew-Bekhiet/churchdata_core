@@ -262,10 +262,10 @@ class ListControllerBase<G, T extends ViewableWithID> {
   }
 
   void toggleSelected(T item) {
-    if ((currentSelection ?? getEmptySet<G>()).contains(item)) {
-      deselect(item);
-    } else {
+    if (currentSelection == null || !currentSelection!.contains(item)) {
       select(item);
+    } else {
+      deselect(item);
     }
   }
 
