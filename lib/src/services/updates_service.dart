@@ -59,6 +59,7 @@ class UpdatesService {
           .child('updates')
           .child('latest_version')
           .once()
+          .timeout(const Duration(seconds: 5))
           .then(saveCachedValueFromDB('latest_version'));
       return Version.parse(versionData.snapshot.value?.toString() ?? '0.0.0.0');
     } on Exception {
@@ -76,6 +77,7 @@ class UpdatesService {
           .child('updates')
           .child('deprecated_from')
           .once()
+          .timeout(const Duration(seconds: 5))
           .then(saveCachedValueFromDB('deprecated_from'));
       return Version.parse(versionData.snapshot.value?.toString() ?? '0.0.0.0');
     } on Exception {
@@ -93,6 +95,7 @@ class UpdatesService {
           .child('updates')
           .child('download_link')
           .once()
+          .timeout(const Duration(seconds: 5))
           .then(saveCachedValueFromDB('download_link'));
       return Uri.parse(linkData.snapshot.value.toString());
     } on Exception {
@@ -110,6 +113,7 @@ class UpdatesService {
           .child('updates')
           .child('release_notes')
           .once()
+          .timeout(const Duration(seconds: 5))
           .then(saveCachedValueFromDB('release_notes'));
       return Uri.parse(linkData.snapshot.value.toString());
     } on Exception {
