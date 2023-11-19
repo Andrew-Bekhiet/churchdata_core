@@ -30,8 +30,8 @@ dependencies:
   firebase_messaging: ^14.0.1
   firebase_storage: ^11.0.2
   flutter_cache_manager: ^3.3.0
-  flutter_local_notifications: ^15.1.0+1
-  flutter_secure_storage: ^8.0.0
+  flutter_local_notifications: ^16.1.0
+  flutter_secure_storage: ^9.0.0
   get_it: ^7.2.0
   google_maps_flutter: ^2.1.8
   google_maps_flutter_web: ^0.5.1
