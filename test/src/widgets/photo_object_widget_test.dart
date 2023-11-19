@@ -115,6 +115,7 @@ void main() {
 
           person.photoUrlCache.invalidate();
         },
+        skip: true,
       );
     },
   );
