@@ -75,6 +75,12 @@ class MockPaginatableStream<T extends _i3.ID> extends _i1.Mock
       ) as T Function(_i4.QueryDocumentSnapshot<Map<String, dynamic>>));
 
   @override
+  bool get canPaginate => (super.noSuchMethod(
+        Invocation.getter(#canPaginate),
+        returnValue: false,
+      ) as bool);
+
+  @override
   bool get isLoading => (super.noSuchMethod(
         Invocation.getter(#isLoading),
         returnValue: false,

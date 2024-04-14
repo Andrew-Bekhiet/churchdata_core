@@ -139,12 +139,15 @@ void main() {
                     bool isLoading = false,
                     bool canPaginateForward = true,
                     bool canPaginateBackward = true,
+                    bool canPaginate = true,
                   }) {
                     final objectsPaginatableStream =
                         MockPaginatableStream<BasicDataObject>();
 
                     when(objectsPaginatableStream.stream)
                         .thenAnswer((_) => BehaviorSubject());
+                    when(objectsPaginatableStream.canPaginate)
+                        .thenReturn(canPaginate);
                     when(objectsPaginatableStream.canPaginateBackward)
                         .thenReturn(canPaginateBackward);
                     when(objectsPaginatableStream.canPaginateForward)

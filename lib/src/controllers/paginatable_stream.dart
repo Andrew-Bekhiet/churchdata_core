@@ -11,6 +11,8 @@ abstract class PaginatableStreamBase<T> {
 
   bool get isLoading;
 
+  bool get canPaginate;
+
   bool get canPaginateForward;
   bool get canPaginateBackward;
 
@@ -48,6 +50,8 @@ class PaginatableStream<T extends ID> extends PaginatableStreamBase<T> {
   final Subject<QueryOfJson> query;
   final T Function(JsonQueryDoc) mapper;
 
+  @override
+  bool get canPaginate => _canPaginate;
   final bool _canPaginate;
 
   @override

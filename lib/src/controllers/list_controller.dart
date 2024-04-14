@@ -138,7 +138,8 @@ class ListControllerBase<G, T extends ViewableWithID> {
         .where(
           (o) =>
               objectsPaginatableStream.currentOffset != o &&
-              !objectsPaginatableStream.isLoading,
+              !objectsPaginatableStream.isLoading &&
+              objectsPaginatableStream.canPaginate,
         )
         .listen(objectsPaginatableStream.loadPage);
   }
