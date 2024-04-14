@@ -190,10 +190,10 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: b01820acdf51c9b5b4469139b199a19dff17ad08
+      resolved-ref: "30d5f9133c621063f112f5ced885951be299054f"
       url: "https://github.com/Andrew-Bekhiet/churchdata_core_mocks"
     source: git
-    version: "0.4.0"
+    version: "0.5.0"
   clock:
     dependency: "direct main"
     description:
@@ -796,12 +796,11 @@ packages:
   google_sign_in_mocks:
     dependency: transitive
     description:
-      path: "."
-      ref: "0c086c0ca2377c1961767f6df05bd28c14d7aa4a"
-      resolved-ref: "0c086c0ca2377c1961767f6df05bd28c14d7aa4a"
-      url: "https://github.com/miyaji555/google_sign_in_mocks"
-    source: git
-    version: "0.2.2"
+      name: google_sign_in_mocks
+      sha256: "09312785f1076b0646bb675a324355c33524bbdb760d1c6ebd5e4dcf04d9a343"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   google_sign_in_platform_interface:
     dependency: transitive
     description:
