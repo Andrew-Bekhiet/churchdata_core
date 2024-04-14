@@ -109,7 +109,7 @@ class DatabaseRepository {
                     ),
                     const Text(
                       'استرجع ايضا العناصر بداخل هذا العنصر',
-                      textScaleFactor: 0.9,
+                      textScaler: TextScaler.linear(0.9),
                     ),
                   ],
                 ),
