@@ -35,6 +35,8 @@ class DataObjectListViewBase<G, T extends ViewableWithID>
   ///Optional string to show when there are no items
   final String? emptyMsg;
 
+  final ScrollController? scrollController;
+
   DataObjectListViewBase({
     super.key,
     bool changeVisibilityUpdateInterval = true,
@@ -44,6 +46,7 @@ class DataObjectListViewBase<G, T extends ViewableWithID>
     this.onTap,
     this.onLongPress,
     this.emptyMsg,
+    this.scrollController,
     required this.autoDisposeController,
   }) : assert(isSubtype<void, G>() ||
             isSubtype<DataObject?, G>() ||
@@ -91,11 +94,13 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID>
   @override
   bool get wantKeepAlive => _builtOnce && ModalRoute.of(context)!.isCurrent;
 
-  final ScrollController _scrollController = ScrollController();
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = widget.scrollController ?? ScrollController();
+
     _scrollController.addListener(() {
       if (_controller.canPaginateForward &&
           _scrollController.position.pixels >=
@@ -326,7 +331,7 @@ class _DataObjectListViewBaseState<G, T extends ViewableWithID>
   @override
   Future<void> dispose() async {
     super.dispose();
-    _scrollController.dispose();
+    if (widget.scrollController == null) _scrollController.dispose();
     if (widget.autoDisposeController) await _controller.dispose();
   }
 }
