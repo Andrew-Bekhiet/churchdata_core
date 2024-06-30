@@ -10,8 +10,7 @@ environment:
   flutter: ">=3.0.1"
 
 dependency_overrides:
-  # churchdata_core_mocks:
-  #   path: ../churchdata_core_mocks
+  firebase_core: ^3.0.0
 
 dependencies:
   flutter:
@@ -20,15 +19,15 @@ dependencies:
   android_alarm_manager_plus: ^4.0.2
   async: ^2.9.0
   cached_network_image: ^3.2.2
-  cloud_firestore: ^4.0.2
-  cloud_functions: ^4.0.2
+  cloud_firestore: ^5.0.2
+  cloud_functions: ^5.0.2
   copy_with_extension: ^5.0.2
   equatable: ^2.0.3
-  firebase_auth: ^4.0.2
+  firebase_auth: ^5.1.1
   firebase_database: ^10.0.2
-  firebase_dynamic_links: ^5.0.1
-  firebase_messaging: ^14.0.1
-  firebase_storage: ^11.0.2
+  firebase_dynamic_links: ^6.0.2
+  firebase_messaging: ^15.0.2
+  firebase_storage: ^12.1.0
   flutter_cache_manager: ^3.3.0
   flutter_local_notifications: ^17.0.1
   flutter_secure_storage: ^9.0.0
@@ -45,7 +44,7 @@ dependencies:
   tuple: ^2.0.0
   url_launcher: ^6.1.5
   share_plus: ^9.0.0
-  firebase_remote_config: ^4.2.4
+  firebase_remote_config: ^5.0.2
   version: ^3.0.2
   package_info_plus: ^8.0.0
   group_list_view:
