@@ -18,6 +18,11 @@ class NotificationsService {
   NotificationsService() {
     listenToFirebaseMessaging();
     initPlugins();
+    listenToUserStream();
+  }
+
+  @protected
+  void listenToUserStream() {
     unawaited(
       GetIt.I<AuthRepository>()
           .userStream
