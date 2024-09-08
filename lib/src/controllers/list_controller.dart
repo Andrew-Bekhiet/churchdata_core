@@ -356,13 +356,21 @@ int defaultOffsetFromIndex(int limit, int index, [int? section]) =>
 ///Searches in [objects].[name]
 List<T> defaultSearch<T extends ViewableWithID>(
     List<T> objects, String searchTerms) {
-  return objects.where((o) => o.name.contains(searchTerms)).toList();
+  return objects
+      .where((o) => o.name
+          .normalizeForSearch()
+          .contains(searchTerms.normalizeForSearch()))
+      .toList();
 }
 
 ///Searches only the beginning of [objects].[name]
 List<T> startsWithSearch<T extends DataObject>(
     List<T> objects, String searchTerms) {
-  return objects.where((o) => o.name.startsWith(searchTerms)).toList();
+  return objects
+      .where((o) => o.name
+          .normalizeForSearch()
+          .startsWith(searchTerms.normalizeForSearch()))
+      .toList();
 }
 
 ///Ignores the [searchTerms] and just returns [objects]
@@ -376,3 +384,10 @@ typedef SearchFunction<T> = List<T> Function(
 typedef GroupingFunction<G, T> = Map<G, List<T>> Function(List<T> objects);
 typedef GroupingStreamFunction<G, T> = Stream<Map<G, List<T>>> Function(
     List<T> objects);
+
+extension StringSearch on String {
+  String normalizeForSearch() => toLowerCase()
+      .trim()
+      .replaceAll(RegExp(r'[أاإآ]'), 'ا')
+      .replaceAll(RegExp(r'[ى]'), 'ي');
+}
