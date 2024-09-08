@@ -40,15 +40,6 @@ class AuthRepository<U extends UID, P extends ViewableWithID> {
     unawaited(
       userSubject.next().then(signalReady),
     );
-    unawaited(
-      userSubject.nextNonNull.then(
-        (o) {
-          if (o != null) {
-            GetIt.I<NotificationsService>().registerFCMToken();
-          }
-        },
-      ),
-    );
 
     if (GetIt.I<CacheRepository>().box('User').toMap().isNotEmpty) {
       refreshFromIdToken(

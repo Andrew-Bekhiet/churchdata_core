@@ -1,13 +1,17 @@
 import 'package:churchdata_core/churchdata_core.dart';
 import 'package:churchdata_core_mocks/churchdata_core.dart';
 import 'package:churchdata_core_mocks/churchdata_core.mocks.dart';
-import 'package:churchdata_core_mocks/services/share_service_test.mocks.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:share_plus_platform_interface/share_plus_platform_interface.dart';
 
+import './share_service_test.mocks.dart';
+
+@GenerateNiceMocks([MockSpec<SharePlatform>(as: #MockSharePlatform_)])
 void main() {
   group(
     'Share Service tests ->',
@@ -15,8 +19,6 @@ void main() {
       setUp(
         () async {
           SharePlatform.instance = MockSharePlatform();
-          when((SharePlatform.instance as MockSharePlatform).share(any))
-              .thenAnswer((_) async => Never);
 
           registerFirebaseMocks();
 
@@ -298,3 +300,6 @@ void main() {
     },
   );
 }
+
+class MockSharePlatform extends MockSharePlatform_
+    with MockPlatformInterfaceMixin {}

@@ -18,6 +18,18 @@ class NotificationsService {
   NotificationsService() {
     listenToFirebaseMessaging();
     initPlugins();
+    unawaited(
+      GetIt.I<AuthRepository>()
+          .userStream
+          .firstWhere((user) => user != null)
+          .then(
+        (user) {
+          if (user == null) return;
+
+          maybeSetupUserNotifications(user);
+        },
+      ),
+    );
   }
 
   @protected
@@ -188,6 +200,11 @@ class NotificationsService {
       }
     }
     return false;
+  }
+
+  @protected
+  Future<void> maybeSetupUserNotifications(UID uid) async {
+    await registerFCMToken();
   }
 
   //

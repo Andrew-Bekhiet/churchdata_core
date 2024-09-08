@@ -26,6 +26,7 @@ void main() {
           GetIt.I.pushNewScope(scopeName: 'NotificationsTestsScope');
           registerFirebaseMocks();
 
+          GetIt.I.registerSingleton<AuthRepository>(FakeAuthRepo());
           GetIt.I.registerSingleton<CacheRepository>(FakeCacheRepo());
           GetIt.I.registerSingleton<NotificationsService>(
             FakeNotificationsService(),
@@ -578,6 +579,9 @@ void main() {
 class FakeAuthRepo extends Fake implements AuthRepository {
   @override
   UserBase? get currentUser => UserBase(uid: 'uid', name: 'name');
+
+  @override
+  ValueStream<UserBase?> get userStream => BehaviorSubject<UserBase?>();
 
   @override
   Future<void> dispose() async {}
