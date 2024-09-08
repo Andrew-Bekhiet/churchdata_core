@@ -109,14 +109,6 @@ Future<void> initCore({
     localNotificationsPlugin,
   );
 
-  final notificationsService =
-      overrides[NotificationsService]?.call() ?? NotificationsService();
-  GetIt.I.registerSingleton<NotificationsService>(
-    notificationsService,
-    signalsReady: notificationsService.runtimeType == NotificationsService,
-    dispose: (n) => n.dispose(),
-  );
-
   await Future.wait(
     [
       GetIt.I<CacheRepository>().openBox('Settings'),
@@ -143,6 +135,14 @@ Future<void> initCore({
     authRepository,
     dispose: (r) => r.dispose(),
     signalsReady: authRepository.runtimeType == AuthRepository,
+  );
+
+  final notificationsService =
+      overrides[NotificationsService]?.call() ?? NotificationsService();
+  GetIt.I.registerSingleton<NotificationsService>(
+    notificationsService,
+    signalsReady: notificationsService.runtimeType == NotificationsService,
+    dispose: (n) => n.dispose(),
   );
 
   final functionsService =
