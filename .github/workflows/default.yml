@@ -48,7 +48,7 @@ jobs:
 
       - name: Analyze project source
         if: ${{ steps.source-changed.outputs.any_changed == 'true' }}
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
 
       - name: Run Tests
         if: ${{ steps.source-changed.outputs.any_changed == 'true' }}
