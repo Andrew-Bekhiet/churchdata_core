@@ -114,6 +114,7 @@ class MockSharePlatform_ extends _i1.Mock implements _i2.SharePlatform {
     String? subject,
     String? text,
     _i4.Rect? sharePositionOrigin,
+    List<String>? fileNameOverrides,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -123,6 +124,7 @@ class MockSharePlatform_ extends _i1.Mock implements _i2.SharePlatform {
             #subject: subject,
             #text: text,
             #sharePositionOrigin: sharePositionOrigin,
+            #fileNameOverrides: fileNameOverrides,
           },
         ),
         returnValue: _i3.Future<_i2.ShareResult>.value(_FakeShareResult_0(
@@ -134,6 +136,7 @@ class MockSharePlatform_ extends _i1.Mock implements _i2.SharePlatform {
               #subject: subject,
               #text: text,
               #sharePositionOrigin: sharePositionOrigin,
+              #fileNameOverrides: fileNameOverrides,
             },
           ),
         )),
@@ -147,6 +150,7 @@ class MockSharePlatform_ extends _i1.Mock implements _i2.SharePlatform {
               #subject: subject,
               #text: text,
               #sharePositionOrigin: sharePositionOrigin,
+              #fileNameOverrides: fileNameOverrides,
             },
           ),
         )),

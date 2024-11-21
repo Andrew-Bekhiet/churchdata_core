@@ -15,7 +15,7 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart' hide Notification;
+import 'package:rxdart/rxdart.dart';
 
 void main() {
   group(

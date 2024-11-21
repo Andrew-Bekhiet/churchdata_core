@@ -10,7 +10,6 @@ environment:
   flutter: ">=3.0.1"
 
 dependency_overrides:
-  firebase_database: ^11.0.0
 
 dependencies:
   flutter:
@@ -29,21 +28,21 @@ dependencies:
   firebase_messaging: ^15.0.2
   firebase_storage: ^12.1.0
   flutter_cache_manager: ^3.3.0
-  flutter_local_notifications: ^17.0.1
+  flutter_local_notifications: ^18.0.1
   flutter_secure_storage: ^9.0.0
-  get_it: ^7.2.0
+  get_it: ^8.0.2
   google_maps_flutter: ^2.1.8
   google_maps_flutter_web: ^0.5.1
   google_sign_in: ^6.0.2
   hive_flutter: ^1.1.0
-  intl: ^0.19.0
-  rxdart: ^0.27.4
+  intl: ^0.20.0
+  rxdart: ^0.28.0
   sentry_flutter: ^8.3.0
   timeago: ^3.2.2
   tinycolor2: ^3.0.1
   tuple: ^2.0.0
   url_launcher: ^6.1.5
-  share_plus: ^9.0.0
+  share_plus: ^10.0.0
   firebase_remote_config: ^5.0.2
   version: ^3.0.2
   package_info_plus: ^8.0.0
