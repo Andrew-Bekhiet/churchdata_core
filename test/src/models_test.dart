@@ -43,7 +43,7 @@ void main() {
           expect(unit.id, 'doc');
           expect(unit.toJson(), {
             'Name': unit.name,
-            'Color': unit.color?.value,
+            'Color': unit.color?.argbValue,
           });
 
           final doc = await unit.ref.get();

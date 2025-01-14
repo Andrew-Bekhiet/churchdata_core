@@ -419,6 +419,8 @@ void main() {
                           .requestPermission())
                       .thenAnswer(
                     (_) async => const NotificationSettings(
+                      providesAppNotificationSettings:
+                          AppleNotificationSetting.enabled,
                       criticalAlert: AppleNotificationSetting.enabled,
                       alert: AppleNotificationSetting.enabled,
                       announcement: AppleNotificationSetting.enabled,
@@ -535,6 +537,8 @@ void main() {
                           .requestPermission())
                       .thenAnswer(
                     (_) async => const NotificationSettings(
+                      providesAppNotificationSettings:
+                          AppleNotificationSetting.enabled,
                       criticalAlert: AppleNotificationSetting.enabled,
                       alert: AppleNotificationSetting.enabled,
                       announcement: AppleNotificationSetting.enabled,

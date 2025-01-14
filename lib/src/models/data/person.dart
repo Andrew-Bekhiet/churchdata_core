@@ -138,7 +138,7 @@ class PersonBase extends DataObjectWithPhoto {
       'Gender': gender,
       'ShammasLevel': shammasLevel,
       'StudyYear': studyYear,
-      'Color': color?.value,
+      'Color': color?.argbValue,
     };
   }
 
