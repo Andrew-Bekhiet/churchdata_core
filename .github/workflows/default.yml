@@ -23,7 +23,7 @@ jobs:
             analysis_options.yaml
             codecov.yaml
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         if: ${{ steps.source-changed.outputs.any_changed == 'true' }}
         with:
           path: ${{ runner.tool_cache }}/flutter
@@ -34,7 +34,7 @@ jobs:
         with:
           channel: "stable"
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         if: ${{ steps.source-changed.outputs.any_changed == 'true' }}
         with:
           path: ${{ env.PUB_CACHE }}
