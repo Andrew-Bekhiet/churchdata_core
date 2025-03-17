@@ -13,7 +13,7 @@ jobs:
 
       - name: Get specific changed files
         id: source-changed
-        uses: tj-actions/changed-files@v41
+        uses: step-security/changed-files@v45
         with:
           files: |
             **.dart
