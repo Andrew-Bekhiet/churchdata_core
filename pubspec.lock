@@ -190,7 +190,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: fc66d8ff2b470fba0229aa0fd6386be1836f90ff
+      resolved-ref: "3a2ba7051ec9a9d9d50ade783604dc8195e62ac4"
       url: "https://github.com/Andrew-Bekhiet/churchdata_core_mocks"
     source: git
     version: "0.5.0"
