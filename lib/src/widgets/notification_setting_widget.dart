@@ -73,7 +73,7 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
                 border: UnderlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(vertical: 5),
               ),
-              value: _getAndSetMultiplier(
+              initialValue: _getAndSetMultiplier(
                 setting.intervalInDays,
               ),
               onSaved: (_) => onSave(),

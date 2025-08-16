@@ -108,7 +108,7 @@ class ThemingService {
         systemOverlayStyle:
             isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       ),
-      bottomAppBarTheme: BottomAppBarTheme(
+      bottomAppBarTheme: BottomAppBarThemeData(
         color: secondary,
         shape: const CircularNotchedRectangle(),
       ),

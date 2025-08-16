@@ -51,7 +51,7 @@ void main() {
                         accentColor: secondary,
                       ) &&
                   t.inputDecorationTheme ==
-                      InputDecorationTheme(
+                      InputDecorationThemeData(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
                           borderSide: const BorderSide(color: primary),
@@ -63,14 +63,14 @@ void main() {
                   t.visualDensity == VisualDensity.adaptivePlatformDensity &&
                   t.brightness == Brightness.light &&
                   t.appBarTheme ==
-                      AppBarTheme(
+                      AppBarThemeData(
                         backgroundColor: primary,
                         foregroundColor:
                             Typography.material2018().black.titleLarge?.color,
                         systemOverlayStyle: SystemUiOverlayStyle.dark,
                       ) &&
                   t.bottomAppBarTheme ==
-                      const BottomAppBarTheme(
+                      const BottomAppBarThemeData(
                         color: secondary,
                         shape: CircularNotchedRectangle(),
                       ),
@@ -102,7 +102,7 @@ void main() {
                         accentColor: secondary,
                       ) &&
                   t.inputDecorationTheme ==
-                      InputDecorationTheme(
+                      InputDecorationThemeData(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
                           borderSide: const BorderSide(color: primary),
@@ -114,14 +114,14 @@ void main() {
                   t.visualDensity == VisualDensity.adaptivePlatformDensity &&
                   t.brightness == Brightness.dark &&
                   t.appBarTheme ==
-                      AppBarTheme(
+                      AppBarThemeData(
                         backgroundColor: primary,
                         foregroundColor:
                             Typography.material2018().white.titleLarge?.color,
                         systemOverlayStyle: SystemUiOverlayStyle.light,
                       ) &&
                   t.bottomAppBarTheme ==
-                      const BottomAppBarTheme(
+                      const BottomAppBarThemeData(
                         color: secondary,
                         shape: CircularNotchedRectangle(),
                       ),
