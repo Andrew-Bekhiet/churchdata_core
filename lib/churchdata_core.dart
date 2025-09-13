@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -214,13 +213,12 @@ void registerFirebaseDependencies({
   FirebaseStorage? firebaseStorageOverride,
   FirebaseAuth? firebaseAuthOverride,
   FirebaseDatabase? firebaseDatabaseOverride,
-  FirebaseDynamicLinks? firebaseDynamicLinksOverride,
   FirebaseFunctions? firebaseFunctionsOverride,
   FirebaseMessaging? firebaseMessagingOverride,
   FirebaseRemoteConfig? firebaseRemoteConfigOverride,
 }) {
   GetIt.I.registerSingleton<GoogleSignIn>(
-    googleSignInOverride ?? GoogleSignIn(),
+    googleSignInOverride ?? GoogleSignIn.instance,
   );
   GetIt.I.registerSingleton<FirebaseAuth>(
     firebaseAuthOverride ?? FirebaseAuth.instance,
@@ -239,9 +237,6 @@ void registerFirebaseDependencies({
   );
   GetIt.I.registerSingleton<FirebaseMessaging>(
     firebaseMessagingOverride ?? FirebaseMessaging.instance,
-  );
-  GetIt.I.registerSingleton<FirebaseDynamicLinks>(
-    firebaseDynamicLinksOverride ?? FirebaseDynamicLinks.instance,
   );
   GetIt.I.registerSingleton<FirebaseRemoteConfig>(
     firebaseRemoteConfigOverride ?? FirebaseRemoteConfig.instance,
